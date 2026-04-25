@@ -1,0 +1,727 @@
+% beamerthemeHSG.sty
+% Beamer theme replicating the University of St. Gallen (HSG) PowerPoint template.
+% Assets required in the same folder: hsg-logo.png, hsg-tagline.png, hsg-badge.png
+%
+% Usage in a presentation:
+%   \documentclass[aspectratio=169]{beamer}
+%   \usetheme{HSG}
+%   \author{...}
+%   \title{...}
+%   \subtitle{...}       % second title line
+%   \institute{...}      % course / institute line
+%   \date{...}
+%   \newcommand{\coursefooter}{Computer Networks} % shown in the footer
+%
+\ProvidesPackage{beamerthemeHSG}[2026/04/23 HSG Beamer Theme]
+
+\RequirePackage{tikz}
+\RequirePackage{xcolor}
+\RequirePackage{graphicx}
+\RequirePackage{ifthen}
+\RequirePackage{pgffor}
+\usetikzlibrary{positioning,shapes.geometric,calc,decorations.pathmorphing}
+
+% ---------------------------------------------------------------------------
+% Colours (from theme1.xml of the HSG PowerPoint template)
+% ---------------------------------------------------------------------------
+\definecolor{HSGgreen}{HTML}{00802F}   % primary brand green
+\definecolor{HSGgreenDark}{HTML}{0A5F2D}
+\definecolor{HSGbluegrey}{HTML}{73A5AF}
+\definecolor{HSGsand}{HTML}{E1D7C3}
+\definecolor{HSGcoral}{HTML}{EB6969}
+\definecolor{HSGyellow}{HTML}{FFF04B}
+\definecolor{HSGtext}{HTML}{2E2E2E}
+\definecolor{HSGmuted}{HTML}{7A7A7A}
+
+% ---------------------------------------------------------------------------
+% Fonts. HSG corporate font is Gill Sans Nova (proprietary, Monotype).
+% The PPTX embeds it via MS MicroType Express compression, which is not
+% reversible without the Microsoft decompressor. Three paths are offered:
+%
+%   pdflatex ..... Lato Light (humanist sans, always available)
+%   xe/lualatex .. Gill Sans Nova if licensed, else Gillius ADF (open clone)
+%
+% Compile with xelatex or lualatex for the closest Gill-Sans look.
+% ---------------------------------------------------------------------------
+\RequirePackage{iftex}
+\ifPDFTeX
+  \RequirePackage[default]{lato}
+  \RequirePackage[T1]{fontenc}
+\else
+  \RequirePackage{fontspec}
+  \IfFontExistsTF{Gill Sans Nova}
+    {\setsansfont{Gill Sans Nova}[Ligatures=TeX, UprightFont={* Light}, BoldFont={* Book}]}
+    {\IfFontExistsTF{Gillius ADF}
+       {\setsansfont{Gillius ADF}[Ligatures=TeX]}
+       {\setsansfont{TeX Gyre Heros}[Ligatures=TeX]}}
+\fi
+\renewcommand{\familydefault}{\sfdefault}
+
+% ---------------------------------------------------------------------------
+% Beamer colour setup
+% ---------------------------------------------------------------------------
+\setbeamercolor{normal text}{fg=HSGtext, bg=white}
+\setbeamercolor{structure}{fg=HSGgreen}
+\setbeamercolor{alerted text}{fg=HSGgreen}
+\setbeamercolor{title}{fg=HSGtext}
+\setbeamercolor{subtitle}{fg=HSGtext}
+\setbeamercolor{frametitle}{fg=HSGtext}
+\setbeamercolor{itemize item}{fg=HSGtext}
+\setbeamercolor{itemize subitem}{fg=HSGtext}
+\setbeamercolor{enumerate item}{fg=HSGtext}
+\setbeamercolor{footline}{fg=HSGmuted}
+
+% ---------------------------------------------------------------------------
+% Fonts configured for Beamer
+% ---------------------------------------------------------------------------
+\setbeamerfont{title}{series=\mdseries, size=\huge}
+\setbeamerfont{subtitle}{series=\mdseries, size=\Large}
+\setbeamerfont{author}{size=\small}
+\setbeamerfont{institute}{size=\footnotesize}
+\setbeamerfont{date}{size=\footnotesize}
+\setbeamerfont{frametitle}{series=\mdseries, size=\LARGE}
+\setbeamerfont{framesubtitle}{series=\mdseries, size=\footnotesize, shape=\normalfont}
+\setbeamerfont{footline}{size=\scriptsize}
+
+% Remove Beamer navigation symbols everywhere
+\setbeamertemplate{navigation symbols}{}
+
+% Itemize bullets as small filled circles in HSG green
+\setbeamertemplate{itemize item}{\footnotesize$\bullet$}
+\setbeamertemplate{itemize subitem}{\scriptsize$\bullet$}
+
+% ---------------------------------------------------------------------------
+% Course footer. Usage in the preamble:   \coursefooter{Computer Networks}
+% Leave unset to show only "School of Computer Science | University of St. Gallen"
+% ---------------------------------------------------------------------------
+\def\@hsgcoursefooter{}
+\newcommand{\coursefooter}[1]{\def\@hsgcoursefooter{#1}}
+
+% ---------------------------------------------------------------------------
+% Frame title: small muted-grey topic tag above a larger regular-weight title.
+% HSG green is RESERVED for the sidebar current-section marker, the chrome
+% badge, and inline emphasis (\hsgemph). It must NEVER be used for frame
+% titles, frame subtitles, column headers, or any heading-like text on a
+% slide — that would clash with the sidebar's progress cue.
+% ---------------------------------------------------------------------------
+\setbeamercolor{framesubtitle}{fg=HSGmuted}
+\setbeamertemplate{frametitle}{%
+  \vspace{0.35cm}%
+  \noindent%
+  {\usebeamercolor[fg]{framesubtitle}\usebeamerfont{framesubtitle}%
+   \ifx\insertframesubtitle\@empty\vphantom{Xy}\else\insertframesubtitle\fi\par}%
+  \vspace{-0.10em}%
+  \noindent{\usebeamerfont{frametitle}\insertframetitle\par}%
+  \vspace{0.20em}%
+}
+
+% ---------------------------------------------------------------------------
+% Slide-area contract. Every slide is divided into three zones.
+%
+%   +-----------------------------------------+  y = 0 (top)
+%   |  HEADER  (frame title + framesubtitle)  |  height = \hsg@headerheight
+%   +-----------------------------------------+  y = 2.00 cm
+%   |                                         |
+%   |  CONTENT  (maximised usable area)       |  height = \hsg@contentheight
+%   |                                         |
+%   +-----------------------------------------+  y = 8.00 cm
+%   |  FOOTER   (logo bottom-L, badge bottom-R)|  height = \hsg@footerheight
+%   +-----------------------------------------+  y = 9.00 cm (bottom)
+%
+%   Horizontal margins: 1.0 cm on left and right -> text width 14.0 cm.
+%
+% Content fills the full area between HEADER and FOOTER without overlap.
+% ---------------------------------------------------------------------------
+\newlength{\hsg@footerheight}
+\newlength{\hsg@headerheight}
+\newlength{\hsg@sidemargin}
+\newlength{\hsg@sidebarwidth}
+\setlength{\hsg@footerheight}{1.00cm}
+\setlength{\hsg@headerheight}{2.20cm}
+\setlength{\hsg@sidemargin}{1.00cm}
+\setlength{\hsg@sidebarwidth}{0.60cm} % slim spine + progress bar, no text
+
+\setbeamersize{%
+  sidebar width left=\hsg@sidebarwidth,%
+  text margin left=0.40cm,%
+  text margin right=\hsg@sidemargin%
+}
+\setbeamercolor{sidebar left}{bg=white}
+
+% ---------------------------------------------------------------------------
+% Footer chrome: ONE helper used by ALL non-title layouts so the logo,
+% inline progress indicator, and page badge land at IDENTICAL positions
+% across the deck.
+%
+%   - HSG logo at bottom-LEFT: inset \hsg@sidemargin from left.
+%   - Inline progress "SECTION · N / M" just right of the logo.
+%   - Page-number badge at bottom-RIGHT: square sized for 1-to-3-digit
+%     numbers; font automatically scales down for 2+ digits so the digits
+%     never touch the badge edge.
+% ---------------------------------------------------------------------------
+\newcommand{\hsg@footerchrome}{%
+  \begin{tikzpicture}[remember picture, overlay]
+    % Small HSG logo, bottom-left — sits OUTSIDE the body text area,
+    % inside the left sidebar gutter, so the sidebar section list sits above it.
+    \node[anchor=south west, inner sep=0pt]
+      at ([xshift=0.30cm, yshift=0.25cm]current page.south west)
+      {\includegraphics[height=0.55cm]{hsg-logo.png}};
+    % Page badge, bottom-right. Font auto-shrinks past 1 digit so 2-/3-digit
+    % numbers never touch the badge edge.
+    \node[anchor=south east, inner sep=0pt]
+      at ([xshift=-\hsg@sidemargin, yshift=0.30cm]current page.south east)
+      {\tikz[baseline=0pt]{%
+        \fill[HSGgreen] (0.08,-0.08) -- (0.48,-0.07)
+                        -- (0.51,0.36) -- (0.04,0.35) -- cycle;
+        \node[white, inner sep=0pt] at (0.275, 0.135)
+          {\ifnum\insertframenumber<10\relax
+             {\fontsize{6.5}{7.5}\selectfont\bfseries\insertframenumber}%
+           \else\ifnum\insertframenumber<100\relax
+             {\fontsize{5.5}{6.5}\selectfont\bfseries\insertframenumber}%
+           \else
+             {\fontsize{4.5}{5.5}\selectfont\bfseries\insertframenumber}%
+           \fi\fi};
+      }};
+  \end{tikzpicture}%
+}
+
+% ---------------------------------------------------------------------------
+% Inline section progress indicator.
+%
+% Declare the deck's outline ONCE in the preamble with
+%   \hsgsetsections{Dataset, Methodology, Results, Acoustic test, Takeaways}
+% Then call \hsgsection{Name} right before the first slide of each section
+% to advance the progress counter. This does NOT produce a divider slide —
+% it just updates the inline footer progress display.
+%
+% The footer chrome renders:   <HSG-logo>  SECTION · N / M   ...   <page badge>
+% so the reader always sees where they are in the deck without a dedicated
+% table-of-contents slide.
+% ---------------------------------------------------------------------------
+\newcounter{hsg@cursec}
+\setcounter{hsg@cursec}{0}
+\def\@hsg@sections{}
+\def\@hsg@sectotal{0}
+\def\hsg@currentsectionname{}
+
+\newcommand{\hsgsetsections}[1]{%
+  \def\@hsg@sections{#1}%
+  \def\@hsg@sectotal{0}%
+  \foreach \s in {#1} {%
+    \xdef\@hsg@sectotal{\the\numexpr\@hsg@sectotal+1\relax}%
+  }%
+}
+
+% Minimal vertical progress spine.
+%
+% Instead of text, the sidebar is a slim vertical rail running the height
+% of the content zone. N evenly-spaced notches mark section boundaries.
+% The portion of the rail corresponding to sections already passed is
+% filled solid HSGgreen; the remainder stays HSGmuted!25. The current
+% section is highlighted by a small HSGgreen bullet at its notch.
+%
+% No text. Reading the page badge + this spine tells you where you are.
+\setbeamertemplate{sidebar left}{%
+  \ifnum\@hsg@sectotal>0\relax
+    \begin{tikzpicture}[remember picture, overlay]
+      % Rail endpoints (top/bottom of content zone)
+      \coordinate (hsgtop) at
+        ([xshift=0.30cm, yshift=-\hsg@headerheight+0.10cm]current page.north west);
+      \coordinate (hsgbot) at
+        ([xshift=0.30cm, yshift=\hsg@footerheight-0.10cm]current page.south west);
+      % Background rail (full height, muted)
+      \draw[HSGmuted!25, line width=3pt, line cap=round] (hsgtop) -- (hsgbot);
+      % Progress: fill from top to the mid-point of the current-section notch
+      \pgfmathsetmacro{\hsgfill}{\thehsg@cursec/\@hsg@sectotal}
+      \coordinate (hsgcur) at ($(hsgtop)!\hsgfill!(hsgbot)$);
+      \draw[HSGgreen, line width=3pt, line cap=round] (hsgtop) -- (hsgcur);
+      % Notch per section boundary
+      \foreach \i in {1,...,\@hsg@sectotal} {
+        \pgfmathsetmacro{\frac}{\i/\@hsg@sectotal}
+        \coordinate (hsgnotch) at ($(hsgtop)!\frac!(hsgbot)$);
+        \ifnum\i=\thehsg@cursec\relax
+          \fill[HSGgreen] (hsgnotch) circle (0.10cm);
+          \fill[white]    (hsgnotch) circle (0.045cm);
+        \else
+          % subtle tick
+          \draw[HSGmuted!60, line width=0.4pt]
+            ($(hsgnotch)+(-0.09cm,0)$) -- ($(hsgnotch)+(0.09cm,0)$);
+        \fi
+      }
+    \end{tikzpicture}%
+  \fi
+}
+
+% Footline template reserves exactly \hsg@footerheight of vertical space at
+% the bottom of each frame, guaranteeing content never reaches the chrome.
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[wd=\paperwidth, ht=\hsg@footerheight, dp=0pt]{footline}{}\end{beamercolorbox}%
+  \hsg@footerchrome%
+}
+
+% ---------------------------------------------------------------------------
+% Title page
+%
+% Optional hero image on the right half of the cover. Matches the PowerPoint
+% master's "Titel Slide 1" layout. Usage in the preamble:
+%
+%     \coverimage{path/to/image.jpg}                 % rectangular (default)
+%     \coverimage[shape=circle]{path/to/image.jpg}
+%     \coverimage[shape=hexagon]{path/to/image.jpg}
+%     \coverimage[shape=gear]{path/to/image.jpg}     % 10-toothed cogwheel
+%     \coverimage[shape=blob]{path/to/image.jpg}     % organic rounded shape
+%
+% Leave unset for a text-only cover. When set, the title text narrows to the
+% left half automatically so the image has room.
+% ---------------------------------------------------------------------------
+\RequirePackage{xkeyval}
+\RequirePackage{adjustbox}
+
+\def\@hsgcoverimage{}
+\def\@hsgcovershape{rect}
+\define@key{hsgcover}{shape}{\def\@hsgcovershape{#1}}
+\newcommand{\coverimage}[2][]{%
+  \def\@hsgcovershape{rect}%
+  \setkeys{hsgcover}{#1}%
+  \def\@hsgcoverimage{#2}%
+}
+
+% Title page. Faithfully reproduces slideLayout38.xml "Titel Slide 3" —
+% the actual layout used by the HSG PowerPoint template's slide 1.
+% All positions scaled from master 25.40 x 14.29 cm to Beamer 16 x 9 cm.
+\setbeamertemplate{title page}{%
+  \begin{tikzpicture}[remember picture, overlay]
+    % HSG logo WITH institute subtitle — top-left, respecting side margin.
+    \node[anchor=north west, inner sep=0pt]
+      at ([xshift=\hsg@sidemargin, yshift=-0.55cm]current page.north west)
+      {\includegraphics[height=1.40cm]{hsg-logo-cover.png}};
+
+    % LAYER 1 (background): HSG green badge frame — drawn FIRST so the
+    % photo overlays it and only a thin L-shaped strip of the badge
+    % peeks out along the photo's lower-left diagonal edge.
+    %
+    % Master positions (slideLayout38 "Titel Slide 3", ×0.630 Beamer scale):
+    %   Badge Grafik 20: (15.92, 4.42) size 6.89x7.65 cm  ->  (10.03, 2.78) size 4.34x4.82 cm
+    %   Photo Bildplatzhalter 17: (16.03, 1.19) size 9.41x10.62 cm  ->  (10.10, 0.75) size 5.93x6.69 cm
+    \ifx\@hsgcoverimage\@empty\else
+      \node[anchor=north west, inner sep=0pt]
+        at ([xshift=10.03cm, yshift=-2.78cm]current page.north west)
+        {\includegraphics[width=4.34cm, height=4.82cm]{hsg-badge.png}};
+    \fi
+
+    % LAYER 2 (foreground): Photo with master's 6-point custGeom clip.
+    % Master placeholder (16.03, 1.19) 9.41x10.62  ->  Beamer (10.10, 0.75) 5.93x6.69.
+    % COVER fit: image is scaled to fill the clip area without distortion
+    % (aspect ratio preserved). Any excess is cropped by the clip path.
+    \ifx\@hsgcoverimage\@empty\else
+      \begin{scope}[shift={([xshift=10.10cm, yshift=-0.75cm]current page.north west)}]
+        \clip (5.93cm, 0)
+           -- (5.93cm, -6.69cm)
+           -- (5.54cm, -6.69cm)
+           -- (0.82cm, -6.27cm)
+           -- (0, -1.53cm)
+           -- (0, -1.48cm) -- cycle;
+        \node[anchor=center, inner sep=0pt] at (2.965cm, -3.345cm)
+          {\includegraphics[width=12cm, height=12cm, keepaspectratio, angle=-90]{\@hsgcoverimage}};
+      \end{scope}
+    \fi
+
+    % Title box. Left margin 1.0 cm (matches content slides' left margin).
+    % Font sizes follow the HSG PowerPoint master, scaled from the 25.4 cm
+    % PPT canvas to Beamer's 16 cm canvas (scale factor 16/25.4 = 0.630):
+    %   Master title = Gill Sans Nova Light 40 pt  ->  25 pt in Beamer
+    %   Master body  = Gill Sans Nova Body    12 pt  ->  7.5 pt in Beamer
+    % Title (at \hsg@sidemargin so it's aligned with content slides).
+    \node[anchor=north west, inner sep=0pt, outer sep=0pt]
+      at ([xshift=\hsg@sidemargin, yshift=-3.00cm]current page.north west)
+      {\begin{minipage}[t]{9.0cm}
+        \setlength{\parindent}{0pt}\setlength{\parskip}{0pt}\raggedright
+        \leavevmode{\fontsize{22}{26}\selectfont\color{HSGtext}\inserttitle\par}%
+        \ifx\insertsubtitle\@empty\else
+          \vspace{0.20em}
+          \leavevmode{\fontsize{14}{17}\selectfont\color{HSGtext}\insertsubtitle\par}%
+        \fi
+       \end{minipage}};
+
+    % Authors / institute.
+    \node[anchor=north west, inner sep=0pt, outer sep=0pt]
+      at ([xshift=\hsg@sidemargin, yshift=-6.10cm]current page.north west)
+      {\begin{minipage}[t]{9.0cm}
+        \setlength{\parindent}{0pt}\setlength{\parskip}{0pt}\raggedright
+        \ifx\insertauthor\@empty\else
+          \leavevmode{\fontsize{9}{11}\selectfont\color{HSGtext}\insertauthor\par}%
+          \vspace{0.25em}%
+        \fi
+        \ifx\insertinstitute\@empty\else
+          \leavevmode{\fontsize{8}{10}\selectfont\color{HSGtext}\insertinstitute\par}%
+        \fi
+       \end{minipage}};
+
+    % "From insight to impact" — bottom-left, small (6 pt).
+    \node[anchor=north west, inner sep=0pt,
+          font=\fontsize{6}{7.5}\selectfont, text=HSGtext]
+      at ([xshift=\hsg@sidemargin, yshift=-8.30cm]current page.north west)
+      {From insight to impact};
+  \end{tikzpicture}%
+}
+
+% ---------------------------------------------------------------------------
+% Section page (optional, called with \frame{\sectionpage})
+% ---------------------------------------------------------------------------
+\setbeamertemplate{section page}{%
+  \begin{centering}
+    \vspace*{1.5cm}
+    {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{structure}%
+     Section~\insertsectionnumber\par}
+    \vspace{0.4em}
+    {\usebeamerfont{title}\insertsection\par}
+  \end{centering}
+}
+
+% ---------------------------------------------------------------------------
+% Convenience: green inline emphasis command
+% ---------------------------------------------------------------------------
+\newcommand{\hsgemph}[1]{{\color{HSGgreen}\textbf{#1}}}
+
+% ---------------------------------------------------------------------------
+% Content area enforcement.
+%
+% The HSG content slides have fixed chrome (title, footer, badge, logo) that
+% consumes vertical space. Usable content area on a Beamer 16x9 slide is
+% approximately 14.5 cm wide x 5.5 cm tall after frametitle and footline.
+%
+% Two mechanisms are provided:
+%
+%   \begin{frame}[shrink=15] ... \end{frame}
+%     Beamer's built-in auto-shrink. Content is rendered at 100%, then
+%     if it overflows the frame, it is scaled down by up to 15%.
+%
+%   \begin{hsgfit} ... \end{hsgfit}
+%     Wraps its content in an auto-sizing box that is guaranteed to fit
+%     the default content area (14.5 x 5.5 cm). Use when shrink is not
+%     enough or for tighter control.
+% ---------------------------------------------------------------------------
+\newenvironment{hsgfit}{%
+  \adjustbox{max totalsize={14.5cm}{5.5cm}, center}\bgroup%
+  \begin{minipage}{14.5cm}%
+}{%
+  \end{minipage}%
+  \egroup%
+}
+
+% ===========================================================================
+% Frame patterns from the HSG PowerPoint master.
+% Each command below generates a full frame. Place them inside the document,
+% not inside a frame, for example:
+%
+%     \hsgagenda{Encryption}{Symmetric crypto}{Asymmetric crypto}{TLS}{Summary}
+%     \hsgquote{The cloud is just somebody else's computer.}{Anonymous}
+%     \hsgstatement{Security is a process, not a product.}
+%     \hsgfullimage{images/turbine-hall.jpg}
+%     \hsgthanks
+%     \hsgcontact{Bruno Rodrigues}{bruno.rodrigues@unisg.ch}{ICV-HSG Dornbirn}
+% ===========================================================================
+
+% -----------------------------------------------------------------
+% Agenda frame: title on the left, numbered list below. Right half
+% is reserved for an optional image via \hsgagendaimage{path}.
+% -----------------------------------------------------------------
+% Default texture image comes from the HSG master (portrait concrete slab).
+% Override with \hsgagendaimage{path} or disable with \hsgagendaimage{}.
+\def\@hsgagendaimage{hsg-agenda-texture-portrait.jpg}
+\newcommand{\hsgagendaimage}[1]{\def\@hsgagendaimage{#1}}
+
+% Agenda layout — matches slideLayout36.xml exactly.
+% Master positions (scaled 25.40x14.29 -> 16x9):
+%   Title:   (0.63, 0.66) 9.26x1.07 cm
+%   Content: (0.63, 2.23) 9.26x5.60 cm (enumerate list on the left)
+%   Picture: (10.44, 0.00) 5.56x9.00 cm (full-height, right side)
+\newcommand{\hsgagenda}[1]{%
+  \begin{frame}[plain]
+    \begin{tikzpicture}[remember picture, overlay]
+      % Optional full-height image on the right
+      \ifx\@hsgagendaimage\@empty\else
+        \node[anchor=north west, inner sep=0pt]
+          at ([xshift=10.44cm, yshift=0cm]current page.north west)
+          {\includegraphics[width=5.56cm, height=9.00cm,
+                            keepaspectratio=false]{\@hsgagendaimage}};
+      \fi
+
+      % Agenda title at same top-left offset as normal frames.
+      \node[anchor=north west, font=\Large\mdseries, text=HSGtext]
+        at ([xshift=0.63cm, yshift=-0.66cm]current page.north west)
+        {Agenda};
+
+      % Enumerate list positioned at master coordinates.
+      % Width depends on whether an agenda image is set.
+      \ifx\@hsgagendaimage\@empty
+        \def\@hsg@agendawidth{14.74cm}%
+      \else
+        \def\@hsg@agendawidth{9.26cm}%
+      \fi
+      \node[anchor=north west, text width=\@hsg@agendawidth, inner sep=0pt]
+        at ([xshift=0.63cm, yshift=-2.23cm]current page.north west)
+        {%
+          \begin{enumerate}
+          \setlength\itemsep{0.55em}
+          \color{HSGtext}#1
+          \end{enumerate}
+        };
+    \end{tikzpicture}%
+    \hsg@footerchrome%  SAME footer as every other content slide
+  \end{frame}%
+}
+
+% -----------------------------------------------------------------
+% Section-divider frame — matches slideLayout37.xml "Titel Slide 2".
+% Use between major parts of the talk (Introduction, Methods,
+% Results, Conclusion, ...). Produces a left-side title with an
+% optional subtitle and a full-height concrete-texture image on
+% the right (same texture as the agenda default).
+%
+%   \hsgsection{Introduction}             -> title only
+%   \hsgsection{Methods}{Distributed}     -> title + subtitle line
+%
+% Override the right-side image: \hsgsectionimage{path}.
+% Disable it entirely:           \hsgsectionimage{}.
+% -----------------------------------------------------------------
+% \hsgsection{Name} — advance to the next section without rendering a
+% divider slide. The inline footer progress updates automatically.
+% The optional argument (#1) is kept for backward compatibility but
+% ignored, since the divider slide was removed.
+\def\@hsgsectionimage{hsg-agenda-texture-portrait.jpg}
+\newcommand{\hsgsectionimage}[1]{\def\@hsgsectionimage{#1}}
+\newcommand{\hsgsection}[2][]{%
+  \stepcounter{hsg@cursec}%
+  \gdef\hsg@currentsectionname{#2}%
+}
+
+% -----------------------------------------------------------------
+% Chapter-separator frame — matches slideLayout39/40.xml "Kapiteltrenner".
+% Large number + title, optionally over a full-bleed background image.
+%
+%   \hsgchapter{02}{Methodology}
+%   \hsgchapter[images/bg.jpg]{03}{Results}   % optional bg image
+% -----------------------------------------------------------------
+\newcommand{\hsgchapter}[3][]{%
+  \begin{frame}[plain]
+    \begin{tikzpicture}[remember picture, overlay]
+      \ifthenelse{\equal{#1}{}}{}{%
+        \node[anchor=center, inner sep=0pt] at (current page.center)
+          {\includegraphics[width=\paperwidth, height=\paperheight,
+                            keepaspectratio=false]{#1}};%
+      }
+      % Large chapter number — bold HSG green
+      \node[anchor=north west, inner sep=0pt,
+            font=\fontsize{72}{82}\selectfont\bfseries, text=HSGgreen]
+        at ([xshift=\hsg@sidemargin, yshift=-2.00cm]current page.north west)
+        {#2};
+      % Chapter title below
+      \node[anchor=north west, inner sep=0pt,
+            font=\fontsize{28}{34}\selectfont, text=HSGtext]
+        at ([xshift=\hsg@sidemargin, yshift=-5.20cm]current page.north west)
+        {#3};
+    \end{tikzpicture}%
+    \hsg@footerchrome%
+  \end{frame}%
+}
+
+% -----------------------------------------------------------------
+% Quote frame (two flavours: black on white, or white on green).
+% \hsgquote{quote}{attribution}          -> black text, white bg
+% \hsgquoteinverted{quote}{attribution}  -> white text, green bg
+% -----------------------------------------------------------------
+\newcommand{\hsgquote}[2]{%
+  \begin{frame}[plain]
+    \begin{tikzpicture}[remember picture, overlay]
+      % tiny logo bottom-left for context
+      \node[anchor=south west, xshift=0.7cm, yshift=0.5cm]
+        at (current page.south west)
+        {\includegraphics[height=0.55cm]{hsg-logo.png}};
+    \end{tikzpicture}%
+    \vfill
+    \begin{center}
+      \begin{minipage}{0.82\textwidth}
+        \raggedright
+        {\color{HSGgreen}\fontsize{60}{60}\selectfont\textbf{\char`\"}}\\[-1.2em]
+        {\LARGE\itshape #1}\par\vspace{1.2em}
+        \hfill\emph{#2}
+      \end{minipage}
+    \end{center}
+    \vfill\vfill
+  \end{frame}%
+}
+
+\newcommand{\hsgquoteinverted}[2]{%
+  {\setbeamercolor{background canvas}{bg=HSGgreen}%
+   \setbeamercolor{normal text}{fg=white, bg=HSGgreen}%
+  \begin{frame}[plain]
+    \vfill
+    \begin{center}
+      \begin{minipage}{0.82\textwidth}
+        \color{white}\raggedright
+        {\fontsize{60}{60}\selectfont\textbf{\char`\"}}\\[-1.2em]
+        {\LARGE\itshape #1}\par\vspace{1.2em}
+        \hfill\emph{#2}
+      \end{minipage}
+    \end{center}
+    \vfill\vfill
+  \end{frame}}%
+}
+
+% -----------------------------------------------------------------
+% Statement frame — matches master slideLayout27/29 "Statement 1/2".
+%
+% Master title placeholder: (2.30, 2.04) PPT size 14.30x10.36, font 79 pt.
+% Beamer (×0.630): (1.45, 1.29) cm size 9.01x6.53 cm, 50 pt.
+%
+% Footer chrome (HSG logo + centred page badge) is preserved so the slide
+% carries the same page number as every other content slide.
+%
+% \hsgstatement{Security is a process, not a product.}
+% -----------------------------------------------------------------
+\newcommand{\hsgstatement}[1]{%
+  \begin{frame}[plain]
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[anchor=north west, inner sep=0pt]
+        at ([xshift=1.45cm, yshift=-1.29cm]current page.north west)
+        {\begin{minipage}[t]{9.01cm}
+          \setlength{\parindent}{0pt}\raggedright
+          {\color{HSGgreen}\fontsize{28}{34}\selectfont\bfseries #1\par}
+         \end{minipage}};
+    \end{tikzpicture}%
+    \hsg@footerchrome%  same logo + page-number badge as every content slide
+  \end{frame}%
+}
+
+% -----------------------------------------------------------------
+% Full-bleed image frame. No footer, small logo bottom-left.
+% \hsgfullimage{path/to/image}
+% -----------------------------------------------------------------
+\newcommand{\hsgfullimage}[1]{%
+  \begin{frame}[plain]
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[anchor=center, inner sep=0pt] at (current page.center)
+        {\includegraphics[width=\paperwidth, height=\paperheight,
+                          keepaspectratio=false]{#1}};
+      \node[anchor=south west, xshift=0.6cm, yshift=0.4cm]
+        at (current page.south west)
+        {\includegraphics[height=0.5cm]{hsg-logo.png}};
+    \end{tikzpicture}%
+  \end{frame}%
+}
+
+% -----------------------------------------------------------------
+% Closing frame. Faithfully reproduces slideLayout32.xml "31_Contact"
+% — the master's closing slide. Full-bleed HSG campus photo with a
+% headline overlay top-left (white, large) and a white logo box
+% bottom-right.
+%   \hsgclosing            -> "Questions?"
+%   \hsgclosing{Custom}    -> custom headline
+% Uses the bundled hsg-closing-campus.jpg (HSG courtyard, from master).
+% Override the photo with \hsgclosingphoto{path}.
+% -----------------------------------------------------------------
+\def\@hsgclosingtext{Questions?}
+\newcommand{\hsgclosingtext}[1]{\def\@hsgclosingtext{#1}}
+\def\@hsgclosingphoto{hsg-closing-campus.jpg}
+\newcommand{\hsgclosingphoto}[1]{\def\@hsgclosingphoto{#1}}
+
+% Contact info shown inside the translucent white box on the closing slide.
+% Defaults to \insertauthor from the title block. Email is optional.
+% Override with \hsgclosingcontact{title+name}{email}.
+%   e.g. \hsgclosingcontact{Prof. Dr. Bruno Rodrigues}{bruno.rodrigues@unisg.ch}
+\def\@hsgclosingcontactname{\insertauthor}
+\def\@hsgclosingcontactemail{}
+\newcommand{\hsgclosingcontact}[2]{%
+  \def\@hsgclosingcontactname{#1}%
+  \def\@hsgclosingcontactemail{#2}%
+}
+
+\newcommand{\hsgclosing}{%
+  \begin{frame}[plain]
+    \begin{tikzpicture}[remember picture, overlay]
+      % Full-bleed campus photo
+      \node[anchor=center, inner sep=0pt] at (current page.center)
+        {\includegraphics[width=\paperwidth, height=\paperheight]{\@hsgclosingphoto}};
+
+      % Headline top-left, white, large.
+      \node[anchor=north west, inner sep=0pt,
+            font=\fontsize{28}{34}\selectfont, text=white]
+        at ([xshift=\hsg@sidemargin, yshift=-\hsg@headerheight]current page.north west)
+        {\@hsgclosingtext};
+
+      % Translucent contact box — faithful reproduction of slideLayout32
+      % "Rechteck 7" from HSG-slide-template.pptx.
+      %
+      % Master specs (exact values extracted from PPTX XML):
+      %   Position (top-left): (6894258, 3008550) EMU = (19.15, 8.36) PPT cm
+      %   Size:                (2105677, 1237183) EMU = ( 5.85, 3.44) PPT cm
+      %   Fill:  bg1 (white) with alpha=81000  ->  81 % opacity
+      %   Border: none
+      %   Shadow: outer, blurRad=50800 EMU (1.4 mm), dist=38100 EMU (1.1 mm),
+      %           direction 2700000 (shadow cast to bottom-right), alpha 40 %
+      %   Text:   no insets (lIns=tIns=rIns=bIns=0), anchored top
+      %
+      % Beamer (× 16/25.4 = 0.630):
+      %   Position: (12.06, 5.27) cm from slide top-left
+      %   Size:     3.69 × 2.17 cm
+      %
+      % Inner HSG logo (master "Rectangle 2", uses image3.png):
+      %   Position: (19.54, 8.73) PPT  ->  (12.31, 5.50) Beamer
+      %   Size:     (4.09, 0.85)  PPT  ->  ( 2.58, 0.54) Beamer
+      %   Offset inside the box: (0.25, 0.23) cm from top-left
+      %
+      % The box is drawn first as a semi-transparent white rectangle with a
+      % subtle shadow; the logo + contact text sit on top.
+      % Box shifted 1 cm up relative to master XML (PPT has extra vertical
+      % headroom the Beamer 16x9 canvas lacks). Position origin: (12.06, 4.27).
+      \begin{scope}[shift={([xshift=12.06cm, yshift=-4.27cm]current page.north west)}]
+        \fill[white, opacity=0.81]
+          (0, 0) rectangle (3.69cm, -2.17cm);
+        % HSG logo at the top of the box (same offset as master).
+        \node[anchor=north west, inner sep=0pt]
+          at (0.25cm, -0.23cm)
+          {\includegraphics[width=2.58cm]{hsg-logo-en.png}};
+        % Contact text (name bold + email) at 5.5 pt, below the logo.
+        \node[anchor=north west, inner sep=0pt,
+              text=HSGtext, align=left,
+              font=\fontsize{5}{6.5}\selectfont]
+          at (0.25cm, -1.05cm)
+          {\ifx\@hsgclosingcontactname\@empty\else
+             {\bfseries\@hsgclosingcontactname}\\[0.10em]%
+           \fi
+           \ifx\@hsgclosingcontactemail\@empty\else
+             \@hsgclosingcontactemail%
+           \fi};
+      \end{scope}
+
+      % Bottom strip with EQUIS / AACSB / AMBA accreditation logos and
+      % the "From insight to impact" tagline. Extracted from master page 5
+      % (slideLayout32) so positions and sizes exactly match the PPT.
+      \node[anchor=south west, inner sep=0pt]
+        at (current page.south west)
+        {\includegraphics[width=\paperwidth]{hsg-closing-logo-band.png}};
+    \end{tikzpicture}%
+  \end{frame}%
+}
+
+% Backward-compat alias for \hsgthanks — now reuses the closing slide.
+\newcommand{\hsgthanks}{\hsgclosing}
+
+% -----------------------------------------------------------------
+% Contact frame: name, contact details, optional affiliation.
+% \hsgcontact{Name}{email}{Affiliation}
+% -----------------------------------------------------------------
+\newcommand{\hsgcontact}[3]{%
+  \begin{frame}
+    \frametitle{Contact}
+    \vspace{1em}
+    \begin{minipage}{0.85\textwidth}
+      {\LARGE #1}\par\vspace{0.8em}
+      {\normalsize\color{HSGgreen} #2}\par\vspace{0.6em}
+      {\small #3}
+    \end{minipage}
+  \end{frame}%
+}
+
+\endinput
