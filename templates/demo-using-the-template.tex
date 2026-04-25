@@ -241,9 +241,67 @@ my-talk/
   \end{lstlisting}
 
   \vspace{0.4em}
-  \textbf{Rule:} do NOT colour column headers HSGgreen. The sidebar
-  already uses HSGgreen for progress; reusing it elsewhere creates
-  visual conflict.
+  \textbf{Rule:} do NOT colour column headers HSGgreen. Reserve green
+  for inline \texttt{\textbackslash hsgemph}.
+\end{frame}
+
+\begin{frame}[t]
+  \frametitle{Two-column rendered}
+
+  \begin{columns}[T]
+    \column{0.5\textwidth}
+      \textbf{Symmetric}
+      \begin{itemize}\item Shared key\item Fast\end{itemize}
+    \column{0.5\textwidth}
+      \textbf{Asymmetric}
+      \begin{itemize}\item Key pair\item Slow\end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[t,fragile]
+  \frametitle{Three-column layout}
+
+  \begin{lstlisting}
+\begin{columns}[T]
+  \column{0.33\textwidth} ...
+  \column{0.33\textwidth} ...
+  \column{0.33\textwidth} ...
+\end{columns}
+  \end{lstlisting}
+
+  \vspace{0.4em}
+  Asymmetric splits work too: \texttt{0.6\textbackslash textwidth} +
+  \texttt{0.4\textbackslash textwidth} for a wide-text + narrow-figure
+  pattern.
+\end{frame}
+
+\begin{frame}[t]
+  \frametitle{Three-column rendered}
+
+  \begin{columns}[T]
+    \column{0.32\textwidth}
+      \textbf{Confidentiality}
+      \begin{itemize}\setlength\itemsep{0pt}
+        \item Encryption hides content
+        \item Adversary sees only ciphertext
+      \end{itemize}
+    \column{0.32\textwidth}
+      \textbf{Integrity}
+      \begin{itemize}\setlength\itemsep{0pt}
+        \item MAC detects tampering
+        \item Hash chains for logs
+      \end{itemize}
+    \column{0.32\textwidth}
+      \textbf{Availability}
+      \begin{itemize}\setlength\itemsep{0pt}
+        \item Replication, redundancy
+        \item Rate-limiting against DoS
+      \end{itemize}
+  \end{columns}
+
+  \vspace{0.6em}
+  Three balanced columns with \texttt{[T]} top-alignment. The CIA triad
+  fits naturally into this layout.
 \end{frame}
 
 \begin{frame}[t]

@@ -373,20 +373,20 @@
     % longer it shrinks proportionally so the cover layout never breaks.
     \node[anchor=north west, inner sep=0pt, outer sep=0pt]
       at ([xshift=\hsg@sidemargin, yshift=-3.00cm]current page.north west)
-      {\adjustbox{max width=9.0cm}{%
+      {\adjustbox{max width=8.4cm}{%
         \fontsize{22}{26}\selectfont\color{HSGtext}\inserttitle}};
 
     \ifx\insertsubtitle\@empty\else
       \node[anchor=north west, inner sep=0pt, outer sep=0pt]
         at ([xshift=\hsg@sidemargin, yshift=-4.20cm]current page.north west)
-        {\adjustbox{max width=9.0cm}{%
+        {\adjustbox{max width=8.4cm}{%
           \fontsize{14}{17}\selectfont\color{HSGtext}\insertsubtitle}};
     \fi
 
     \ifx\insertauthor\@empty\else
       \node[anchor=north west, inner sep=0pt, outer sep=0pt]
         at ([xshift=\hsg@sidemargin, yshift=-6.10cm]current page.north west)
-        {\adjustbox{max width=9.0cm}{%
+        {\adjustbox{max width=8.4cm}{%
           \fontsize{9}{11}\selectfont\color{HSGtext}\insertauthor}};
     \fi
 
@@ -395,8 +395,8 @@
     \ifx\insertinstitute\@empty\else
       \node[anchor=north west, inner sep=0pt, outer sep=0pt]
         at ([xshift=\hsg@sidemargin, yshift=-6.80cm]current page.north west)
-        {\adjustbox{max totalsize={9.0cm}{1.5cm}}{%
-          \begin{minipage}[t]{9.0cm}
+        {\adjustbox{max totalsize={8.4cm}{1.5cm}}{%
+          \begin{minipage}[t]{8.4cm}
             \setlength{\parindent}{0pt}\setlength{\parskip}{0pt}\raggedright
             \leavevmode{\fontsize{8}{10}\selectfont\color{HSGtext}\insertinstitute\par}%
           \end{minipage}}};
