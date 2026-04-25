@@ -1,6 +1,12 @@
 % beamerthemeHSG.sty
 % Beamer theme replicating the University of St. Gallen (HSG) PowerPoint template.
-% Assets required in the same folder: hsg-logo.png, hsg-tagline.png, hsg-badge.png
+% Assets required in the same folder:
+%   hsg-logo-en.pdf, hsg-logo-de.pdf  (vector logos, official Wikimedia SVGs)
+%   hsg-logo-cover.png                (logo + institute subtitle, raster)
+%   hsg-badge.png                     (green frame around cover photo)
+%   hsg-agenda-texture-portrait.jpg   (concrete texture for agenda)
+%   hsg-closing-campus.jpg            (campus photo for closing slide)
+%   hsg-closing-logo-band.png         (accreditation strip for closing slide)
 %
 % Usage in a presentation:
 %   \documentclass[aspectratio=169]{beamer}
@@ -47,13 +53,40 @@
 \ifPDFTeX
   \RequirePackage[default]{lato}
   \RequirePackage[T1]{fontenc}
+  \PackageWarning{beamerthemeHSG}{%
+    Compiled with pdflatex; falling back to Lato.\MessageBreak
+    For the official HSG Gill-Sans-Nova look, switch the compiler to\MessageBreak
+    xelatex or lualatex (the theme will pick up fonts/ automatically)}%
 \else
   \RequirePackage{fontspec}
-  \IfFontExistsTF{Gill Sans Nova}
-    {\setsansfont{Gill Sans Nova}[Ligatures=TeX, UprightFont={* Light}, BoldFont={* Book}]}
-    {\IfFontExistsTF{Gillius ADF}
-       {\setsansfont{Gillius ADF}[Ligatures=TeX]}
-       {\setsansfont{TeX Gyre Heros}[Ligatures=TeX]}}
+  % Prefer the vendored Gillius ADF OTFs under ./fonts/ (deterministic,
+  % independent of TeX Live's font collection on the host machine).
+  \IfFileExists{fonts/GilliusADF-Regular.otf}{%
+    \setsansfont{GilliusADF}[%
+      Path=./fonts/, Extension=.otf,
+      UprightFont=*-Regular,
+      ItalicFont=*-Italic,
+      BoldFont=*-Bold,
+      BoldItalicFont=*-BoldItalic,
+      Ligatures=TeX]%
+  }{%
+    \IfFontExistsTF{Gill Sans Nova}{%
+      \setsansfont{Gill Sans Nova}[Ligatures=TeX, UprightFont={* Light}, BoldFont={* Book}]%
+    }{%
+      \IfFontExistsTF{Gillius ADF}{%
+        \setsansfont{Gillius ADF}[Ligatures=TeX]%
+        \PackageWarning{beamerthemeHSG}{%
+          Using system-installed Gillius ADF (TeX Live).\MessageBreak
+          For reproducible rendering, copy the OTFs into ./fonts/}%
+      }{%
+        \setsansfont{TeX Gyre Heros}[Ligatures=TeX]%
+        \PackageWarning{beamerthemeHSG}{%
+          No Gill-Sans family available; falling back to TeX Gyre Heros.\MessageBreak
+          Drop GilliusADF-{Regular,Italic,Bold,BoldItalic}.otf into ./fonts/\MessageBreak
+          to get the official HSG look}%
+      }%
+    }%
+  }%
 \fi
 \renewcommand{\familydefault}{\sfdefault}
 
@@ -165,22 +198,25 @@
     % inside the left sidebar gutter, so the sidebar section list sits above it.
     \node[anchor=south west, inner sep=0pt]
       at ([xshift=0.30cm, yshift=0.25cm]current page.south west)
-      {\includegraphics[height=0.55cm]{hsg-logo.png}};
-    % Page badge, bottom-right. Font auto-shrinks past 1 digit so 2-/3-digit
-    % numbers never touch the badge edge.
+      {\includegraphics[height=0.55cm]{hsg-logo-en.pdf}};
+    % Page badge, bottom-right. Geometry copied verbatim from the master:
+    % Freeform Shape 6 in slideMaster1.xml — a 5-point trapezoid with
+    % size 0.593 x 0.650 cm PPT  ->  0.374 x 0.410 cm Beamer.
+    % Polygon path-normalised points (master custGeom):
+    %   pt0 (0.0000, 0.2090)  pt1 (1.0000, 0.0000)
+    %   pt2 (1.0000, 1.0000)  pt3 (0.1449, 0.9467)  -> close to pt0
+    % Page number font: master = 8 pt PPT  ->  5 pt Beamer.
     \node[anchor=south east, inner sep=0pt]
       at ([xshift=-\hsg@sidemargin, yshift=0.30cm]current page.south east)
-      {\tikz[baseline=0pt]{%
-        \fill[HSGgreen] (0.08,-0.08) -- (0.48,-0.07)
-                        -- (0.51,0.36) -- (0.04,0.35) -- cycle;
-        \node[white, inner sep=0pt] at (0.275, 0.135)
-          {\ifnum\insertframenumber<10\relax
-             {\fontsize{6.5}{7.5}\selectfont\bfseries\insertframenumber}%
-           \else\ifnum\insertframenumber<100\relax
-             {\fontsize{5.5}{6.5}\selectfont\bfseries\insertframenumber}%
-           \else
-             {\fontsize{4.5}{5.5}\selectfont\bfseries\insertframenumber}%
-           \fi\fi};
+      {\tikz[baseline=0pt, x=0.374cm, y=-0.410cm, yshift=0.410cm]{%
+        % y axis flipped so the master path's (0,0)=top-left maps to the
+        % usual TikZ bottom-left baseline.
+        \fill[HSGgreen]
+          (0.0000, 0.2090) -- (1.0000, 0.0000) --
+          (1.0000, 1.0000) -- (0.1449, 0.9467) -- cycle;
+        % Centre the page number at the polygon's visual centroid.
+        \node[white, inner sep=0pt, font=\fontsize{5}{6}\selectfont\bfseries]
+          at (0.536, 0.539) {\insertframenumber};
       }};
   \end{tikzpicture}%
 }
@@ -537,7 +573,7 @@
       % tiny logo bottom-left for context
       \node[anchor=south west, xshift=0.7cm, yshift=0.5cm]
         at (current page.south west)
-        {\includegraphics[height=0.55cm]{hsg-logo.png}};
+        {\includegraphics[height=0.55cm]{hsg-logo-en.pdf}};
     \end{tikzpicture}%
     \vfill
     \begin{center}
@@ -585,9 +621,9 @@
     \begin{tikzpicture}[remember picture, overlay]
       \node[anchor=north west, inner sep=0pt]
         at ([xshift=1.45cm, yshift=-1.29cm]current page.north west)
-        {\begin{minipage}[t]{9.01cm}
+        {\begin{minipage}[t]{13.0cm}
           \setlength{\parindent}{0pt}\raggedright
-          {\color{HSGgreen}\fontsize{28}{34}\selectfont\bfseries #1\par}
+          {\color{HSGgreen}\fontsize{36}{42}\selectfont\bfseries #1\par}
          \end{minipage}};
     \end{tikzpicture}%
     \hsg@footerchrome%  same logo + page-number badge as every content slide
@@ -606,7 +642,7 @@
                           keepaspectratio=false]{#1}};
       \node[anchor=south west, xshift=0.6cm, yshift=0.4cm]
         at (current page.south west)
-        {\includegraphics[height=0.5cm]{hsg-logo.png}};
+        {\includegraphics[height=0.5cm]{hsg-logo-en.pdf}};
     \end{tikzpicture}%
   \end{frame}%
 }
@@ -681,7 +717,7 @@
         % HSG logo at the top of the box (same offset as master).
         \node[anchor=north west, inner sep=0pt]
           at (0.25cm, -0.23cm)
-          {\includegraphics[width=2.58cm]{hsg-logo-en.png}};
+          {\includegraphics[width=2.58cm]{hsg-logo-en.pdf}};
         % Contact text (name bold + email) at 5.5 pt, below the logo.
         \node[anchor=north west, inner sep=0pt,
               text=HSGtext, align=left,
