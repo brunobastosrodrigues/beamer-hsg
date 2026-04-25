@@ -177,18 +177,14 @@
 \newlength{\hsg@footerheight}
 \newlength{\hsg@headerheight}
 \newlength{\hsg@sidemargin}
-\newlength{\hsg@sidebarwidth}
 \setlength{\hsg@footerheight}{1.00cm}
 \setlength{\hsg@headerheight}{2.20cm}
 \setlength{\hsg@sidemargin}{1.00cm}
-\setlength{\hsg@sidebarwidth}{0.60cm} % slim spine + progress bar, no text
 
 \setbeamersize{%
-  sidebar width left=\hsg@sidebarwidth,%
-  text margin left=0.40cm,%
+  text margin left=\hsg@sidemargin,%
   text margin right=\hsg@sidemargin%
 }
-\setbeamercolor{sidebar left}{bg=white}
 
 % ---------------------------------------------------------------------------
 % Footer chrome: ONE helper used by ALL non-title layouts so the logo,
@@ -276,37 +272,9 @@
 % filled solid HSGgreen; the remainder stays HSGmuted!25. The current
 % section is highlighted by a small HSGgreen bullet at its notch.
 %
-% No text. Reading the page badge + this spine tells you where you are.
-\setbeamertemplate{sidebar left}{%
-  \ifnum\@hsg@sectotal>0\relax
-    \begin{tikzpicture}[remember picture, overlay]
-      % Rail endpoints (top/bottom of content zone)
-      \coordinate (hsgtop) at
-        ([xshift=0.30cm, yshift=-\hsg@headerheight+0.10cm]current page.north west);
-      \coordinate (hsgbot) at
-        ([xshift=0.30cm, yshift=\hsg@footerheight-0.10cm]current page.south west);
-      % Background rail (full height, muted)
-      \draw[HSGmuted!25, line width=3pt, line cap=round] (hsgtop) -- (hsgbot);
-      % Progress: fill from top to the mid-point of the current-section notch
-      \pgfmathsetmacro{\hsgfill}{\thehsg@cursec/\@hsg@sectotal}
-      \coordinate (hsgcur) at ($(hsgtop)!\hsgfill!(hsgbot)$);
-      \draw[HSGgreen, line width=3pt, line cap=round] (hsgtop) -- (hsgcur);
-      % Notch per section boundary
-      \foreach \i in {1,...,\@hsg@sectotal} {
-        \pgfmathsetmacro{\frac}{\i/\@hsg@sectotal}
-        \coordinate (hsgnotch) at ($(hsgtop)!\frac!(hsgbot)$);
-        \ifnum\i=\thehsg@cursec\relax
-          \fill[HSGgreen] (hsgnotch) circle (0.10cm);
-          \fill[white]    (hsgnotch) circle (0.045cm);
-        \else
-          % subtle tick
-          \draw[HSGmuted!60, line width=0.4pt]
-            ($(hsgnotch)+(-0.09cm,0)$) -- ($(hsgnotch)+(0.09cm,0)$);
-        \fi
-      }
-    \end{tikzpicture}%
-  \fi
-}
+% Sidebar disabled — \hsgsetsections / \hsgsection still accept their
+% arguments for backward compatibility but do not render anything.
+\setbeamertemplate{sidebar left}{}
 
 % Footline template reserves exactly \hsg@footerheight of vertical space at
 % the bottom of each frame, guaranteeing content never reaches the chrome.
@@ -350,7 +318,7 @@
     % HSG logo WITH institute subtitle — top-left, respecting side margin.
     \node[anchor=north west, inner sep=0pt]
       at ([xshift=\hsg@sidemargin, yshift=-0.55cm]current page.north west)
-      {\includegraphics[height=1.40cm]{hsg-logo-cover.png}};
+      {\includegraphics[height=0.90cm]{hsg-logo-en.pdf}};
 
     % LAYER 1 (background): HSG green badge frame — drawn FIRST so the
     % photo overlays it and only a thin L-shaped strip of the badge
@@ -378,40 +346,61 @@
            -- (0, -1.53cm)
            -- (0, -1.48cm) -- cycle;
         \node[anchor=center, inner sep=0pt] at (2.965cm, -3.345cm)
-          {\includegraphics[width=12cm, height=12cm, keepaspectratio, angle=-90]{\@hsgcoverimage}};
+          {\includegraphics[width=12cm, height=12cm, keepaspectratio]{\@hsgcoverimage}};
       \end{scope}
     \fi
 
-    % Title box. Left margin 1.0 cm (matches content slides' left margin).
-    % Font sizes follow the HSG PowerPoint master, scaled from the 25.4 cm
-    % PPT canvas to Beamer's 16 cm canvas (scale factor 16/25.4 = 0.630):
-    %   Master title = Gill Sans Nova Light 40 pt  ->  25 pt in Beamer
-    %   Master body  = Gill Sans Nova Body    12 pt  ->  7.5 pt in Beamer
-    % Title (at \hsg@sidemargin so it's aligned with content slides).
+    % Title / subtitle / author / institute.
+    %
+    % Each block sits at a FIXED Y position so the vertical rhythm is
+    % constant regardless of content length:
+    %
+    %   y = 3.00 cm   Title       (max width 9 cm, max height 1.6 cm)
+    %   y = 4.80 cm   Subtitle    (max width 9 cm, max height 0.8 cm)
+    %   y = 6.10 cm   Author      (max width 9 cm, max height 0.6 cm)
+    %   y = 6.80 cm   Institute   (max width 9 cm, max height 1.5 cm)
+    %   y = 8.30 cm   Tagline     (always 6 pt)
+    %
+    % Each block is wrapped in \adjustbox{max totalsize={W}{H}, scale<=1}
+    % so long content auto-shrinks to fit the box, but short content
+    % renders at its natural design size. This guarantees the cover
+    % layout never breaks regardless of how long the title or author
+    % string is.
+
+    % Title — single line, auto-shrinks proportionally to fit 9 cm wide.
+    % \adjustbox{max width=9cm} measures the natural width; if the title
+    % is shorter than 9cm it renders at the design size (22 pt), if
+    % longer it shrinks proportionally so the cover layout never breaks.
     \node[anchor=north west, inner sep=0pt, outer sep=0pt]
       at ([xshift=\hsg@sidemargin, yshift=-3.00cm]current page.north west)
-      {\begin{minipage}[t]{9.0cm}
-        \setlength{\parindent}{0pt}\setlength{\parskip}{0pt}\raggedright
-        \leavevmode{\fontsize{22}{26}\selectfont\color{HSGtext}\inserttitle\par}%
-        \ifx\insertsubtitle\@empty\else
-          \vspace{0.20em}
-          \leavevmode{\fontsize{14}{17}\selectfont\color{HSGtext}\insertsubtitle\par}%
-        \fi
-       \end{minipage}};
+      {\adjustbox{max width=9.0cm}{%
+        \fontsize{22}{26}\selectfont\color{HSGtext}\inserttitle}};
 
-    % Authors / institute.
-    \node[anchor=north west, inner sep=0pt, outer sep=0pt]
-      at ([xshift=\hsg@sidemargin, yshift=-6.10cm]current page.north west)
-      {\begin{minipage}[t]{9.0cm}
-        \setlength{\parindent}{0pt}\setlength{\parskip}{0pt}\raggedright
-        \ifx\insertauthor\@empty\else
-          \leavevmode{\fontsize{9}{11}\selectfont\color{HSGtext}\insertauthor\par}%
-          \vspace{0.25em}%
-        \fi
-        \ifx\insertinstitute\@empty\else
-          \leavevmode{\fontsize{8}{10}\selectfont\color{HSGtext}\insertinstitute\par}%
-        \fi
-       \end{minipage}};
+    \ifx\insertsubtitle\@empty\else
+      \node[anchor=north west, inner sep=0pt, outer sep=0pt]
+        at ([xshift=\hsg@sidemargin, yshift=-4.20cm]current page.north west)
+        {\adjustbox{max width=9.0cm}{%
+          \fontsize{14}{17}\selectfont\color{HSGtext}\insertsubtitle}};
+    \fi
+
+    \ifx\insertauthor\@empty\else
+      \node[anchor=north west, inner sep=0pt, outer sep=0pt]
+        at ([xshift=\hsg@sidemargin, yshift=-6.10cm]current page.north west)
+        {\adjustbox{max width=9.0cm}{%
+          \fontsize{9}{11}\selectfont\color{HSGtext}\insertauthor}};
+    \fi
+
+    % Institute often has 2-3 lines so wrap inside a 9 cm minipage and
+    % auto-shrink the WHOLE block if its total height exceeds 1.5 cm.
+    \ifx\insertinstitute\@empty\else
+      \node[anchor=north west, inner sep=0pt, outer sep=0pt]
+        at ([xshift=\hsg@sidemargin, yshift=-6.80cm]current page.north west)
+        {\adjustbox{max totalsize={9.0cm}{1.5cm}}{%
+          \begin{minipage}[t]{9.0cm}
+            \setlength{\parindent}{0pt}\setlength{\parskip}{0pt}\raggedright
+            \leavevmode{\fontsize{8}{10}\selectfont\color{HSGtext}\insertinstitute\par}%
+          \end{minipage}}};
+    \fi
 
     % "From insight to impact" — bottom-left, small (6 pt).
     \node[anchor=north west, inner sep=0pt,
