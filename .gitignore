@@ -1,0 +1,19 @@
+# LaTeX build artefacts
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.bbl
+*.blg
+*.run.xml
+
+# Editor swap files
+*.swp
+*.bak
+.vscode/
+.DS_Store
