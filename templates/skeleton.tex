@@ -1,0 +1,57 @@
+% =====================================================================
+% HSG Beamer template — minimal compileable starter.
+%
+% Replace every TODO and compile three times:
+%     pdflatex deck.tex
+%     pdflatex deck.tex
+%     pdflatex deck.tex
+%
+% For the official Gill-Sans-Nova look (vendored Gillius ADF), use
+% xelatex or lualatex instead — the theme picks up fonts/ automatically.
+% =====================================================================
+\documentclass[aspectratio=169]{beamer}
+\usetheme{HSG}
+
+\title{TODO Title}
+\subtitle{TODO Subtitle}              % delete the line if not needed
+\author{TODO Author Name}
+\institute{TODO Institute\\University of St.\,Gallen}
+\date{}
+\coursefooter{TODO Course or project}
+\coverimage{TODO-cover-photo.jpg}     % omit if no hero photo
+
+% Contact info shown inside the closing translucent box.
+\hsgclosingcontact
+  {TODO Author Name}
+  {TODO email@example.edu}
+
+% Deck outline (drives the left-margin progress bar). 4-6 sections.
+\hsgsetsections{TODO, Section, Names, Here}
+
+\begin{document}
+
+% --- Cover ----------------------------------------------------------
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% --- Agenda (mirror \hsgsetsections above) -------------------------
+\hsgagenda{
+  \item TODO Section 1
+  \item TODO Section 2
+  \item TODO Section 3
+  \item TODO Section 4
+}
+
+% --- Section 1 ------------------------------------------------------
+\hsgsection{TODO Section 1}
+
+\begin{frame}
+  \frametitle{TODO Slide title}
+  TODO body content.
+\end{frame}
+
+% --- Closing --------------------------------------------------------
+\hsgclosing
+
+\end{document}

@@ -9,6 +9,26 @@ helper below already covers the layout.
 
 ---
 
+## 0. Quickstart for agents (read this first)
+
+```
+1. Read templates/skeleton.tex          ← canonical starter
+2. Read helpers.json                     ← machine-readable API manifest
+3. Read templates/demo-using-the-template.tex  ← one example of every helper
+4. Bootstrap a new deck:
+     bin/new-deck.sh ~/path/to/new-deck
+     cd ~/path/to/new-deck && pdflatex deck.tex && pdflatex deck.tex && pdflatex deck.tex
+5. For Overleaf: see OVERLEAF.md
+```
+
+The fastest path is `bin/new-deck.sh` because it copies every required
+asset (theme, logos, photos, fonts/, latexmkrc) into the target folder
+in one shot. After that, fill in the `TODO` markers in `deck.tex`.
+
+If something breaks, jump to *Section 6 — Common errors*.
+
+---
+
 ## 1. Folder contract
 
 ```

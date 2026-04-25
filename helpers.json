@@ -1,0 +1,50 @@
+{
+  "version": "0.2.0",
+  "compilers_supported": ["pdflatex", "xelatex", "lualatex"],
+  "default_compiler": "pdflatex",
+  "preamble_setters": [
+    {"name": "\\title",            "args": ["text"], "purpose": "Cover-slide title."},
+    {"name": "\\subtitle",         "args": ["text"], "purpose": "Cover-slide subtitle, optional."},
+    {"name": "\\author",           "args": ["text"], "purpose": "Cover-slide author line."},
+    {"name": "\\institute",        "args": ["text"], "purpose": "Cover-slide institute (newline-separated)."},
+    {"name": "\\coursefooter",     "args": ["text"], "purpose": "Course/project name shown in the footer."},
+    {"name": "\\coverimage",       "args": ["path"], "purpose": "Hero photo on the cover, clipped+badge-framed."},
+    {"name": "\\hsgsetsections",   "args": ["comma-separated names"], "purpose": "Declare deck outline; drives the sidebar progress."},
+    {"name": "\\hsgclosingcontact","args": ["name", "email"], "purpose": "Contact lines inside the closing translucent box."},
+    {"name": "\\hsgclosingtext",   "args": ["text"], "purpose": "Override default 'Questions?' headline on closing slide."},
+    {"name": "\\hsgclosingphoto",  "args": ["path"], "purpose": "Override default closing-slide background photo."}
+  ],
+  "frame_helpers": [
+    {"name": "\\titlepage",         "args": [],                          "layout": "Titel Slide 3",            "purpose": "Cover. Use inside [plain] frame: \\begin{frame}[plain]\\titlepage\\end{frame}."},
+    {"name": "\\hsgagenda",         "args": ["\\item ... \\item ..."],   "layout": "Agenda",                   "purpose": "Numbered agenda + concrete-texture column on the right."},
+    {"name": "\\hsgsection",        "args": ["[ignored]", "name"],       "layout": "—",                        "purpose": "Silent: advances sidebar counter; renders no frame."},
+    {"name": "\\hsgstatement",      "args": ["text"],                    "layout": "Statement 1",              "purpose": "One bold green sentence at 36 pt."},
+    {"name": "\\hsgquote",          "args": ["quote", "attribution"],    "layout": "Zitat schwarze Schrift",   "purpose": "Quote on white background."},
+    {"name": "\\hsgquoteinverted",  "args": ["quote", "attribution"],    "layout": "Zitat weisse Schrift",     "purpose": "Quote on green background."},
+    {"name": "\\hsgfullimage",      "args": ["path"],                    "layout": "Bild Vollfläche",          "purpose": "Full-bleed image, small HSG logo overlay."},
+    {"name": "\\hsgclosing",        "args": [],                          "layout": "31_Contact",               "purpose": "Closing slide: full-bleed campus photo + contact box. Uses preamble setters."}
+  ],
+  "inline_helpers": [
+    {"name": "\\hsgemph", "args": ["text"], "purpose": "Inline HSG-green bold emphasis."},
+    {"name": "\\framesubtitle", "args": ["text"], "purpose": "Tiny grey breadcrumb above the frametitle."}
+  ],
+  "rules_to_follow": [
+    "Three pdflatex passes. remember-picture overlays settle on pass 2-3.",
+    "HSG green is reserved for the sidebar, page badge, and \\hsgemph. Never use it for frame titles, framesubtitles, or column headers.",
+    "Copy ALL hsg-* assets and the fonts/ directory next to your .tex file.",
+    "Sidebar wants 4-6 sections in \\hsgsetsections; the same items should appear in \\hsgagenda.",
+    "Cover and closing layouts are hand-tuned. Do not redefine their templates."
+  ],
+  "assets_required": {
+    "logos": ["hsg-logo-en.pdf", "hsg-logo-en.png", "hsg-logo-de.pdf", "hsg-logo-de.png", "hsg-logo-cover.png"],
+    "decoration": ["hsg-badge.png"],
+    "agenda": ["hsg-agenda-texture-portrait.jpg"],
+    "closing": ["hsg-closing-campus.jpg", "hsg-closing-logo-band.png"],
+    "fonts": ["fonts/GilliusADF-Regular.otf", "fonts/GilliusADF-Italic.otf", "fonts/GilliusADF-Bold.otf", "fonts/GilliusADF-BoldItalic.otf"]
+  },
+  "starter_files": {
+    "minimal": "templates/skeleton.tex",
+    "exhaustive_example": "templates/demo-using-the-template.tex",
+    "deck_at_repo_root":  "example.tex"
+  }
+}
