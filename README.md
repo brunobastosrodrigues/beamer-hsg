@@ -1,94 +1,93 @@
 # Beamer HSG Template
 
-A Beamer theme that replicates the University of St. Gallen PowerPoint
-template, so the same visual identity can be used from LaTeX sources.
+A Beamer theme that replicates the University of St. Gallen
+PowerPoint template, so the same visual identity can be used from
+LaTeX sources. Vendored Gillius ADF font for an authentic
+Gill-Sans-Nova look without system installs.
 
-## Contents
-
-```
-beamer-hsg-template/
-├── beamerthemeHSG.sty     the Beamer theme
-├── hsg-logo.png           the HSG logo, extracted from the official .pptx
-├── hsg-badge.png          angular shape asset (reserved for future use)
-├── hsg-tagline.png        "From insight to impact" raster (reserved)
-├── example.tex            sample presentation
-├── example.pdf            pre-compiled preview
-└── README.md              this file
-```
-
-## Usage
-
-Put the folder next to your `.tex` file, or copy the `.sty` and the
-`hsg-logo.png` into the same directory as your document. Then:
-
-```latex
-\documentclass[aspectratio=169]{beamer}
-\usetheme{HSG}
-
-\title{Computer Networks}
-\subtitle{Network Security}
-\author{Bruno Rodrigues}
-\institute{University of St.\,Gallen\\Bachelor in Computer Science\\Computer Networks (2,906)}
-\coursefooter{Computer Networks}   % appears before "School of Computer Science" in the footer
-
-\begin{document}
-
-\begin{frame}[plain]
-  \titlepage
-\end{frame}
-
-\begin{frame}
-  \frametitle{Lecture goals}
-  \framesubtitle{Hello World}    % small green tag above the title
-  \begin{itemize}
-    \item To \hsgemph{provide} a general overview of encryption mechanisms.
-    \item To \hsgemph{overview} symmetric and asymmetric crypto.
-  \end{itemize}
-\end{frame}
-
-\end{document}
-```
-
-Compile twice to let `remember picture` settle:
+## Quick start
 
 ```bash
-pdflatex example.tex
-pdflatex example.tex
+git clone https://github.com/brunobastosrodrigues/beamer-hsg.git
+cd beamer-hsg
+bin/new-deck.sh ~/my-talk
+cd ~/my-talk
+# edit deck.tex (replace TODO markers)
+pdflatex deck.tex && pdflatex deck.tex && pdflatex deck.tex
 ```
 
-## What the theme provides
+For the Gill-Sans-Nova look, swap `pdflatex` for `xelatex` (or set
+`$pdf_mode = 5` in `latexmkrc` and run `latexmk`).
 
-- **Title page** with the HSG logo top-left, a green triangular wedge
-  bottom-right, and the "From insight to impact." tagline.
-- **Content pages** with a small green topic tag above the title
-  (`\framesubtitle{...}`), black bullets, and a footer containing the
-  course name, "School of Computer Science", and the university name.
-- **Angular slide-number badge** in HSG green at the bottom-right.
-- `\hsgemph{...}` command for inline green-bold keyword emphasis.
-- HSG colour palette defined as LaTeX colours: `HSGgreen`, `HSGgreenDark`,
-  `HSGbluegrey`, `HSGsand`, `HSGcoral`, `HSGyellow`.
+## Folder
+
+```
+beamer-hsg/
+├── beamerthemeHSG.sty                      the theme
+├── latexmkrc                               default compile config
+├── helpers.json                            machine-readable API manifest
+├── AGENTS.md                               agent reference + decision table
+├── OVERLEAF.md                             how to upload to Overleaf
+├── README.md                               this file
+├── example.tex / example-v1.pdf            ready-to-render demo
+├── bin/new-deck.sh                         bootstrap a new deck
+├── templates/
+│   ├── skeleton.tex                        minimal compileable starter
+│   ├── demo-using-the-template.tex         20-page tutorial
+│   └── demo-using-the-template-v1.pdf      pre-compiled tutorial
+├── hsg-logo-en.{pdf,png}                   "University of St. Gallen"
+├── hsg-logo-de.{pdf,png}                   "Universität St. Gallen"
+├── hsg-logo-cover.png                      logo + institute subtitle
+├── hsg-badge.png                           green frame around cover photo
+├── hsg-agenda-texture-portrait.jpg         concrete texture for agenda
+├── hsg-closing-campus.jpg                  campus photo for closing
+├── hsg-closing-logo-band.png               accreditation strip + tagline
+└── fonts/
+    ├── GilliusADF-{Regular,Italic,Bold,BoldItalic}.otf
+    └── LICENSE-Gillius-ADF.txt             GPL-2 + font exception
+```
+
+## Helpers (one-line summary)
+
+| Macro | Purpose |
+|---|---|
+| `\titlepage` | Cover slide. Set `\coverimage{path}` in preamble. |
+| `\hsgagenda{ \item ... }` | Numbered agenda + concrete-texture column. |
+| `\hsgsetsections{a, b, c}` | Declare deck outline (drives sidebar). |
+| `\hsgsection{Name}` | Silent: advances sidebar progress. |
+| `\hsgstatement{text}` | One bold green sentence at 36 pt. |
+| `\hsgquote{q}{author}` | Quote on white. |
+| `\hsgquoteinverted{q}{author}` | Quote on green. |
+| `\hsgfullimage{path}` | Full-bleed image. |
+| `\hsgclosing` | Closing *Questions?* slide with campus photo. |
+| `\hsgemph{word}` | Inline HSG-green bold accent. |
+
+For full details and the layout-decision table, see **AGENTS.md**.
+
+## Overleaf
+
+See **OVERLEAF.md**. TL;DR: download the GitHub release ZIP →
+*New Project → Upload Project* → set compiler to XeLaTeX → compile.
 
 ## Fonts
 
-The HSG corporate font is Gill Sans Nova, which is proprietary and not
-typically installed on Linux systems. The theme falls back to **Lato Light**,
-a widely available humanist sans-serif that is the closest open-source
-match. If Gill Sans Nova is available on your system, you can swap the
-font declaration in `beamerthemeHSG.sty`:
-
-```latex
-% Replace
-\RequirePackage[default,light]{lato}
-% with
-\RequirePackage{fontspec}       % requires lualatex or xelatex
-\setsansfont{Gill Sans Nova}
-```
-
-and compile with `lualatex` or `xelatex` instead of `pdflatex`.
+`fonts/` ships **Gillius ADF** (Arkandis Digital Foundry, GPL-2+FE),
+the open-source clone of Gill Sans Nova. xelatex/lualatex pick it up
+automatically via `fontspec`. pdflatex falls back to Lato (the
+closest humanist sans available in TeX Live).
 
 ## Assets
 
-The HSG logo and tagline raster in this folder come from the official
-`HSG-slide-template.pptx` published by the University of St. Gallen. If
-the University updates its corporate design, drop in a replacement
-`hsg-logo.png` and recompile.
+Logos are vector PDFs derived from the official Wikimedia Commons SVG
+(public domain). Photos and the accreditation strip are extracted from
+the `HSG-slide-template.pptx` master. The closing-slide campus photo
+shows the HSG library courtyard.
+
+## Licence
+
+The theme code (`beamerthemeHSG.sty`, scripts, templates, manifests)
+is unlicensed for now — treat as "all rights reserved" until a licence
+is set. The vendored Gillius ADF fonts retain their **GPL-2+FE**
+licence (see `fonts/LICENSE-Gillius-ADF.txt`); the font exception
+allows embedding in a compiled PDF without infecting the document with
+GPL.
