@@ -223,9 +223,20 @@
         \fill[HSGgreen]
           (0.0000, 0.2090) -- (1.0000, 0.0000) --
           (1.0000, 1.0000) -- (0.1449, 0.9467) -- cycle;
-        % Centre the page number at the polygon's visual centroid.
-        \node[white, inner sep=0pt, font=\fontsize{5}{6}\selectfont\bfseries]
-          at (0.536, 0.539) {\insertframenumber};
+        % Centre the page number at the polygon's optical centre.
+        % The badge is asymmetric (wider on the right, narrower on the
+        % top-left); the number sits at (0.575, 0.555). Font auto-shrinks
+        % for 2-/3-digit numbers so the whole digit string fits between
+        % the slanted edges.
+        \node[white, inner sep=0pt, anchor=center, text=white]
+          at (0.575, 0.555)
+          {\ifnum\insertframenumber<10\relax
+             {\fontsize{5}{6}\selectfont\bfseries\insertframenumber}%
+           \else\ifnum\insertframenumber<100\relax
+             {\fontsize{4}{5}\selectfont\bfseries\insertframenumber}%
+           \else
+             {\fontsize{3.2}{4}\selectfont\bfseries\insertframenumber}%
+           \fi\fi};
       }};
   \end{tikzpicture}%
 }
