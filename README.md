@@ -41,7 +41,7 @@ beamer-hsg/
 ├── fonts/
 │   ├── GilliusADF-{Regular,Italic,Bold,BoldItalic}.otf
 │   └── LICENSE-Gillius-ADF.txt         GPL-2 + font exception
-├── templates/
+├── example/
 │   ├── skeleton.tex                    minimal compileable starter
 │   ├── demo-using-the-template.tex     20-page tutorial
 │   └── demo-using-the-template-v1.pdf  pre-compiled tutorial

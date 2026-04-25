@@ -12,7 +12,7 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.17}
 
-% Theme + assets live one directory up (this file is in templates/).
+% Theme + assets live one directory up (this file is in example/).
 \makeatletter\def\input@path{{../}}\makeatother
 \usetheme{HSG}
 
@@ -495,7 +495,7 @@ pdflatex deck.tex && pdflatex deck.tex && pdflatex deck.tex
   Three files the agent reads first:
   \begin{itemize}
     \setlength\itemsep{0.2em}
-    \item \texttt{templates/skeleton.tex} -- canonical starter
+    \item \texttt{example/skeleton.tex} -- canonical starter
     \item \texttt{helpers.json} -- machine-readable API manifest
     \item \texttt{AGENTS.md} -- decision table + golden rules
   \end{itemize}
@@ -542,7 +542,7 @@ pdflatex deck.tex && pdflatex deck.tex && pdflatex deck.tex
                   (vendored Gillius ADF picked up automatically).
             \item \textbf{pdfLaTeX} for the Lato fallback.
           \end{itemize}
-    \item Open \texttt{templates/skeleton.tex}, set as
+    \item Open \texttt{example/skeleton.tex}, set as
           \emph{Main document}, replace TODOs, recompile.
   \end{enumerate}
 
@@ -604,7 +604,7 @@ pdflatex deck.tex && pdflatex deck.tex && pdflatex deck.tex
     \item \texttt{AGENTS.md} -- exhaustive agent reference + decision
           table from "what kind of slide do you want?" to "which helper
           to call".
-    \item \texttt{templates/skeleton.tex} -- minimal compileable
+    \item \texttt{example/skeleton.tex} -- minimal compileable
           starter for any new deck.
     \item \texttt{examples/example.tex} -- 9-slide showcase with every
           helper used at least once.

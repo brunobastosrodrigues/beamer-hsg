@@ -44,8 +44,8 @@
   },
   "asset_resolution_paths_in_theme": ["./assets/", "./", "../assets/"],
   "starter_files": {
-    "minimal": "templates/skeleton.tex",
-    "exhaustive_example": "templates/demo-using-the-template.tex",
+    "minimal": "example/skeleton.tex",
+    "exhaustive_example": "example/demo-using-the-template.tex",
     "deck_showcase":      "examples/example.tex"
   }
 }

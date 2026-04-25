@@ -12,9 +12,9 @@ helper below already covers the layout.
 ## 0. Quickstart for agents (read this first)
 
 ```
-1. Read templates/skeleton.tex          ← canonical starter
+1. Read example/skeleton.tex          ← canonical starter
 2. Read helpers.json                     ← machine-readable API manifest
-3. Read templates/demo-using-the-template.tex  ← one example of every helper
+3. Read example/demo-using-the-template.tex  ← one example of every helper
 4. Bootstrap a new deck:
      bin/new-deck.sh ~/path/to/new-deck
      cd ~/path/to/new-deck && pdflatex deck.tex && pdflatex deck.tex && pdflatex deck.tex
@@ -46,7 +46,7 @@ beamer-hsg/
 │   ├── hsg-closing-campus.jpg          campus photo for closing.
 │   └── hsg-closing-logo-band.png       accreditation strip + tagline.
 ├── fonts/                              vendored Gillius ADF OTFs + licence.
-├── templates/                          starter and tutorial decks.
+├── example/                          starter and tutorial decks.
 └── examples/                           showcase deck + pre-compiled PDFs.
 ```
 

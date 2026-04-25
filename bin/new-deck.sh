@@ -21,7 +21,7 @@ cp "$HERE/assets/"*.pdf "$HERE/assets/"*.png "$HERE/assets/"*.jpg "$TARGET/asset
 cp -r "$HERE/fonts"                    "$TARGET/"
 
 # Starter
-cp "$HERE/templates/skeleton.tex" "$TARGET/deck.tex"
+cp "$HERE/example/skeleton.tex" "$TARGET/deck.tex"
 
 cat <<EOF
 

@@ -13,7 +13,7 @@ button. Instead, upload a release ZIP. Two minutes, two routes.
    - **pdfLaTeX** for the Lato fallback (always works).
    - **XeLaTeX** for the official Gill-Sans-Nova look (the vendored
      `fonts/GilliusADF-*.otf` files are picked up automatically).
-4. Open `templates/skeleton.tex` (or copy it to `main.tex` and set it as
+4. Open `example/skeleton.tex` (or copy it to `main.tex` and set it as
    *Main document* in Project Settings → Main document).
 5. Replace every `TODO` marker, click *Recompile*. The first compile
    takes ~30 s while Overleaf indexes the fonts; later compiles are
@@ -40,8 +40,8 @@ latexmkrc                   default compile config
 hsg-*.pdf, hsg-*.png, *.jpg every asset (logos, photos, accreditation)
 fonts/GilliusADF-*.otf      vendored open Gill-Sans-Nova substitute
 fonts/LICENSE-Gillius-ADF.txt  GPL-2+FE licence statement
-templates/skeleton.tex      minimal compileable starter
-templates/demo-using-the-template.tex  20-page tutorial deck
+example/skeleton.tex      minimal compileable starter
+example/demo-using-the-template.tex  20-page tutorial deck
 example.tex, example-v1.pdf the showcase deck
 helpers.json                machine-readable API manifest
 AGENTS.md                   reference for coding agents
