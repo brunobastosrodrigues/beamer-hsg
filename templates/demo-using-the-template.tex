@@ -1,0 +1,392 @@
+% A tutorial deck — how to use the HSG Beamer template.
+% Compile from the repo root with:
+%   pdflatex templates/demo-using-the-template.tex   (3 passes)
+\documentclass[aspectratio=169]{beamer}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+
+% Tell the theme where the .sty + assets live (one directory up).
+\makeatletter
+  \def\input@path{{../}}
+\makeatother
+\graphicspath{{../}}
+\usetheme{HSG}
+
+\title{Using the HSG Beamer template}
+\subtitle{A 10-minute tour with examples}
+\author{HSG Beamer Theme Team}
+\institute{University of St.\,Gallen}
+\date{}
+\coursefooter{Template tutorial}
+\coverimage{../hsg-closing-campus.jpg}
+
+\hsgclosingcontact
+  {Template Contributors}
+  {beamer-hsg@example.edu}
+
+\hsgsetsections{Setup, Helpers, Sidebar, Tips}
+
+% ---- listing style for showing LaTeX snippets on slides ------------------
+\definecolor{HSGlst}{HTML}{F4F4F0}
+\lstdefinelanguage{LaTeXmini}{
+  morekeywords={titlepage,frametitle,framesubtitle,coverimage,hsgemph,
+                hsgagenda,hsgsection,hsgsetsections,hsgquote,hsgquoteinverted,
+                hsgstatement,hsgfullimage,hsgclosing,hsgclosingcontact,
+                hsgclosingtext,hsgclosingphoto,coursefooter,documentclass,
+                usetheme,title,subtitle,author,institute,date,begin,end,
+                frame,item,includegraphics,column,columns,textbf,color},
+  sensitive=true,
+  morestring=[b]{},
+  morecomment=[l]\%,
+}
+\lstset{
+  language=LaTeXmini,
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{HSGgreen},
+  commentstyle=\color{HSGmuted}\itshape,
+  backgroundcolor=\color{HSGlst},
+  frame=single,
+  rulecolor=\color{HSGmuted!40},
+  framerule=0.4pt,
+  framesep=4pt,
+  xleftmargin=4pt,
+  xrightmargin=4pt,
+  breaklines=true,
+  showstringspaces=false,
+  aboveskip=0.4em,
+  belowskip=0.4em,
+}
+
+\begin{document}
+
+% =========================================================================
+% 1. TITLE
+% =========================================================================
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% =========================================================================
+% 2. AGENDA
+% =========================================================================
+\hsgagenda{
+  \item Setup: assets, compiler, three commands
+  \item Helpers: every macro with one example
+  \item Sidebar: declaring the deck outline
+  \item Tips: traps, golden rules, where to look
+}
+
+% =========================================================================
+% SECTION 1: Setup
+% =========================================================================
+\hsgsection{Setup}
+
+\begin{frame}[t,fragile]
+  \frametitle{Three commands to a finished deck}
+
+  \begin{enumerate}
+    \setlength\itemsep{0.5em}
+    \item Copy \texttt{beamerthemeHSG.sty} and every \texttt{hsg-*}
+          asset into your working directory.
+    \item Write your \texttt{deck.tex} starting from the skeleton in
+          \texttt{templates/skeleton.tex}.
+    \item Compile three times:
+  \end{enumerate}
+
+  \vspace{0.6em}
+  \begin{lstlisting}
+pdflatex deck.tex
+pdflatex deck.tex
+pdflatex deck.tex
+  \end{lstlisting}
+
+  \vspace{0.6em}
+  Three passes are needed because TikZ \texttt{remember picture}
+  overlays settle on the second-and-third pass.
+\end{frame}
+
+\begin{frame}[t,fragile]
+  \frametitle{Preamble: what to set once, in this order}
+
+  \begin{lstlisting}
+\documentclass[aspectratio=169]{beamer}
+\usetheme{HSG}
+
+\title{My talk}
+\subtitle{Optional second line}
+\author{Prof. Dr. Author Name}
+\institute{Your Institute\\University of St.\,Gallen}
+\date{}
+\coursefooter{Course or project}
+\coverimage{cover-photo.jpg}     % optional hero image
+
+\hsgclosingcontact
+  {Prof. Dr. Author Name}
+  {author@unisg.ch}
+
+\hsgsetsections{Intro, Methods, Results, Outlook}
+  \end{lstlisting}
+\end{frame}
+
+% =========================================================================
+% SECTION 2: Helpers
+% =========================================================================
+\hsgsection{Helpers}
+
+\begin{frame}[t]
+  \frametitle{The cover slide}
+
+  Just one line in your document body:
+
+  \fcolorbox{HSGmuted!40}{HSGsand!10}{\parbox{0.95\linewidth}{\ttfamily\scriptsize
+    \textbackslash begin\{frame\}[plain]\textbackslash titlepage\textbackslash end\{frame\}}}
+
+  \vspace{0.6em}
+  The cover photo comes from \texttt{\textbackslash coverimage\{...\}}
+  in the preamble. The HSG green badge frame is layered behind it.
+
+  \vspace{0.6em}
+  \fcolorbox{HSGmuted!40}{white}{%
+    \parbox{0.96\linewidth}{\scriptsize
+      \textbf{Tip:} the cover photo right edge clips with a slanted
+      polygon. Pick a photo whose subject sits in the LEFT third so
+      the clip does not crop it.}}
+\end{frame}
+
+\begin{frame}[t,fragile]
+  \frametitle{Agenda --- numbered list with concrete-texture column}
+
+  \begin{lstlisting}
+\hsgagenda{
+  \item Introduction
+  \item Methodology
+  \item Results
+  \item Discussion
+  \item Conclusion
+}
+  \end{lstlisting}
+
+  \vspace{0.4em}
+  Use 4--6 items, one or two words each. The same items should appear in
+  \texttt{\textbackslash hsgsetsections} so the sidebar progress matches.
+\end{frame}
+
+\begin{frame}[t]
+  \frametitle{Section advance \emph{(silent, no slide rendered)}}
+
+  \fcolorbox{HSGmuted!40}{HSGsand!10}{\parbox{0.95\linewidth}{\ttfamily\scriptsize
+    \textbackslash hsgsection\{Methods\}\quad\textcolor{HSGmuted}{\% advances the sidebar; renders no frame.}\\
+    \textbackslash begin\{frame\}\\
+    \quad\textbackslash frametitle\{Sub-topic\}\\
+    \quad ...\\
+    \textbackslash end\{frame\}}}
+
+  \vspace{0.6em}
+  Call \texttt{\textbackslash hsgsection\{Name\}} right before the first
+  content slide of each section. The vertical green progress bar on the
+  left fills proportionally.
+\end{frame}
+
+\begin{frame}[t]
+  \frametitle{Standard content slide}
+
+  \fcolorbox{HSGmuted!40}{HSGsand!10}{\parbox{0.95\linewidth}{\ttfamily\scriptsize
+    \textbackslash begin\{frame\}\\
+    \quad\textbackslash frametitle\{Results\}\\
+    \quad\textbackslash framesubtitle\{Detection performance\}\\
+    \quad\textbackslash begin\{itemize\}\\
+    \quad\quad\textbackslash item \textbackslash hsgemph\{AUC = 0.89\} on the held-out split\\
+    \quad\quad\textbackslash item False-positive rate held at 2\,\%\\
+    \quad\textbackslash end\{itemize\}\\
+    \textbackslash end\{frame\}}}
+
+  \vspace{0.4em}
+  \texttt{\textbackslash framesubtitle} renders as a tiny grey
+  breadcrumb above the title. Keep it under 6 words.
+\end{frame}
+
+\begin{frame}[t]
+  \frametitle{Two-column comparison --- native Beamer \texttt{columns}}
+
+  \fcolorbox{HSGmuted!40}{HSGsand!10}{\parbox{0.95\linewidth}{\ttfamily\scriptsize
+    \textbackslash begin\{columns\}[T]\\
+    \quad\textbackslash column\{0.5\textbackslash textwidth\}\\
+    \quad\quad\textbackslash textbf\{Symmetric\}\\
+    \quad\quad\textbackslash begin\{itemize\}\textbackslash item Shared key\textbackslash item Fast\textbackslash end\{itemize\}\\
+    \quad\textbackslash column\{0.5\textbackslash textwidth\}\\
+    \quad\quad\textbackslash textbf\{Asymmetric\}\\
+    \quad\quad\textbackslash begin\{itemize\}\textbackslash item Key pair\textbackslash item Slow\textbackslash end\{itemize\}\\
+    \textbackslash end\{columns\}}}
+
+  \vspace{0.4em}
+  No HSG-specific helper needed; Beamer's own \texttt{columns}
+  environment is the right tool.
+\end{frame}
+
+\begin{frame}[t,fragile]
+  \frametitle{Statement --- one big bold sentence}
+
+  \begin{lstlisting}
+\hsgstatement{Security is a process, not a product.}
+  \end{lstlisting}
+
+  \vspace{0.4em}
+  Renders at 36 pt HSG green bold on its own slide, with the standard
+  footer chrome (logo + page number badge). Use sparingly --- the
+  whole deck should not feel like a billboard.
+\end{frame}
+
+\hsgstatement{Security is a process, not a product.}
+
+\begin{frame}[t,fragile]
+  \frametitle{Quote slides --- two flavours}
+
+  \textbf{Black-on-white:}
+  \begin{lstlisting}
+\hsgquote{The cloud is just somebody else's computer.}{Anonymous}
+  \end{lstlisting}
+
+  \vspace{0.5em}
+  \textbf{White-on-green:}
+  \begin{lstlisting}
+\hsgquoteinverted{The best way to predict the future is to invent it.}{Alan Kay}
+  \end{lstlisting}
+\end{frame}
+
+\hsgquote
+  {The cloud is just somebody else's computer.}
+  {Anonymous}
+
+\begin{frame}[t,fragile]
+  \frametitle{Full-bleed image}
+
+  \begin{lstlisting}
+\hsgfullimage{path/to/photo.jpg}
+  \end{lstlisting}
+
+  \vspace{0.3em}
+  Image fills the whole 16$\times$9 canvas. Pre-crop to 16:9 to avoid
+  axis-aligned letterboxing. A small HSG logo overlays the bottom-left.
+\end{frame}
+
+% =========================================================================
+% SECTION 3: Sidebar
+% =========================================================================
+\hsgsection{Sidebar}
+
+\begin{frame}[t,fragile]
+  \frametitle{Declaring the deck outline}
+
+  \begin{lstlisting}
+% In the preamble:
+\hsgsetsections{Intro, Methods, Results, Outlook}
+
+% In the document body, one call per section transition:
+\hsgsection{Intro}        % section 1 starts here
+... slides ...
+\hsgsection{Methods}      % section 2 starts here
+... slides ...
+  \end{lstlisting}
+
+  \vspace{0.4em}
+  The narrow vertical bar on the left of every content slide fills
+  green up to the current section. Past sections appear filled, the
+  current section has a small ring marker, future sections are empty.
+\end{frame}
+
+\begin{frame}[t,fragile]
+  \frametitle{Closing slide}
+
+  \begin{lstlisting}
+% In the preamble:
+\hsgclosingcontact
+  {Prof. Dr. Author Name}
+  {author@unisg.ch}
+
+% Last line of the document body:
+\hsgclosing
+  \end{lstlisting}
+
+  \vspace{0.4em}
+  \texttt{\textbackslash hsgclosing} produces the
+  full-bleed-campus-photo \emph{Questions?} slide, with the translucent
+  contact box, the HSG logo, the EQUIS/AACSB/AMBA accreditation strip,
+  and the \emph{From insight to impact} tagline. Override the headline
+  with \texttt{\textbackslash hsgclosingtext\{Thank you.\}} or the photo
+  with \texttt{\textbackslash hsgclosingphoto\{...\}}.
+\end{frame}
+
+% =========================================================================
+% SECTION 4: Tips
+% =========================================================================
+\hsgsection{Tips}
+
+\begin{frame}[t,fragile]
+  \frametitle{Golden rules}
+
+  \begin{itemize}
+    \setlength\itemsep{0.55em}
+    \item \hsgemph{Never use HSG green for titles or headings.} It's
+          reserved for the sidebar, the page badge, and inline
+          \texttt{\textbackslash hsgemph\{...\}}.
+    \item \hsgemph{Three passes} of \texttt{pdflatex}. Two is not
+          enough; remember-picture overlays drift on pass two.
+    \item \hsgemph{Copy ALL assets} listed in the theme header. A
+          missing \texttt{hsg-closing-logo-band.png} silently breaks
+          the closing slide.
+    \item \hsgemph{Keep slides spare.} If you find yourself shrinking
+          to fit, split the slide instead.
+    \item \hsgemph{Cover and closing} are hand-tuned. Do not redefine
+          their templates.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[t,fragile]
+  \frametitle{Where to look when something breaks}
+
+  \begin{tabular}{@{}p{4.4cm}p{8.6cm}@{}}
+    \toprule
+    \textbf{Symptom} & \textbf{Where to look first} \\
+    \midrule
+    Title slide chrome misplaced &
+      Compile two more times. Remember-picture needs three passes. \\[3pt]
+    Logo or photo missing &
+      One of \texttt{hsg-*.png}/\texttt{hsg-*.pdf}/\texttt{hsg-*.jpg}
+      not copied next to the \texttt{.tex}. \\[3pt]
+    Body bullets render green &
+      You added a \texttt{\textbackslash setbeamercolor} in your
+      preamble. Remove it. \\[3pt]
+    Sidebar progress empty &
+      You didn't call \texttt{\textbackslash hsgsetsections} in the
+      preamble. \\[3pt]
+    Page number clipped in badge &
+      Three-digit numbers fit; four-digit do not. Split your deck. \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\begin{frame}[t,fragile]
+  \frametitle{Further reading inside this repo}
+
+  \begin{itemize}
+    \setlength\itemsep{0.4em}
+    \item \texttt{AGENTS.md} --- exhaustive agent-friendly reference.
+    \item \texttt{templates/skeleton.tex} --- minimal compileable
+          starter.
+    \item \texttt{templates/skeleton-content.tex} --- one example of
+          every helper.
+    \item \texttt{example.tex} (this folder's parent) --- the
+          ready-to-render demo deck.
+    \item \texttt{OVERLEAF.md} --- how to upload the template to
+          Overleaf and pick a compiler.
+  \end{itemize}
+
+  \vspace{0.6em}
+  Issues, suggestions, fixes welcome at
+  \hsgemph{github.com/brunobastosrodrigues/beamer-hsg}.
+\end{frame}
+
+\hsgclosing
+
+\end{document}
