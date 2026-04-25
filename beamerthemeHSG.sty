@@ -1,12 +1,15 @@
 % beamerthemeHSG.sty
 % Beamer theme replicating the University of St. Gallen (HSG) PowerPoint template.
-% Assets required in the same folder:
-%   hsg-logo-en.pdf, hsg-logo-de.pdf  (vector logos, official Wikimedia SVGs)
-%   hsg-logo-cover.png                (logo + institute subtitle, raster)
-%   hsg-badge.png                     (green frame around cover photo)
-%   hsg-agenda-texture-portrait.jpg   (concrete texture for agenda)
-%   hsg-closing-campus.jpg            (campus photo for closing slide)
-%   hsg-closing-logo-band.png         (accreditation strip for closing slide)
+% Required image assets — the theme looks for them under ./assets/ first,
+% then ./ (flat layout), then ../assets/. Both the organised repo layout
+% and the flat layout produced by bin/new-deck.sh work.
+%
+%   hsg-logo-en.pdf, hsg-logo-de.pdf  vector logos (official Wikimedia SVGs)
+%   hsg-logo-cover.png                logo + institute subtitle (raster)
+%   hsg-badge.png                     green frame around the cover photo
+%   hsg-agenda-texture-portrait.jpg   concrete texture for the agenda
+%   hsg-closing-campus.jpg            campus photo for the closing slide
+%   hsg-closing-logo-band.png         accreditation strip for the closing
 %
 % Usage in a presentation:
 %   \documentclass[aspectratio=169]{beamer}
@@ -26,6 +29,12 @@
 \RequirePackage{ifthen}
 \RequirePackage{pgffor}
 \usetikzlibrary{positioning,shapes.geometric,calc,decorations.pathmorphing}
+
+% Asset resolution paths. The theme looks for hsg-* image files in this
+% order: ./assets/, ./, then ../assets/ (for examples/ subfolder usage).
+% This way users can keep the repo's organised layout OR copy assets
+% flat next to their .tex (e.g. via bin/new-deck.sh) — both work.
+\graphicspath{{./assets/}{./}{../assets/}}
 
 % ---------------------------------------------------------------------------
 % Colours (from theme1.xml of the HSG PowerPoint template)

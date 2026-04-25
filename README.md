@@ -23,29 +23,37 @@ For the Gill-Sans-Nova look, swap `pdflatex` for `xelatex` (or set
 
 ```
 beamer-hsg/
-├── beamerthemeHSG.sty                      the theme
-├── latexmkrc                               default compile config
-├── helpers.json                            machine-readable API manifest
-├── AGENTS.md                               agent reference + decision table
-├── OVERLEAF.md                             how to upload to Overleaf
-├── README.md                               this file
-├── example.tex / example-v1.pdf            ready-to-render demo
-├── bin/new-deck.sh                         bootstrap a new deck
+├── beamerthemeHSG.sty                  the theme (root for \usetheme{HSG})
+├── latexmkrc                           default compile config
+├── helpers.json                        machine-readable API manifest
+├── AGENTS.md                           agent reference + decision table
+├── OVERLEAF.md                         how to upload to Overleaf
+├── README.md                           this file
+├── bin/
+│   └── new-deck.sh                     bootstrap a new deck
+├── assets/                             every image asset
+│   ├── hsg-logo-{en,de}.{pdf,png}      vector + raster logos
+│   ├── hsg-logo-cover.png              logo + institute subtitle
+│   ├── hsg-badge.png                   green frame around cover photo
+│   ├── hsg-agenda-texture-portrait.jpg concrete texture for agenda
+│   ├── hsg-closing-campus.jpg          campus photo for closing
+│   └── hsg-closing-logo-band.png       accreditation strip + tagline
+├── fonts/
+│   ├── GilliusADF-{Regular,Italic,Bold,BoldItalic}.otf
+│   └── LICENSE-Gillius-ADF.txt         GPL-2 + font exception
 ├── templates/
-│   ├── skeleton.tex                        minimal compileable starter
-│   ├── demo-using-the-template.tex         20-page tutorial
-│   └── demo-using-the-template-v1.pdf      pre-compiled tutorial
-├── hsg-logo-en.{pdf,png}                   "University of St. Gallen"
-├── hsg-logo-de.{pdf,png}                   "Universität St. Gallen"
-├── hsg-logo-cover.png                      logo + institute subtitle
-├── hsg-badge.png                           green frame around cover photo
-├── hsg-agenda-texture-portrait.jpg         concrete texture for agenda
-├── hsg-closing-campus.jpg                  campus photo for closing
-├── hsg-closing-logo-band.png               accreditation strip + tagline
-└── fonts/
-    ├── GilliusADF-{Regular,Italic,Bold,BoldItalic}.otf
-    └── LICENSE-Gillius-ADF.txt             GPL-2 + font exception
+│   ├── skeleton.tex                    minimal compileable starter
+│   ├── demo-using-the-template.tex     20-page tutorial
+│   └── demo-using-the-template-v1.pdf  pre-compiled tutorial
+└── examples/
+    ├── example.tex                     showcase deck source
+    └── example-v*.pdf                  pre-compiled showcase versions
 ```
+
+The theme resolves image filenames against `./assets/`, `./`, and
+`../assets/` automatically (`\graphicspath{...}`), so users can keep
+the organised layout above OR a flat layout (everything next to the
+`.tex`). `bin/new-deck.sh` produces an `assets/` subfolder by default.
 
 ## Helpers (one-line summary)
 

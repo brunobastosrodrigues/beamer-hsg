@@ -34,36 +34,31 @@ If something breaks, jump to *Section 6 — Common errors*.
 ```
 beamer-hsg/
 ├── beamerthemeHSG.sty                  the theme. DO NOT EDIT unless asked.
-├── hsg-logo.png                        small HSG icon for content-slide footers.
-├── hsg-logo-cover.png                  HSG icon + "Universität St. Gallen" with
-│                                       the "Institut für Computer Science in
-│                                       Vorarlberg" subtitle (used on title slide).
-├── hsg-logo-en.png                     HSG icon + "University of St. Gallen"
-│                                       (no institute subtitle) — used inside the
-│                                       closing-slide translucent box.
-├── hsg-badge.png                       green angular badge drawn BEHIND the
-│                                       cover photo so an L-frame peeks through.
-├── hsg-agenda-texture-portrait.jpg     concrete-texture column for the agenda
-│                                       slide (default right-side image).
-├── hsg-closing-campus.jpg              HSG campus courtyard photo (closing slide
-│                                       full-bleed background).
-├── hsg-closing-logo-band.png           bottom strip with EQUIS / AACSB / AMBA
-│                                       accreditation logos + "From insight to
-│                                       impact" tagline (closing slide overlay).
-├── example.tex                         reference presentation using every helper.
-├── example-v1.pdf                      pre-compiled preview.
-├── fonts/                              optional Gillius ADF OTF files.
-├── AGENTS.md                           this file.
-└── README.md                           human-oriented overview.
+├── latexmkrc                           default compile config (3-pass pdflatex).
+├── helpers.json                        machine-readable API manifest.
+├── README.md, AGENTS.md, OVERLEAF.md   human + agent docs.
+├── bin/new-deck.sh                     scaffold a new deck in target dir.
+├── assets/                             every image asset, organised in one folder.
+│   ├── hsg-logo-{en,de}.{pdf,png}      vector + raster HSG logos.
+│   ├── hsg-logo-cover.png              logo + institute subtitle.
+│   ├── hsg-badge.png                   green frame around cover photo.
+│   ├── hsg-agenda-texture-portrait.jpg concrete-texture column for the agenda.
+│   ├── hsg-closing-campus.jpg          campus photo for closing.
+│   └── hsg-closing-logo-band.png       accreditation strip + tagline.
+├── fonts/                              vendored Gillius ADF OTFs + licence.
+├── templates/                          starter and tutorial decks.
+└── examples/                           showcase deck + pre-compiled PDFs.
 ```
 
-When creating a new presentation, copy `beamerthemeHSG.sty` and EVERY image
-asset above into the folder next to the new `.tex` file. Missing an asset
-(e.g. `hsg-closing-logo-band.png`) causes an ugly half-rendered slide, not a
-compile error — the log will show `File ... not found` warnings that pdflatex
-happily ignores.
+The theme resolves image filenames against `./assets/`, `./`, and
+`../assets/` automatically via `\graphicspath`. So when an agent runs
+`bin/new-deck.sh /path/to/new-deck`, the script copies the theme +
+`assets/` + `fonts/` into the target directory; the user's `deck.tex`
+sits at the root and `\includegraphics{hsg-...}` resolves transparently.
 
-Do NOT reference assets via absolute paths.
+Do NOT reference assets via absolute paths. Do NOT prefix asset names
+with `assets/` in your `\includegraphics{...}` calls — the
+`\graphicspath` already covers that.
 
 ---
 

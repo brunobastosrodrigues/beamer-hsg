@@ -16,15 +16,8 @@ mkdir -p "$TARGET"
 # Theme + assets
 cp "$HERE/beamerthemeHSG.sty"          "$TARGET/"
 cp "$HERE/latexmkrc"                   "$TARGET/"
-cp "$HERE"/hsg-logo-en.pdf             "$TARGET/"
-cp "$HERE"/hsg-logo-en.png             "$TARGET/"
-cp "$HERE"/hsg-logo-de.pdf             "$TARGET/"
-cp "$HERE"/hsg-logo-de.png             "$TARGET/"
-cp "$HERE"/hsg-logo-cover.png          "$TARGET/"
-cp "$HERE"/hsg-badge.png               "$TARGET/"
-cp "$HERE"/hsg-agenda-texture-portrait.jpg "$TARGET/"
-cp "$HERE"/hsg-closing-campus.jpg      "$TARGET/"
-cp "$HERE"/hsg-closing-logo-band.png   "$TARGET/"
+mkdir -p "$TARGET/assets"
+cp "$HERE/assets/"*.pdf "$HERE/assets/"*.png "$HERE/assets/"*.jpg "$TARGET/assets/"
 cp -r "$HERE/fonts"                    "$TARGET/"
 
 # Starter

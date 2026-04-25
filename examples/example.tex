@@ -1,0 +1,132 @@
+% Example presentation using the HSG Beamer theme.
+% Compile from THIS folder: pdflatex example.tex  (three passes)
+\documentclass[aspectratio=169]{beamer}
+
+% Tell LaTeX where the theme + assets live (one directory up).
+\makeatletter\def\input@path{{../}}\makeatother
+\usetheme{HSG}
+
+\title{Computer Networks}
+\subtitle{Network Security}
+\author{Prof. Dr. Bruno Rodrigues}
+\institute{University of St.\,Gallen\\Bachelor in Computer Science\\Computer Networks (2,906)}
+\date{}
+\coursefooter{Computer Networks}
+\coverimage{hsg-closing-campus.jpg}    % demo cover; replace with your own photo
+
+% Deck outline — drives the left-margin sidebar progress.
+\hsgsetsections{Setup, Symmetric, Asymmetric, Summary}
+
+% Closing-slide contact (sits inside the translucent white box).
+\hsgclosingcontact
+  {Prof. Dr. Bruno Rodrigues}
+  {bruno.rodrigues@unisg.ch}
+
+\begin{document}
+
+% =====================================================================
+% 1. COVER
+% =====================================================================
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% =====================================================================
+% 2. AGENDA
+% =====================================================================
+\hsgagenda{
+  \item Setup and goals
+  \item Symmetric encryption
+  \item Asymmetric encryption
+  \item Summary
+}
+
+% =====================================================================
+% Section 1: Setup
+% =====================================================================
+\hsgsection{Setup}
+
+\begin{frame}
+\frametitle{Lecture goals}
+\framesubtitle{What we will cover today}
+
+\begin{itemize}
+  \setlength\itemsep{0.5em}
+  \item \hsgemph{Provide} a general overview of encryption mechanisms.
+  \item \hsgemph{Compare} symmetric (AES) and asymmetric (RSA) approaches.
+  \item \hsgemph{Explain} session keys (Diffie-Hellman) and TLS.
+  \item \hsgemph{Discuss} certificates and digital signatures.
+\end{itemize}
+\end{frame}
+
+% =====================================================================
+% Section 2: Symmetric
+% =====================================================================
+\hsgsection{Symmetric}
+
+\begin{frame}
+\frametitle{Two-column comparison}
+\framesubtitle{Symmetric vs. asymmetric, side-by-side}
+
+\begin{columns}[T]
+  \column{0.5\textwidth}
+    \textbf{Symmetric encryption}
+    \begin{itemize}
+      \item Single shared key
+      \item Fast, suitable for bulk data
+      \item Key distribution is the hard part
+    \end{itemize}
+  \column{0.5\textwidth}
+    \textbf{Asymmetric encryption}
+    \begin{itemize}
+      \item Public / private key pair
+      \item Solves key distribution
+      \item Orders of magnitude slower
+    \end{itemize}
+\end{columns}
+
+\vspace{1em}
+In practice, \hsgemph{TLS} combines both: asymmetric cryptography
+establishes a shared session key, which is then used with a symmetric
+cipher for the data stream.
+\end{frame}
+
+\hsgstatement{The hard part is key distribution, not the cipher.}
+
+% =====================================================================
+% Section 3: Asymmetric
+% =====================================================================
+\hsgsection{Asymmetric}
+
+\hsgquote
+  {The cloud is just somebody else's computer.}
+  {Anonymous}
+
+\hsgquoteinverted
+  {The best way to predict the future is to invent it.}
+  {Alan Kay}
+
+% =====================================================================
+% Section 4: Summary
+% =====================================================================
+\hsgsection{Summary}
+
+\begin{frame}
+\frametitle{Takeaways}
+
+\begin{itemize}
+  \setlength\itemsep{0.55em}
+  \item Symmetric cryptography is fast; asymmetric solves key distribution.
+  \item \hsgemph{Certificates} bind public keys to identities;
+        \hsgemph{TLS} uses them to bootstrap trust.
+  \item \hsgemph{Diffie-Hellman} gives forward secrecy even if long-term
+        keys leak later.
+\end{itemize}
+\end{frame}
+
+% =====================================================================
+% CLOSING
+% =====================================================================
+\hsgclosing
+
+\end{document}

@@ -36,15 +36,16 @@
     "Cover and closing layouts are hand-tuned. Do not redefine their templates."
   ],
   "assets_required": {
-    "logos": ["hsg-logo-en.pdf", "hsg-logo-en.png", "hsg-logo-de.pdf", "hsg-logo-de.png", "hsg-logo-cover.png"],
-    "decoration": ["hsg-badge.png"],
-    "agenda": ["hsg-agenda-texture-portrait.jpg"],
-    "closing": ["hsg-closing-campus.jpg", "hsg-closing-logo-band.png"],
+    "logos": ["assets/hsg-logo-en.pdf", "assets/hsg-logo-en.png", "assets/hsg-logo-de.pdf", "assets/hsg-logo-de.png", "assets/hsg-logo-cover.png"],
+    "decoration": ["assets/hsg-badge.png"],
+    "agenda": ["assets/hsg-agenda-texture-portrait.jpg"],
+    "closing": ["assets/hsg-closing-campus.jpg", "assets/hsg-closing-logo-band.png"],
     "fonts": ["fonts/GilliusADF-Regular.otf", "fonts/GilliusADF-Italic.otf", "fonts/GilliusADF-Bold.otf", "fonts/GilliusADF-BoldItalic.otf"]
   },
+  "asset_resolution_paths_in_theme": ["./assets/", "./", "../assets/"],
   "starter_files": {
     "minimal": "templates/skeleton.tex",
     "exhaustive_example": "templates/demo-using-the-template.tex",
-    "deck_at_repo_root":  "example.tex"
+    "deck_showcase":      "examples/example.tex"
   }
 }
