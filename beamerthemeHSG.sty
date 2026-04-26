@@ -351,9 +351,16 @@
 
 \def\@hsgcoverimage{}
 \def\@hsgcovershape{rect}
+\def\@hsgcoverrotate{0}
 \define@key{hsgcover}{shape}{\def\@hsgcovershape{#1}}
+\define@key{hsgcover}{rotate}{\def\@hsgcoverrotate{#1}}
+% \coverimage[options]{path}
+%   options: shape={rect|circle|hexagon|gear|blob}
+%            rotate=<deg>   apply rotation BEFORE the cover-clip path
+%                           (-90 = portrait photo into landscape clip, etc.)
 \newcommand{\coverimage}[2][]{%
   \def\@hsgcovershape{rect}%
+  \def\@hsgcoverrotate{0}%
   \setkeys{hsgcover}{#1}%
   \def\@hsgcoverimage{#2}%
 }
@@ -394,7 +401,8 @@
            -- (0, -1.53cm)
            -- (0, -1.48cm) -- cycle;
         \node[anchor=center, inner sep=0pt] at (2.965cm, -3.345cm)
-          {\includegraphics[width=12cm, height=12cm, keepaspectratio]{\@hsgcoverimage}};
+          {\includegraphics[width=12cm, height=12cm, keepaspectratio,
+                            angle=\@hsgcoverrotate]{\@hsgcoverimage}};
       \end{scope}
     \fi
 
