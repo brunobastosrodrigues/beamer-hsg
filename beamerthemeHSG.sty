@@ -222,10 +222,33 @@
 %     numbers; font automatically scales down for 2+ digits so the digits
 %     never touch the badge edge.
 % ---------------------------------------------------------------------------
+% Minimal section-progress indicator: a tiny row of section numbers
+% in the top-right corner. Past sections muted, current bold + green,
+% future muted. Takes < 0.5 cm of vertical space and ~0.4 cm per
+% section horizontally — invisible until the reader looks for it.
+\newcommand{\hsg@progress}{%
+  \ifnum\@hsg@sectotal>0\relax
+    \begin{tikzpicture}[remember picture, overlay]
+      \foreach \i in {1,...,\@hsg@sectotal} {%
+        \pgfmathsetmacro{\hsgxoff}{(\i - \@hsg@sectotal - 1) * 0.30}%
+        \ifnum\i=\thehsg@cursec\relax
+          \node[anchor=base east, inner sep=0pt,
+                font=\fontsize{6}{7}\selectfont\bfseries, text=HSGgreen]
+            at ([xshift=\hsgxoff cm, yshift=-0.55cm]current page.north east) {\i};
+        \else
+          \node[anchor=base east, inner sep=0pt,
+                font=\fontsize{5}{6}\selectfont, text=HSGmuted!60]
+            at ([xshift=\hsgxoff cm, yshift=-0.55cm]current page.north east) {\i};
+        \fi
+      }%
+    \end{tikzpicture}%
+  \fi
+}
+
 \newcommand{\hsg@footerchrome}{%
+  \hsg@progress%
   \begin{tikzpicture}[remember picture, overlay]
-    % Small HSG logo, bottom-left — sits OUTSIDE the body text area,
-    % inside the left sidebar gutter, so the sidebar section list sits above it.
+    % Small HSG logo, bottom-left — sits OUTSIDE the body text area.
     \node[anchor=south west, inner sep=0pt]
       at ([xshift=0.30cm, yshift=0.25cm]current page.south west)
       {\includegraphics[height=0.55cm]{hsg-logo-en.pdf}};
