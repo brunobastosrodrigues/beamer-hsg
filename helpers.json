@@ -40,7 +40,8 @@
     "decoration": ["assets/hsg-badge.png"],
     "agenda": ["assets/hsg-agenda-texture-portrait.jpg"],
     "closing": ["assets/hsg-closing-campus.jpg", "assets/hsg-closing-logo-band.png"],
-    "fonts": ["fonts/GilliusADF-Regular.otf", "fonts/GilliusADF-Italic.otf", "fonts/GilliusADF-Bold.otf", "fonts/GilliusADF-BoldItalic.otf"]
+    "fonts_sans": ["fonts/GilliusADF-Regular.otf", "fonts/GilliusADF-Italic.otf", "fonts/GilliusADF-Bold.otf", "fonts/GilliusADF-BoldItalic.otf"],
+    "fonts_serif": ["fonts/texgyrepagella-regular.otf", "fonts/texgyrepagella-italic.otf", "fonts/texgyrepagella-bold.otf", "fonts/texgyrepagella-bolditalic.otf"]
   },
   "asset_resolution_paths_in_theme": ["./assets/", "./", "../assets/"],
   "starter_files": {

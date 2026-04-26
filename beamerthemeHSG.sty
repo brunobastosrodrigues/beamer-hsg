@@ -49,27 +49,34 @@
 \definecolor{HSGmuted}{HTML}{7A7A7A}
 
 % ---------------------------------------------------------------------------
-% Fonts. HSG corporate font is Gill Sans Nova (proprietary, Monotype).
-% The PPTX embeds it via MS MicroType Express compression, which is not
-% reversible without the Microsoft decompressor. Three paths are offered:
+% Fonts. HSG corporate identity uses two families:
 %
-%   pdflatex ..... Lato Light (humanist sans, always available)
-%   xe/lualatex .. Gill Sans Nova if licensed, else Gillius ADF (open clone)
+%   Sans  ..... Gill Sans MT Pro / Gill Sans Nova   (proprietary, Monotype)
+%               Open clone vendored: Gillius ADF (Arkandis Digital Foundry)
+%   Serif ..... Palatino OTF                        (proprietary, Linotype)
+%               Open clone vendored: TeX Gyre Pagella (GUST e-foundry)
 %
-% Compile with xelatex or lualatex for the closest Gill-Sans look.
+% Slides are sans-dominant; the serif family is available via \rmfamily
+% or \textrm{...} for body text in formal docs. Three compile paths:
+%
+%   pdflatex ..... Lato (sans) + mathpazo (Palatino-like serif)
+%   xe/lualatex .. Vendored Gillius ADF + TeX Gyre Pagella from ./fonts/
+%
+% Compile with xelatex or lualatex for the official HSG look.
 % ---------------------------------------------------------------------------
 \RequirePackage{iftex}
 \ifPDFTeX
   \RequirePackage[default]{lato}
+  \RequirePackage{mathpazo}    % Palatino-clone serif for \rmfamily / \textrm
   \RequirePackage[T1]{fontenc}
   \PackageWarning{beamerthemeHSG}{%
-    Compiled with pdflatex; falling back to Lato.\MessageBreak
-    For the official HSG Gill-Sans-Nova look, switch the compiler to\MessageBreak
-    xelatex or lualatex (the theme will pick up fonts/ automatically)}%
+    Compiled with pdflatex; falling back to Lato (sans) + mathpazo (serif).\MessageBreak
+    For the official HSG look, switch the compiler to xelatex or lualatex\MessageBreak
+    (the theme will pick up fonts/ automatically)}%
 \else
   \RequirePackage{fontspec}
-  % Prefer the vendored Gillius ADF OTFs under ./fonts/ (deterministic,
-  % independent of TeX Live's font collection on the host machine).
+  % Prefer the vendored Gillius ADF + TeX Gyre Pagella OTFs under ./fonts/
+  % (deterministic, independent of TeX Live's font collection on the host).
   \IfFileExists{fonts/GilliusADF-Regular.otf}{%
     \setsansfont{GilliusADF}[%
       Path=./fonts/, Extension=.otf,
@@ -94,6 +101,24 @@
           Drop GilliusADF-{Regular,Italic,Bold,BoldItalic}.otf into ./fonts/\MessageBreak
           to get the official HSG look}%
       }%
+    }%
+  }%
+  % Serif: TeX Gyre Pagella (open Palatino clone). Vendored under fonts/.
+  \IfFileExists{fonts/texgyrepagella-regular.otf}{%
+    \setmainfont{texgyrepagella}[%
+      Path=./fonts/, Extension=.otf,
+      UprightFont=*-regular,
+      ItalicFont=*-italic,
+      BoldFont=*-bold,
+      BoldItalicFont=*-bolditalic,
+      Ligatures=TeX]%
+  }{%
+    \IfFontExistsTF{TeX Gyre Pagella}{%
+      \setmainfont{TeX Gyre Pagella}[Ligatures=TeX]%
+    }{%
+      \PackageWarning{beamerthemeHSG}{%
+        TeX Gyre Pagella not found; \rmfamily will use the LaTeX default.\MessageBreak
+        Drop texgyrepagella-{regular,italic,bold,bolditalic}.otf into ./fonts/}%
     }%
   }%
 \fi

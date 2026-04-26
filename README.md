@@ -79,10 +79,20 @@ See **OVERLEAF.md**. TL;DR: download the GitHub release ZIP →
 
 ## Fonts
 
-`fonts/` ships **Gillius ADF** (Arkandis Digital Foundry, GPL-2+FE),
-the open-source clone of Gill Sans Nova. xelatex/lualatex pick it up
-automatically via `fontspec`. pdflatex falls back to Lato (the
-closest humanist sans available in TeX Live).
+The HSG corporate identity uses two families:
+
+| Role  | HSG official      | Open clone (vendored) | Licence    |
+|-------|-------------------|-----------------------|------------|
+| Sans  | Gill Sans MT Pro  | Gillius ADF           | GPL-2+FE   |
+| Serif | Palatino OTF      | TeX Gyre Pagella      | GUST FL    |
+
+xelatex / lualatex pick up both automatically via `fontspec` from
+`./fonts/`. Slides are sans-dominant (`\sffamily` is the default);
+the serif family is available via `\rmfamily` or `\textrm{...}` for
+formal-document body text.
+
+pdflatex falls back to **Lato** (sans) + **mathpazo** (Palatino-clone
+serif). Always available; less faithful to the corporate look.
 
 ## Assets
 
