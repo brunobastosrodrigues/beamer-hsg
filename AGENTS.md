@@ -45,7 +45,9 @@ beamer-hsg/
 │   ├── hsg-agenda-texture-portrait.jpg concrete-texture column for the agenda.
 │   ├── hsg-closing-campus.jpg          campus photo for closing.
 │   └── hsg-closing-logo-band.png       accreditation strip + tagline.
-├── fonts/                              vendored Gillius ADF OTFs + licence.
+├── fonts/                              vendored OTFs + licences:
+│                                       Gillius ADF (sans, Gill-Sans-Nova clone),
+│                                       TeX Gyre Pagella (serif, Palatino clone).
 ├── example/                          starter and tutorial decks.
 └── examples/                           showcase deck + pre-compiled PDFs.
 ```
@@ -104,9 +106,17 @@ Every new presentation MUST follow this structure:
 Compile with `pdflatex file.tex` **three times** — `remember picture`
 overlays need multiple passes to settle.
 
-For the closest Gill Sans look, use `xelatex` or `lualatex`; the theme
-auto-detects the compiler (Gill Sans Nova if licensed, else Gillius ADF,
-else TeX Gyre Heros).
+For the official HSG typography, compile with **xelatex** or
+**lualatex**. The theme auto-loads the vendored families from `./fonts/`:
+
+| Role  | HSG official      | Loaded by xelatex/lualatex | pdflatex fallback |
+|-------|-------------------|----------------------------|-------------------|
+| Sans  | Gill Sans MT Pro  | Gillius ADF                | Lato              |
+| Serif | Palatino OTF      | TeX Gyre Pagella           | mathpazo          |
+
+Slides are sans-dominant by default (`\sffamily`). The serif family
+becomes available via `\rmfamily` or `\textrm{...}` for body text in
+formal documents — this is the master's intended use of Palatino.
 
 ---
 
@@ -484,7 +494,8 @@ Use \hsgemph{key term} to draw the reader's eye in HSG green bold.
 | `"Command \coursefooter already defined"` | You used `\newcommand` | Use the setter form: `\coursefooter{Name}` |
 | Bullets render green | Custom `\setbeamercolor` in preamble | Remove it |
 | Footer starts with `|` | Empty `\coursefooter` argument | Supply a course name or remove the line |
-| Font looks generic | Compiled with `pdflatex` | Use `xelatex` + install Gillius ADF or Gill Sans Nova |
+| Font looks generic | Compiled with `pdflatex` | Use `xelatex` so the theme picks up Gillius ADF + TeX Gyre Pagella from `fonts/` |
+| `\textrm{...}` looks like Computer Modern | `xelatex` could not find the Pagella OTFs | Verify `fonts/texgyrepagella-regular.otf` is present; the theme emits a `PackageWarning` if not |
 | Agenda lacks the concrete-texture column | `\hsgagendaimage{}` called with empty arg | Remove that line to restore default |
 | Closing-box text doesn't fit | Name/email too long at 5 pt | Abbreviate the title, e.g. `Prof. B. Rodrigues` |
 
