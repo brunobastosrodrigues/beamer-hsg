@@ -25,6 +25,7 @@
     {"name": "\\hsgtwocol",         "args": ["left", "right"],           "layout": "—",                        "purpose": "Two-column body via minipages. Left edge aligns with the frametitle (Beamer's native columns shifts content into the margin)."},
     {"name": "\\hsgthreecol",       "args": ["left", "centre", "right"], "layout": "—",                        "purpose": "Three-column body via minipages. Same alignment guarantee as \\hsgtwocol."},
     {"name": "\\hsgbibliography",   "args": [],                          "layout": "—",                        "purpose": "Render a 'References' slide via biblatex. Requires \\usepackage{biblatex}+\\addbibresource{...} in preamble."},
+    {"name": "\\hsgvideolink",      "args": ["url", "thumbnail"],        "layout": "—",                        "purpose": "Clickable video thumbnail. Image gets a translucent play-button overlay; whole figure is hyperlinked to the URL."},
     {"name": "\\hsgbackup",         "args": [],                          "layout": "Kapiteltrenner",           "purpose": "Insert an 'Backup' separator and switch top-right progress to 'appendix'. Following slides keep page-badge counting but stop inflating section progress."},
     {"name": "\\hsgclosing",        "args": [],                          "layout": "31_Contact",               "purpose": "Closing slide: full-bleed campus photo + contact box. Uses preamble setters."}
   ],

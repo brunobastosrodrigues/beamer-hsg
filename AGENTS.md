@@ -438,6 +438,26 @@ Use \hsgemph{key term} to draw the reader's eye in HSG green bold.
 
 ---
 
+## 4.14b Clickable video thumbnail — `\hsgvideolink`
+
+Take a screenshot of the video cover (YouTube, Vimeo, lecture-capture,
+…), drop the image next to your `.tex`, and call:
+
+```latex
+\hsgvideolink{https://youtu.be/dQw4w9WgXcQ}{video-cover.jpg}
+```
+
+The thumbnail is rendered with a play-button overlay; clicking it opens
+the URL in the audience's browser. Use a 16:9 screenshot trimmed of
+browser chrome for the cleanest look.
+
+This is the universal-compatibility path: works in every PDF viewer,
+survives Overleaf, no extra package needed. For inline playback (Adobe
+Reader only) consider the `media9` package, but most academic audiences
+use Preview / Skim / Okular which would not play it anyway.
+
+---
+
 ## 4.15 Animations — `\pause`, `\onslide<n->`, `\only<n>`
 
 Use Beamer's standard overlay primitives. **The page badge counts every

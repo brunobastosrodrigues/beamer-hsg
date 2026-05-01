@@ -552,6 +552,35 @@
 }
 
 % ---------------------------------------------------------------------------
+% \hsgvideolink{url}{thumbnail} — clickable video thumbnail.
+%
+% Take a screenshot of the video cover (e.g. YouTube), drop it next to
+% your .tex, and call \hsgvideolink{url}{screenshot.jpg}. The image is
+% rendered with a translucent black circle + white play triangle on top,
+% and the whole figure is wrapped in \href, so a click in the PDF opens
+% the URL in the audience's browser.
+% Tip: keep aspect ratio of the screenshot (16:9 for YouTube) and trim
+% the browser chrome off before saving.
+% ---------------------------------------------------------------------------
+\newcommand{\hsgvideolink}[2]{%
+  \begin{center}%
+  \href{#1}{%
+    \begin{tikzpicture}
+      \node[inner sep=0pt, line width=0pt] (hsg@vlimg)
+        {\includegraphics[width=0.80\textwidth]{#2}};
+      % Play-button overlay, vertically centred on the thumbnail.
+      \node[circle, fill=black, opacity=0.55, minimum size=1.40cm,
+            inner sep=0pt] at (hsg@vlimg.center) {};
+      \fill[white]
+        ([xshift=-0.22cm, yshift=-0.34cm]hsg@vlimg.center) --
+        ([xshift= 0.34cm, yshift= 0.00cm]hsg@vlimg.center) --
+        ([xshift=-0.22cm, yshift= 0.34cm]hsg@vlimg.center) -- cycle;
+    \end{tikzpicture}%
+  }%
+  \end{center}%
+}
+
+% ---------------------------------------------------------------------------
 % \hsgbackup — render a "Backup" separator slide and switch the top-right
 % progress indicator from numeric (1..N) to a quiet "appendix" label.
 % Following frames keep counting toward \insertframenumber but no longer

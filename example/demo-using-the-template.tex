@@ -659,6 +659,15 @@ pdflatex deck.tex && pdflatex deck.tex && pdflatex deck.tex
   Long lists overflow into extra slides via \texttt{allowframebreaks}.
 \end{frame}
 
+\begin{frame}[t]
+  \frametitle{\textbackslash hsgvideolink --- clickable video thumbnail}
+  Drop a 16:9 screenshot next to your \texttt{.tex} and call
+  \texttt{\textbackslash hsgvideolink\{url\}\{thumbnail.jpg\}}. The whole
+  figure becomes a hyperlink that opens in the audience's browser.
+  \vspace{0.4em}
+  \hsgvideolink{https://youtu.be/dQw4w9WgXcQ}{hsg-closing-campus.jpg}
+\end{frame}
+
 % ---------------------------------------------------------------------------
 % Animation demo. \pause reveals bullets sequentially. The page badge stays
 % on the same logical-frame number across all overlay steps.
