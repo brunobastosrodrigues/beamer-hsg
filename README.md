@@ -5,12 +5,12 @@
 > seminars, lecture handouts, draft talks, and other non-official
 > situations where a quick LaTeX-driven slide deck is useful. For any
 > **official HSG occasion** (e.g., institutional communication, public
-> representation of the University, branded external events) you must
+> representation of the University, branded external events), please
 > use the **official HSG PowerPoint template** distributed by the
 > University's Communications & Marketing office. The HSG name, logos,
 > and corporate identity are property of the University of St. Gallen;
 > their use in this repository is for personal/academic convenience
-> only and confers no endorsement.
+> only.
 
 A Beamer theme that replicates the University of St. Gallen
 PowerPoint template, so the same visual identity can be used from
