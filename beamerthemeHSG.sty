@@ -519,14 +519,25 @@
 \newcommand{\hsgemph}[1]{{\color{HSGgreen}\textbf{#1}}}
 
 % ---------------------------------------------------------------------------
-% \hsgtwocol{left}{right} — symmetric two-column body, top-aligned, equal
-% gutters. Use inside any frame for side-by-side content.
+% Multi-column body helpers. Implemented with side-by-side minipages so the
+% left edge of the columns aligns with the frametitle (Beamer's native
+% \begin{columns} shifts content into the margin and looks misaligned).
+%
+%   \hsgtwocol{left}{right}
+%   \hsgthreecol{left}{centre}{right}
+%
+% Each column is top-aligned. Use inside any normal frame.
 % ---------------------------------------------------------------------------
 \newcommand{\hsgtwocol}[2]{%
-  \begin{columns}[T,onlytextwidth]
-    \begin{column}{0.48\textwidth}#1\end{column}
-    \begin{column}{0.48\textwidth}#2\end{column}
-  \end{columns}%
+  \par\noindent
+  \begin{minipage}[t]{0.48\textwidth}#1\end{minipage}\hfill%
+  \begin{minipage}[t]{0.48\textwidth}#2\end{minipage}\par%
+}
+\newcommand{\hsgthreecol}[3]{%
+  \par\noindent
+  \begin{minipage}[t]{0.31\textwidth}#1\end{minipage}\hfill%
+  \begin{minipage}[t]{0.31\textwidth}#2\end{minipage}\hfill%
+  \begin{minipage}[t]{0.31\textwidth}#3\end{minipage}\par%
 }
 
 % ---------------------------------------------------------------------------

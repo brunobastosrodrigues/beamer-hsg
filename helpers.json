@@ -22,7 +22,8 @@
     {"name": "\\hsgquote",          "args": ["quote", "attribution"],    "layout": "Zitat schwarze Schrift",   "purpose": "Quote on white background."},
     {"name": "\\hsgquoteinverted",  "args": ["quote", "attribution"],    "layout": "Zitat weisse Schrift",     "purpose": "Quote on green background."},
     {"name": "\\hsgfullimage",      "args": ["path"],                    "layout": "Bild Vollfläche",          "purpose": "Full-bleed image, small HSG logo overlay."},
-    {"name": "\\hsgtwocol",         "args": ["left", "right"],           "layout": "—",                        "purpose": "Symmetric two-column body, top-aligned, equal gutters. Use inside any frame."},
+    {"name": "\\hsgtwocol",         "args": ["left", "right"],           "layout": "—",                        "purpose": "Two-column body via minipages. Left edge aligns with the frametitle (Beamer's native columns shifts content into the margin)."},
+    {"name": "\\hsgthreecol",       "args": ["left", "centre", "right"], "layout": "—",                        "purpose": "Three-column body via minipages. Same alignment guarantee as \\hsgtwocol."},
     {"name": "\\hsgbibliography",   "args": [],                          "layout": "—",                        "purpose": "Render a 'References' slide via biblatex. Requires \\usepackage{biblatex}+\\addbibresource{...} in preamble."},
     {"name": "\\hsgbackup",         "args": [],                          "layout": "Kapiteltrenner",           "purpose": "Insert an 'Backup' separator and switch top-right progress to 'appendix'. Following slides keep page-badge counting but stop inflating section progress."},
     {"name": "\\hsgclosing",        "args": [],                          "layout": "31_Contact",               "purpose": "Closing slide: full-bleed campus photo + contact box. Uses preamble setters."}

@@ -225,19 +225,20 @@ my-talk/
 \end{frame}
 
 \begin{frame}[t,fragile]
-  \frametitle{Two-column comparison \emph{(Titel zwei Content)}}
+  \frametitle{Two columns \emph{(Titel zwei Content)}}
 
-  No HSG-specific helper; use Beamer's native \texttt{columns}.
+  Use the \texttt{\textbackslash hsgtwocol} helper. It aligns the left
+  edge of the columns with the frametitle, unlike Beamer's native
+  \texttt{columns} which shifts content into the slide margin.
 
   \begin{lstlisting}
-\begin{columns}[T]
-  \column{0.5\textwidth}
-    \textbf{Symmetric}
-    \begin{itemize}\item Shared key\item Fast\end{itemize}
-  \column{0.5\textwidth}
-    \textbf{Asymmetric}
-    \begin{itemize}\item Key pair\item Slow\end{itemize}
-\end{columns}
+\hsgtwocol{%
+  \textbf{Symmetric}
+  \begin{itemize}\item Shared key\item Fast\end{itemize}
+}{%
+  \textbf{Asymmetric}
+  \begin{itemize}\item Key pair\item Slow\end{itemize}
+}
   \end{lstlisting}
 
   \vspace{0.4em}
@@ -246,16 +247,28 @@ my-talk/
 \end{frame}
 
 \begin{frame}[t]
-  \frametitle{Two-column rendered}
+  \frametitle{Two columns rendered}
+  \hsgtwocol{%
+    \textbf{Symmetric}
+    \begin{itemize}\item Shared key\item Fast\end{itemize}
+  }{%
+    \textbf{Asymmetric}
+    \begin{itemize}\item Key pair\item Slow\end{itemize}
+  }
+\end{frame}
 
-  \begin{columns}[T]
-    \column{0.5\textwidth}
-      \textbf{Symmetric}
-      \begin{itemize}\item Shared key\item Fast\end{itemize}
-    \column{0.5\textwidth}
-      \textbf{Asymmetric}
-      \begin{itemize}\item Key pair\item Slow\end{itemize}
-  \end{columns}
+\begin{frame}[t]
+  \frametitle{Three columns rendered}
+  \hsgthreecol{%
+    \textbf{Symmetric}
+    \begin{itemize}\item Shared key\item Fast\end{itemize}
+  }{%
+    \textbf{Asymmetric}
+    \begin{itemize}\item Key pair\item Slow\end{itemize}
+  }{%
+    \textbf{Hybrid}
+    \begin{itemize}\item Best of both\item Practical default\end{itemize}
+  }
 \end{frame}
 
 \begin{frame}[t,fragile]
@@ -278,26 +291,25 @@ my-talk/
 \begin{frame}[t]
   \frametitle{Three-column rendered}
 
-  \begin{columns}[T]
-    \column{0.32\textwidth}
-      \textbf{Confidentiality}
-      \begin{itemize}\setlength\itemsep{0pt}
-        \item Encryption hides content
-        \item Adversary sees only ciphertext
-      \end{itemize}
-    \column{0.32\textwidth}
-      \textbf{Integrity}
-      \begin{itemize}\setlength\itemsep{0pt}
-        \item MAC detects tampering
-        \item Hash chains for logs
-      \end{itemize}
-    \column{0.32\textwidth}
-      \textbf{Availability}
-      \begin{itemize}\setlength\itemsep{0pt}
-        \item Replication, redundancy
-        \item Rate-limiting against DoS
-      \end{itemize}
-  \end{columns}
+  \hsgthreecol{%
+    \textbf{Confidentiality}
+    \begin{itemize}\setlength\itemsep{0pt}
+      \item Encryption hides content
+      \item Adversary sees only ciphertext
+    \end{itemize}
+  }{%
+    \textbf{Integrity}
+    \begin{itemize}\setlength\itemsep{0pt}
+      \item MAC detects tampering
+      \item Hash chains for logs
+    \end{itemize}
+  }{%
+    \textbf{Availability}
+    \begin{itemize}\setlength\itemsep{0pt}
+      \item Replication, redundancy
+      \item Rate-limiting against DoS
+    \end{itemize}
+  }
 
   \vspace{0.6em}
   Three balanced columns with \texttt{[T]} top-alignment. The CIA triad
