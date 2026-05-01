@@ -256,8 +256,10 @@
   \fi
 }
 
-\newcommand{\hsg@footerchrome}{%
-  \hsg@progress%
+% Footer chrome with NO top-right section progress (logo + page badge only).
+% Used by the agenda, which precedes the first \hsgsection and shouldn't
+% inflate the progress count.
+\newcommand{\hsg@footerchrome@base}{%
   \begin{tikzpicture}[remember picture, overlay]
     % Small HSG logo, bottom-left — sits OUTSIDE the body text area.
     \node[anchor=south west, inner sep=0pt]
@@ -294,6 +296,12 @@
            \fi\fi};
       }};
   \end{tikzpicture}%
+}
+
+% Default footer chrome on content slides: progress + base.
+\newcommand{\hsg@footerchrome}{%
+  \hsg@progress%
+  \hsg@footerchrome@base%
 }
 
 % ---------------------------------------------------------------------------
@@ -651,7 +659,7 @@
           \end{enumerate}
         };
     \end{tikzpicture}%
-    \hsg@footerchrome%  SAME footer as every other content slide
+    \hsg@footerchrome@base%  agenda omits the section progress indicator
   \end{frame}%
 }
 
