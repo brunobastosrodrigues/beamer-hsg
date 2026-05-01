@@ -1,9 +1,38 @@
 # Beamer HSG Template
 
+> **Disclosure.** This is **not** an official University of St. Gallen
+> template. It is a community-maintained Beamer reproduction of the
+> public PowerPoint master, intended for **internal team meetings,
+> seminars, lecture handouts, draft talks, and other non-official
+> situations** where a quick LaTeX-driven slide deck is useful. For any
+> **official HSG occasion** — institutional communication, public
+> representation of the University, branded external events — you must
+> use the **official HSG PowerPoint template** distributed by the
+> University's Communications & Marketing office. The HSG name, logos,
+> and corporate identity are property of the University of St. Gallen;
+> their use in this repository is for personal/academic convenience
+> only and confers no endorsement.
+
 A Beamer theme that replicates the University of St. Gallen
 PowerPoint template, so the same visual identity can be used from
 LaTeX sources. Vendored Gillius ADF font for an authentic
 Gill-Sans-Nova look without system installs.
+
+**Recommended use cases**
+
+- Internal lab / research-group presentations
+- Lecture slides for HSG-affiliated courses
+- PhD progress meetings, thesis-committee updates
+- Quick draft decks where setting up PowerPoint is overkill
+- Any private working presentation among HSG colleagues
+
+**Not recommended for**
+
+- Official university communications
+- External keynotes representing HSG
+- Branded recruiting / marketing materials
+- Anything where the absence of the *official* corporate identity
+  would be a problem
 
 ## Quick start
 
@@ -63,10 +92,16 @@ the organised layout above OR a flat layout (everything next to the
 | `\hsgagenda{ \item ... }` | Numbered agenda + concrete-texture column. |
 | `\hsgsetsections{a, b, c}` | Declare deck outline (drives sidebar). |
 | `\hsgsection{Name}` | Silent: advances sidebar progress. |
-| `\hsgstatement{text}` | One bold green sentence at 36 pt. |
-| `\hsgquote{q}{author}` | Quote on white. |
-| `\hsgquoteinverted{q}{author}` | Quote on green. |
+| `\hsgtwocol{l}{r}` | Two columns aligned with the frametitle. |
+| `\hsgthreecol{a}{b}{c}` | Three columns with the same alignment guarantee. |
+| `\hsgstatement{text}` | One bold green sentence, centred on the slide. |
+| `\hsgquote[photo.jpg]{q}{author}` | Quote on white; optional square author avatar. |
+| `\hsgquoteinverted[photo.jpg]{q}{author}` | Quote on green; same optional avatar. |
 | `\hsgfullimage{path}` | Full-bleed image. |
+| `\hsgvideolink{url}{thumbnail.jpg}` | Clickable video thumbnail with play overlay. |
+| `\hsgbackup` | Appendix separator; switches progress to *appendix*. |
+| `\hsgbibliography` | References slide via biblatex (`allowframebreaks`). |
+| `\hsgclosingcontact{name}{email}` | One translucent contact box per call (repeatable). |
 | `\hsgclosing` | Closing *Questions?* slide with campus photo. |
 | `\hsgemph{word}` | Inline HSG-green bold accent. |
 
