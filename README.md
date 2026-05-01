@@ -1,8 +1,7 @@
 # Beamer HSG Template
 
 > **Disclosure.** This is **not** an official University of St. Gallen
-> template. It is a community-maintained Beamer reproduction of the
-> public PowerPoint master, intended for **internal team meetings,
+> template, intended for **internal team meetings,
 > seminars, lecture handouts, draft talks, and other non-official
 > situations** where a quick LaTeX-driven slide deck is useful. For any
 > **official HSG occasion** — institutional communication, public
