@@ -20,7 +20,6 @@ Gill-Sans-Nova look without system installs.
 **Recommended use cases**
 
 - Internal lab / research-group presentations
-- Lecture slides for HSG-affiliated courses
 - PhD progress meetings, thesis-committee updates
 - Quick draft decks where setting up PowerPoint is overkill
 - Any private working presentation among HSG colleagues
