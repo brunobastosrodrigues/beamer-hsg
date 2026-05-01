@@ -4,8 +4,8 @@
 > template, intended for **internal team meetings,
 > seminars, lecture handouts, draft talks, and other non-official
 > situations** where a quick LaTeX-driven slide deck is useful. For any
-> **official HSG occasion** — institutional communication, public
-> representation of the University, branded external events — you must
+> **official HSG occasion** (e.g., institutional communication, public
+> representation of the University, branded external events) you must
 > use the **official HSG PowerPoint template** distributed by the
 > University's Communications & Marketing office. The HSG name, logos,
 > and corporate identity are property of the University of St. Gallen;
