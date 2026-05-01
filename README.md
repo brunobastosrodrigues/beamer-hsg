@@ -22,7 +22,7 @@ Gill-Sans-Nova look without system installs.
 - Internal lab / research-group presentations
 - PhD progress meetings, thesis-committee updates
 - Quick draft decks where setting up PowerPoint is overkill
-- Any private working presentation among HSG colleagues
+- Any private working presentation 
 
 **Not recommended for**
 
