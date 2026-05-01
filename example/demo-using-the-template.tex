@@ -617,6 +617,59 @@ pdflatex deck.tex && pdflatex deck.tex && pdflatex deck.tex
   \hsgemph{github.com/brunobastosrodrigues/beamer-hsg}.
 \end{frame}
 
+% ---------------------------------------------------------------------
+% Three new helpers: \hsgtwocol, \hsgbibliography, \hsgbackup.
+% ---------------------------------------------------------------------
+\begin{frame}
+  \frametitle{\textbackslash hsgtwocol --- side-by-side content}
+  \hsgtwocol{%
+    \textbf{Left column}\par\vspace{0.3em}
+    A symmetric two-column body with top alignment and equal gutters.
+    Use it for compare/contrast, figure-plus-caption, or before/after layouts
+    without writing a \texttt{minipage} by hand.
+  }{%
+    \textbf{Right column}\par\vspace{0.3em}
+    \begin{itemize}
+      \setlength\itemsep{0.3em}
+      \item Top-aligned by default
+      \item 0.48\,/\,0.48 width split
+      \item Drop \emph{any} content inside
+    \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{\textbackslash hsgbibliography --- references slide}
+  Place \texttt{\textbackslash hsgbibliography} just before \texttt{\textbackslash hsgclosing}.
+  Requires biblatex configured in the preamble:
+  \codebox{\textbackslash usepackage[backend=biber, style=numeric]\{biblatex\}\\
+           \textbackslash addbibresource\{refs.bib\}}
+  Long lists overflow into extra slides via \texttt{allowframebreaks}.
+\end{frame}
+
+\hsgbackup
+
+\begin{frame}
+  \frametitle{Backup --- Q\&A material}
+  Slides after \texttt{\textbackslash hsgbackup} keep counting toward the page
+  badge but stop inflating the section progress in the top-right corner ---
+  it shows \emph{appendix} instead of an extra section number.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Backup --- detailed numbers}
+  \hsgtwocol{%
+    Use this region for slides you want available during Q\&A but not as
+    part of the main narrative.
+  }{%
+    \begin{itemize}
+      \item Detailed derivations
+      \item Extra results tables
+      \item Limitations or caveats
+    \end{itemize}
+  }
+\end{frame}
+
 \hsgclosing
 
 \end{document}

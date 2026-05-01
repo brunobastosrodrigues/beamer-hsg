@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.3.0",
   "compilers_supported": ["pdflatex", "xelatex", "lualatex"],
   "default_compiler": "pdflatex",
   "preamble_setters": [
@@ -22,6 +22,9 @@
     {"name": "\\hsgquote",          "args": ["quote", "attribution"],    "layout": "Zitat schwarze Schrift",   "purpose": "Quote on white background."},
     {"name": "\\hsgquoteinverted",  "args": ["quote", "attribution"],    "layout": "Zitat weisse Schrift",     "purpose": "Quote on green background."},
     {"name": "\\hsgfullimage",      "args": ["path"],                    "layout": "Bild Vollfläche",          "purpose": "Full-bleed image, small HSG logo overlay."},
+    {"name": "\\hsgtwocol",         "args": ["left", "right"],           "layout": "—",                        "purpose": "Symmetric two-column body, top-aligned, equal gutters. Use inside any frame."},
+    {"name": "\\hsgbibliography",   "args": [],                          "layout": "—",                        "purpose": "Render a 'References' slide via biblatex. Requires \\usepackage{biblatex}+\\addbibresource{...} in preamble."},
+    {"name": "\\hsgbackup",         "args": [],                          "layout": "Kapiteltrenner",           "purpose": "Insert an 'Backup' separator and switch top-right progress to 'appendix'. Following slides keep page-badge counting but stop inflating section progress."},
     {"name": "\\hsgclosing",        "args": [],                          "layout": "31_Contact",               "purpose": "Closing slide: full-bleed campus photo + contact box. Uses preamble setters."}
   ],
   "inline_helpers": [

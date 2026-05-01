@@ -226,22 +226,33 @@
 % in the top-right corner. Past sections muted, current bold + green,
 % future muted. Takes < 0.5 cm of vertical space and ~0.4 cm per
 % section horizontally — invisible until the reader looks for it.
+\newif\ifhsg@backup
+\hsg@backupfalse
+
 \newcommand{\hsg@progress}{%
-  \ifnum\@hsg@sectotal>0\relax
+  \ifhsg@backup
     \begin{tikzpicture}[remember picture, overlay]
-      \foreach \i in {1,...,\@hsg@sectotal} {%
-        \pgfmathsetmacro{\hsgxoff}{(\i - \@hsg@sectotal - 1) * 0.30}%
-        \ifnum\i=\thehsg@cursec\relax
-          \node[anchor=base east, inner sep=0pt,
-                font=\fontsize{6}{7}\selectfont\bfseries, text=HSGgreen]
-            at ([xshift=\hsgxoff cm, yshift=-0.55cm]current page.north east) {\i};
-        \else
-          \node[anchor=base east, inner sep=0pt,
-                font=\fontsize{5}{6}\selectfont, text=HSGmuted!60]
-            at ([xshift=\hsgxoff cm, yshift=-0.55cm]current page.north east) {\i};
-        \fi
-      }%
+      \node[anchor=base east, inner sep=0pt,
+            font=\fontsize{5}{6}\selectfont\itshape, text=HSGmuted!60]
+        at ([xshift=-0.10cm, yshift=-0.55cm]current page.north east) {appendix};
     \end{tikzpicture}%
+  \else
+    \ifnum\@hsg@sectotal>0\relax
+      \begin{tikzpicture}[remember picture, overlay]
+        \foreach \i in {1,...,\@hsg@sectotal} {%
+          \pgfmathsetmacro{\hsgxoff}{(\i - \@hsg@sectotal - 1) * 0.30}%
+          \ifnum\i=\thehsg@cursec\relax
+            \node[anchor=base east, inner sep=0pt,
+                  font=\fontsize{6}{7}\selectfont\bfseries, text=HSGgreen]
+              at ([xshift=\hsgxoff cm, yshift=-0.55cm]current page.north east) {\i};
+          \else
+            \node[anchor=base east, inner sep=0pt,
+                  font=\fontsize{5}{6}\selectfont, text=HSGmuted!60]
+              at ([xshift=\hsgxoff cm, yshift=-0.55cm]current page.north east) {\i};
+          \fi
+        }%
+      \end{tikzpicture}%
+    \fi
   \fi
 }
 
@@ -483,6 +494,46 @@
 % Convenience: green inline emphasis command
 % ---------------------------------------------------------------------------
 \newcommand{\hsgemph}[1]{{\color{HSGgreen}\textbf{#1}}}
+
+% ---------------------------------------------------------------------------
+% \hsgtwocol{left}{right} — symmetric two-column body, top-aligned, equal
+% gutters. Use inside any frame for side-by-side content.
+% ---------------------------------------------------------------------------
+\newcommand{\hsgtwocol}[2]{%
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\textwidth}#1\end{column}
+    \begin{column}{0.48\textwidth}#2\end{column}
+  \end{columns}%
+}
+
+% ---------------------------------------------------------------------------
+% \hsgbackup — render an "Appendix" separator slide and switch the
+% top-right progress indicator from numeric (1..N) to a quiet "appendix"
+% label. Following frames keep counting toward \insertframenumber but no
+% longer inflate the section progress shown in the corner.
+% ---------------------------------------------------------------------------
+\newcommand{\hsgbackup}{%
+  \hsg@backuptrue
+  \hsgchapter{}{Backup}%
+}
+
+% ---------------------------------------------------------------------------
+% \hsgbibliography — render a "References" slide that prints the bibliography
+% with allowframebreaks so long lists overflow into extra slides cleanly.
+% Requires the user to load biblatex in the preamble:
+%
+%   \usepackage[backend=biber, style=numeric, sorting=none]{biblatex}
+%   \addbibresource{refs.bib}
+%
+% Then place \hsgbibliography just before \hsgclosing or \hsgbackup.
+% ---------------------------------------------------------------------------
+\newcommand{\hsgbibliography}{%
+  \begin{frame}[allowframebreaks,t]
+    \frametitle{References}
+    \footnotesize
+    \printbibliography[heading=none]
+  \end{frame}%
+}
 
 % ---------------------------------------------------------------------------
 % Content area enforcement.
