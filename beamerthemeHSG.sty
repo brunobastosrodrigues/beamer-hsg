@@ -772,10 +772,27 @@
 
 % -----------------------------------------------------------------
 % Quote frame (two flavours: black on white, or white on green).
-% \hsgquote{quote}{attribution}          -> black text, white bg
-% \hsgquoteinverted{quote}{attribution}  -> white text, green bg
+%
+%   \hsgquote{quote}{attribution}                  black text, white bg
+%   \hsgquote[author-photo.jpg]{quote}{attribution}    + circular author avatar
+%   \hsgquoteinverted{quote}{attribution}          white text, green bg
+%   \hsgquoteinverted[photo.jpg]{quote}{attribution}   + circular author avatar
+%
+% The optional first argument is a path to an image of the quote's author.
+% It is rendered as a small circular avatar to the left of the attribution.
 % -----------------------------------------------------------------
-\newcommand{\hsgquote}[2]{%
+\newcommand{\hsg@avatar}[2]{%
+  % #1 = image path, #2 = border colour (HSGmuted!50 on white bg, white on green bg)
+  \tikz[baseline=-0.5ex]{%
+    \begin{scope}
+      \clip (0,0) circle (0.55cm);
+      \node[inner sep=0pt] at (0,0)
+        {\includegraphics[width=1.20cm, height=1.20cm]{#1}};
+    \end{scope}
+    \draw[#2, line width=0.4pt] (0,0) circle (0.55cm);
+  }%
+}
+\newcommand{\hsgquote}[3][]{%
   \begin{frame}[plain]\hsg@stepframe
     \begin{tikzpicture}[remember picture, overlay]
       % tiny logo bottom-left for context
@@ -788,15 +805,17 @@
       \begin{minipage}{0.82\textwidth}
         \raggedright
         {\color{HSGgreen}\fontsize{60}{60}\selectfont\textbf{\char`\"}}\\[-1.2em]
-        {\LARGE\itshape #1}\par\vspace{1.2em}
-        \hfill\emph{#2}
+        {\LARGE\itshape #2}\par\vspace{1.2em}
+        \hfill
+        \ifx\\#1\\\else\hsg@avatar{#1}{HSGmuted!50}\hspace{0.35em}\fi
+        \emph{#3}
       \end{minipage}
     \end{center}
     \vfill\vfill
   \end{frame}%
 }
 
-\newcommand{\hsgquoteinverted}[2]{%
+\newcommand{\hsgquoteinverted}[3][]{%
   {\setbeamercolor{background canvas}{bg=HSGgreen}%
    \setbeamercolor{normal text}{fg=white, bg=HSGgreen}%
   \begin{frame}[plain]\hsg@stepframe
@@ -805,8 +824,10 @@
       \begin{minipage}{0.82\textwidth}
         \color{white}\raggedright
         {\fontsize{60}{60}\selectfont\textbf{\char`\"}}\\[-1.2em]
-        {\LARGE\itshape #1}\par\vspace{1.2em}
-        \hfill\emph{#2}
+        {\LARGE\itshape #2}\par\vspace{1.2em}
+        \hfill
+        \ifx\\#1\\\else\hsg@avatar{#1}{white}\hspace{0.35em}\fi
+        \emph{#3}
       \end{minipage}
     \end{center}
     \vfill\vfill
