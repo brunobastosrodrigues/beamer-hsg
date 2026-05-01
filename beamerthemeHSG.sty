@@ -566,11 +566,12 @@
   \par\vspace{0.2em}\centering
   \href{#1}{%
     \begin{tikzpicture}
-      % Width capped at 11 cm (slide is 16 cm wide, body ~14 cm; this leaves
-      % ~1.5 cm of breathing room on each side so the image never overflows
-      % the body margins regardless of the host frame's \textwidth).
+      % Cap image at 10 cm wide AND 4.5 cm tall; keepaspectratio fits the
+      % image inside whichever bound binds first, so the figure never
+      % overflows the body left/right margins or pushes into the bottom
+      % chrome (HSG logo + page badge). Tested: 16:9, 4:3, 1:1.
       \node[inner sep=0pt, line width=0pt] (hsg@vlimg)
-        {\includegraphics[width=11cm, keepaspectratio]{#2}};
+        {\includegraphics[width=10cm, height=4.5cm, keepaspectratio]{#2}};
       % Play-button overlay, centred on the thumbnail.
       \node[circle, fill=black, opacity=0.55, minimum size=1.40cm,
             inner sep=0pt] at (hsg@vlimg.center) {};
@@ -783,13 +784,16 @@
 % -----------------------------------------------------------------
 \newcommand{\hsg@avatar}[2]{%
   % #1 = image path, #2 = border colour (HSGmuted!50 on white bg, white on green bg)
+  % Square avatar, 1.10 cm side. Pass a 1:1-cropped portrait for best fit;
+  % anything else is clipped to the central square.
   \tikz[baseline=-0.5ex]{%
     \begin{scope}
-      \clip (0,0) circle (0.55cm);
+      \clip (-0.55cm, -0.55cm) rectangle (0.55cm, 0.55cm);
       \node[inner sep=0pt] at (0,0)
-        {\includegraphics[width=1.20cm, height=1.20cm]{#1}};
+        {\includegraphics[width=1.10cm, height=1.10cm]{#1}};
     \end{scope}
-    \draw[#2, line width=0.4pt] (0,0) circle (0.55cm);
+    \draw[#2, line width=0.4pt]
+      (-0.55cm, -0.55cm) rectangle (0.55cm, 0.55cm);
   }%
 }
 \newcommand{\hsgquote}[3][]{%
