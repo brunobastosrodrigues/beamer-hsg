@@ -25,6 +25,29 @@ The fastest path is `bin/new-deck.sh` because it copies every required
 asset (theme, logos, photos, fonts/, latexmkrc) into the target folder
 in one shot. After that, fill in the `TODO` markers in `deck.tex`.
 
+### Cheat-sheet — the helpers an agent should reach for
+
+| Need                              | Helper                                  |
+| --------------------------------- | --------------------------------------- |
+| Cover                             | `\titlepage` inside `[plain]` frame     |
+| Agenda                            | `\hsgagenda{\item ... \item ...}`       |
+| Section advance (silent)          | `\hsgsection{Name}`                     |
+| Two columns                       | `\hsgtwocol{left}{right}`               |
+| Three columns                     | `\hsgthreecol{a}{b}{c}`                 |
+| One bold green sentence           | `\hsgstatement{...}` (centred)          |
+| Quotation, optional avatar        | `\hsgquote[photo.jpg]{quote}{author}`   |
+| Quotation on green bg             | `\hsgquoteinverted[photo.jpg]{...}{...}`|
+| Full-bleed image                  | `\hsgfullimage{path}`                   |
+| Clickable video link              | `\hsgvideolink{url}{thumbnail.jpg}`     |
+| Inline green-bold emphasis        | `\hsgemph{key term}`                    |
+| Backup / appendix separator       | `\hsgbackup`                            |
+| Bibliography slide                | `\hsgbibliography` (needs biblatex)     |
+| One contact box per author        | repeat `\hsgclosingcontact{n}{e}`       |
+| Closing *Questions?* slide        | `\hsgclosing`                           |
+
+**Never** use Beamer's native `\begin{columns}` — it shifts content
+into the margin. Use `\hsgtwocol` / `\hsgthreecol` instead.
+
 If something breaks, jump to *Section 6 — Common errors*.
 
 ---
@@ -275,37 +298,54 @@ Use for 80 % of slides. Body can be bullets, a table, a TikZ figure, or prose.
 \end{frame}
 ```
 
-## 4.4 Title + two columns — native Beamer `columns`
+## 4.4 Two or three columns — `\hsgtwocol`, `\hsgthreecol`
 
-Use for A/B comparisons, pros/cons, before/after.
+Use for A/B comparisons, pros/cons, before/after, or a triad. The helpers
+align the left edge of the columns with the frametitle. Do NOT use Beamer's
+native `\begin{columns}` — it shifts content into the slide margin and
+makes column headers start LEFT of the frametitle.
 
 ```latex
 \begin{frame}
   \frametitle{Two approaches}
-  \begin{columns}[T]
-    \column{0.5\textwidth}
-      \textbf{\color{HSGgreen} Symmetric}
-      \begin{itemize}\item Shared key\item Fast\end{itemize}
-    \column{0.5\textwidth}
-      \textbf{\color{HSGgreen} Asymmetric}
-      \begin{itemize}\item Key pair\item Slow\end{itemize}
-  \end{columns}
+  \hsgtwocol{%
+    \textbf{Symmetric}
+    \begin{itemize}\item Shared key\item Fast\end{itemize}
+  }{%
+    \textbf{Asymmetric}
+    \begin{itemize}\item Key pair\item Slow\end{itemize}
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{The CIA triad}
+  \hsgthreecol{%
+    \textbf{Confidentiality}
+    \begin{itemize}\item Encryption\end{itemize}
+  }{%
+    \textbf{Integrity}
+    \begin{itemize}\item MACs\end{itemize}
+  }{%
+    \textbf{Availability}
+    \begin{itemize}\item Replication\end{itemize}
+  }
 \end{frame}
 ```
+
+Do NOT colour column headers HSGgreen. Reserve green for inline `\hsgemph`.
 
 ## 4.5 Two images with captions
 
 ```latex
 \begin{frame}
   \frametitle{Before and after}
-  \begin{columns}[T]
-    \column{0.5\textwidth}
-      \includegraphics[width=\linewidth]{before.jpg}\\
-      {\footnotesize\itshape Baseline system.}
-    \column{0.5\textwidth}
-      \includegraphics[width=\linewidth]{after.jpg}\\
-      {\footnotesize\itshape Proposed system.}
-  \end{columns}
+  \hsgtwocol{%
+    \includegraphics[width=\linewidth]{before.jpg}\\
+    {\footnotesize\itshape Baseline system.}
+  }{%
+    \includegraphics[width=\linewidth]{after.jpg}\\
+    {\footnotesize\itshape Proposed system.}
+  }
 \end{frame}
 ```
 
@@ -358,6 +398,10 @@ Pre-crop the image to 16:9.
 
 ## 4.9 Quotation — `\hsgquote` / `\hsgquoteinverted`
 
+Both helpers accept an optional first argument: a path to an image of the
+quote's author. When provided, a small square avatar is rendered next to
+the attribution. Pre-crop the image to 1:1 (or close to it) for best fit.
+
 ```latex
 \hsgquote
   {The cloud is just somebody else's computer.}
@@ -366,7 +410,15 @@ Pre-crop the image to 16:9.
 \hsgquoteinverted
   {The best way to predict the future is to invent it.}
   {Alan Kay}
+
+% With author photo
+\hsgquote[einstein.jpg]
+  {Imagination is more important than knowledge.}
+  {Albert Einstein}
 ```
+
+The bundled `assets/einstein.jpg` is a 300x300 public-domain crop, ready
+to use as a placeholder while you collect real author photos.
 
 ## 4.10 One-line statement — `\hsgstatement`
 
@@ -379,26 +431,43 @@ Single bold sentence centred on the slide in HSG green. Use for key takeaways.
 ## 4.11 Contact info on the closing slide — `\hsgclosingcontact`
 
 The HSG template does NOT use a separate "Contact" slide. Presenter contact
-lives inside the translucent white box on the closing *Questions?* slide.
-Set it in the preamble — `\hsgclosing` renders it automatically.
+lives inside translucent white boxes on the closing *Questions?* slide.
+Set them in the preamble — `\hsgclosing` renders them automatically.
+
+`\hsgclosingcontact` is **repeatable**: each call appends one box. Boxes
+lay out right-to-left, so the rightmost box matches the master's anchor
+position. Up to four boxes fit on a 16 cm canvas. Use one box per author.
 
 ```latex
-\hsgclosingcontact
-  {Prof. Dr. Bruno Rodrigues}
-  {bruno.rodrigues@unisg.ch}
+\hsgclosingcontact{Bruno Rodrigues}{bruno.rodrigues@unisg.ch}
+\hsgclosingcontact{Jinyuan Zhang}{jinyuan.zhang@unisg.ch}
+\hsgclosingcontact{Stefan Krummenacher}{stefan.krummenacher@unisg.ch}
 \hsgclosing
 ```
 
-Exactly two lines: `<title, First name Lastname>` bold, then the e-mail on
-the line below (both in `HSGtext`, no green). Affiliation is NOT shown in
-the box — it already appears on the title slide via `\institute{...}`.
+Each box: `<First name Lastname>` bold, then the e-mail on the line below
+(both in `HSGtext`, no green). Affiliation is NOT shown — it already
+appears on the title slide via `\institute{...}`.
 
-Defaults: if `\hsgclosingcontact` is not set, the box falls back to
-`\insertauthor` from the title block and omits the email.
+Defaults: if no `\hsgclosingcontact` is set, the box falls back to one
+box with `\insertauthor` from the title block and no email.
 
 The legacy `\hsgcontact{name}{email}{affiliation}` macro still exists for
-backward compatibility, but do NOT add a standalone contact slide — put the
-contact inside `\hsgclosing` via `\hsgclosingcontact`.
+backward compatibility, but do NOT add a standalone contact slide.
+
+## 4.11b Multi-author cover
+
+For a multi-author deck, write either of:
+
+```latex
+\author{Bruno Rodrigues, Jinyuan Zhang, and Stefan Krummenacher}
+% or
+\author{Bruno Rodrigues \and Jinyuan Zhang \and Stefan Krummenacher}
+```
+
+The theme renders the cover author line as a single comma-separated
+string and auto-wraps to a second line if there are many authors. The
+institute slot below shifts down automatically.
 
 ## 4.12 Blank canvas — `\begin{frame}[plain]`
 
@@ -438,7 +507,41 @@ Use \hsgemph{key term} to draw the reader's eye in HSG green bold.
 
 ---
 
-## 4.14b Clickable video thumbnail — `\hsgvideolink`
+## 4.14a Backup / appendix slides — `\hsgbackup`
+
+Insert `\hsgbackup` once, just before the slides you want demoted to
+appendix material. It renders a "Backup" separator and switches the
+top-right section progress indicator from numeric to a quiet *appendix*
+label for every following frame. Page-badge counting continues, but the
+section progress no longer inflates with backup slides.
+
+```latex
+\hsgbackup
+
+\begin{frame}
+  \frametitle{Detailed derivations}
+  ...
+\end{frame}
+```
+
+## 4.14b References / bibliography — `\hsgbibliography`
+
+Renders a "References" slide via biblatex with `allowframebreaks` so a
+long list overflows into extra slides cleanly. Configure biblatex in the
+preamble; place `\hsgbibliography` just before `\hsgclosing` (or before
+`\hsgbackup` if you want references in the main flow).
+
+```latex
+% preamble
+\usepackage[backend=biber, style=numeric, sorting=none]{biblatex}
+\addbibresource{refs.bib}
+
+% body
+\hsgbibliography
+\hsgclosing
+```
+
+## 4.14c Clickable video thumbnail — `\hsgvideolink`
 
 Take a screenshot of the video cover (YouTube, Vimeo, lecture-capture,
 …), drop the image next to your `.tex`, and call:
