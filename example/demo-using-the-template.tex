@@ -665,9 +665,9 @@ pdflatex deck.tex && pdflatex deck.tex && pdflatex deck.tex
 % ---------------------------------------------------------------------------
 \begin{frame}[t]
   \frametitle{Animations: \texttt{\textbackslash pause} and \texttt{\textbackslash onslide}}
-  Use Beamer's standard overlay primitives. The page badge tracks the
-  \emph{logical} frame, so the badge number does not change as you click
-  through the build.
+  Use Beamer's standard overlay primitives. Each \texttt{\textbackslash pause}
+  step produces a new PDF page, so the page badge increments between
+  clicks --- same as any Beamer theme.
   \vspace{0.4em}
   \begin{itemize}
     \setlength\itemsep{0.5em}
@@ -676,10 +676,9 @@ pdflatex deck.tex && pdflatex deck.tex && pdflatex deck.tex
     \item Finally, the contribution.
   \end{itemize}
   \vspace{0.4em}
-  For build-up TikZ diagrams use \texttt{\textbackslash onslide<n->\{...\}}
-  on each layer rather than wrapping the whole picture in
-  \texttt{\textbackslash only}; that way \texttt{\textbackslash documentclass[handout]}
-  collapses the overlays cleanly into one printable page.
+  For a printable handout, add \texttt{handout} to the document class:\\
+  \texttt{\textbackslash documentclass[aspectratio=169,handout]\{beamer\}}\\
+  Beamer collapses every overlay into a single page automatically.
 \end{frame}
 
 \hsgbackup
