@@ -28,6 +28,17 @@
 \RequirePackage{graphicx}
 \RequirePackage{ifthen}
 \RequirePackage{pgffor}
+\RequirePackage{etoolbox}
+
+% ---------------------------------------------------------------------------
+% Note on animations: the page badge uses \insertframenumber, which counts
+% every overlay (each \pause or \onslide step is a new PDF page). Decks with
+% lots of animations therefore have the badge "skip ahead" between clicks.
+% To produce a printable handout where the badge counts logical slides only,
+% use   \documentclass[aspectratio=169,handout]{beamer}   — handout mode
+% collapses every overlay into a single page automatically.
+% ---------------------------------------------------------------------------
+\newcommand{\hsg@stepframe}{}% no-op; kept so existing [plain] macros compile
 \usetikzlibrary{positioning,shapes.geometric,calc,decorations.pathmorphing}
 
 % Asset resolution paths. The theme looks for hsg-* image files in this
@@ -552,7 +563,7 @@
 % ---------------------------------------------------------------------------
 \newcommand{\hsgbackup}{%
   \hsg@backuptrue
-  \begin{frame}[plain]
+  \begin{frame}[plain]\hsg@stepframe
     \begin{tikzpicture}[remember picture, overlay]
       \node[anchor=north west, inner sep=0pt,
             font=\fontsize{36}{42}\selectfont, text=HSGgreen]
@@ -639,7 +650,7 @@
 %   Content: (0.63, 2.23) 9.26x5.60 cm (enumerate list on the left)
 %   Picture: (10.44, 0.00) 5.56x9.00 cm (full-height, right side)
 \newcommand{\hsgagenda}[1]{%
-  \begin{frame}[plain]
+  \begin{frame}[plain]\hsg@stepframe
     \begin{tikzpicture}[remember picture, overlay]
       % Optional full-height image on the right
       \ifx\@hsgagendaimage\@empty\else
@@ -706,7 +717,7 @@
 %   \hsgchapter[images/bg.jpg]{03}{Results}   % optional bg image
 % -----------------------------------------------------------------
 \newcommand{\hsgchapter}[3][]{%
-  \begin{frame}[plain]
+  \begin{frame}[plain]\hsg@stepframe
     \begin{tikzpicture}[remember picture, overlay]
       \ifthenelse{\equal{#1}{}}{}{%
         \node[anchor=center, inner sep=0pt] at (current page.center)
@@ -734,7 +745,7 @@
 % \hsgquoteinverted{quote}{attribution}  -> white text, green bg
 % -----------------------------------------------------------------
 \newcommand{\hsgquote}[2]{%
-  \begin{frame}[plain]
+  \begin{frame}[plain]\hsg@stepframe
     \begin{tikzpicture}[remember picture, overlay]
       % tiny logo bottom-left for context
       \node[anchor=south west, xshift=0.7cm, yshift=0.5cm]
@@ -757,7 +768,7 @@
 \newcommand{\hsgquoteinverted}[2]{%
   {\setbeamercolor{background canvas}{bg=HSGgreen}%
    \setbeamercolor{normal text}{fg=white, bg=HSGgreen}%
-  \begin{frame}[plain]
+  \begin{frame}[plain]\hsg@stepframe
     \vfill
     \begin{center}
       \begin{minipage}{0.82\textwidth}
@@ -783,7 +794,7 @@
 % \hsgstatement{Security is a process, not a product.}
 % -----------------------------------------------------------------
 \newcommand{\hsgstatement}[1]{%
-  \begin{frame}[plain]
+  \begin{frame}[plain]\hsg@stepframe
     \begin{tikzpicture}[remember picture, overlay]
       \node[anchor=north west, inner sep=0pt]
         at ([xshift=1.45cm, yshift=-1.29cm]current page.north west)
@@ -801,7 +812,7 @@
 % \hsgfullimage{path/to/image}
 % -----------------------------------------------------------------
 \newcommand{\hsgfullimage}[1]{%
-  \begin{frame}[plain]
+  \begin{frame}[plain]\hsg@stepframe
     \begin{tikzpicture}[remember picture, overlay]
       \node[anchor=center, inner sep=0pt] at (current page.center)
         {\includegraphics[width=\paperwidth, height=\paperheight,
@@ -847,7 +858,7 @@
 }
 
 \newcommand{\hsgclosing}{%
-  \begin{frame}[plain]
+  \begin{frame}[plain]\hsg@stepframe
     \begin{tikzpicture}[remember picture, overlay]
       % Full-bleed campus photo
       \node[anchor=center, inner sep=0pt] at (current page.center)

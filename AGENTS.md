@@ -438,6 +438,61 @@ Use \hsgemph{key term} to draw the reader's eye in HSG green bold.
 
 ---
 
+## 4.15 Animations — `\pause`, `\onslide<n->`, `\only<n>`
+
+Use Beamer's standard overlay primitives. **The page badge counts every
+overlay step**: each `\pause` or `\onslide` step is a new PDF page and a
+new badge number, just like in any other Beamer theme. This is honest —
+the badge matches the PDF page — but it means a slide with three `\pause`
+steps consumes three badge numbers.
+
+Two practical responses:
+- For the live talk, accept it; the audience doesn't read the badge during
+  a build.
+- For a printable handout, add `handout` to the document class:
+  `\documentclass[aspectratio=169,handout]{beamer}` — Beamer collapses every
+  overlay into a single page automatically, and the badge then matches the
+  logical slide count.
+
+**Sequential bullets:**
+```latex
+\begin{frame}[t]
+  \frametitle{Three reasons}
+  \begin{itemize}
+    \item First, set the scene. \pause
+    \item Then, motivate the gap. \pause
+    \item Finally, the contribution.
+  \end{itemize}
+\end{frame}
+```
+
+**Build-up TikZ:** wrap each layer in `\onslide<n->{...}` so the print
+handout collapses cleanly to a single composite page.
+```latex
+\begin{tikzpicture}
+  \onslide<1->{ \node[draw] (a) at (0,0) {Sender}; }
+  \onslide<2->{ \node[draw] (b) at (3,0) {Receiver}; }
+  \onslide<3->{ \draw[->] (a) -- (b); }
+\end{tikzpicture}
+```
+
+**Handout export.** For a printable, overlay-collapsed PDF use the
+`handout` class option once at the top of the file:
+```latex
+\documentclass[aspectratio=169,handout]{beamer}
+```
+
+**Rules of thumb:**
+- Use `\pause` only when sequential reveal aids comprehension. Static
+  bullets are easier to scan in a printed handout.
+- Never put `\pause` inside `[fragile]` frames that contain `lstlisting`
+  — the listing breaks. Use `\onslide<n->` outside the listing instead.
+- The page badge will not reflect overlay steps. If you need the
+  raw overlay number, use `\insertframenumber` directly in your code;
+  the theme leaves it untouched.
+
+---
+
 ## 5. Rules an agent MUST follow
 
 1. **Never modify `beamerthemeHSG.sty`** unless the user explicitly asks.

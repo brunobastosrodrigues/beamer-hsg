@@ -659,6 +659,29 @@ pdflatex deck.tex && pdflatex deck.tex && pdflatex deck.tex
   Long lists overflow into extra slides via \texttt{allowframebreaks}.
 \end{frame}
 
+% ---------------------------------------------------------------------------
+% Animation demo. \pause reveals bullets sequentially. The page badge stays
+% on the same logical-frame number across all overlay steps.
+% ---------------------------------------------------------------------------
+\begin{frame}[t]
+  \frametitle{Animations: \texttt{\textbackslash pause} and \texttt{\textbackslash onslide}}
+  Use Beamer's standard overlay primitives. The page badge tracks the
+  \emph{logical} frame, so the badge number does not change as you click
+  through the build.
+  \vspace{0.4em}
+  \begin{itemize}
+    \setlength\itemsep{0.5em}
+    \item First, set the scene. \pause
+    \item Then, motivate the gap. \pause
+    \item Finally, the contribution.
+  \end{itemize}
+  \vspace{0.4em}
+  For build-up TikZ diagrams use \texttt{\textbackslash onslide<n->\{...\}}
+  on each layer rather than wrapping the whole picture in
+  \texttt{\textbackslash only}; that way \texttt{\textbackslash documentclass[handout]}
+  collapses the overlays cleanly into one printable page.
+\end{frame}
+
 \hsgbackup
 
 \begin{frame}
