@@ -563,12 +563,15 @@
 % the browser chrome off before saving.
 % ---------------------------------------------------------------------------
 \newcommand{\hsgvideolink}[2]{%
-  \begin{center}%
+  \par\vspace{0.2em}\centering
   \href{#1}{%
     \begin{tikzpicture}
+      % Width capped at 11 cm (slide is 16 cm wide, body ~14 cm; this leaves
+      % ~1.5 cm of breathing room on each side so the image never overflows
+      % the body margins regardless of the host frame's \textwidth).
       \node[inner sep=0pt, line width=0pt] (hsg@vlimg)
-        {\includegraphics[width=0.80\textwidth]{#2}};
-      % Play-button overlay, vertically centred on the thumbnail.
+        {\includegraphics[width=11cm, keepaspectratio]{#2}};
+      % Play-button overlay, centred on the thumbnail.
       \node[circle, fill=black, opacity=0.55, minimum size=1.40cm,
             inner sep=0pt] at (hsg@vlimg.center) {};
       \fill[white]
@@ -576,8 +579,7 @@
         ([xshift= 0.34cm, yshift= 0.00cm]hsg@vlimg.center) --
         ([xshift=-0.22cm, yshift= 0.34cm]hsg@vlimg.center) -- cycle;
     \end{tikzpicture}%
-  }%
-  \end{center}%
+  }\par%
 }
 
 % ---------------------------------------------------------------------------
