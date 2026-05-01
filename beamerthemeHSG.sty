@@ -809,15 +809,22 @@
 \def\@hsgclosingphoto{hsg-closing-campus.jpg}
 \newcommand{\hsgclosingphoto}[1]{\def\@hsgclosingphoto{#1}}
 
-% Contact info shown inside the translucent white box on the closing slide.
-% Defaults to \insertauthor from the title block. Email is optional.
-% Override with \hsgclosingcontact{title+name}{email}.
-%   e.g. \hsgclosingcontact{Prof. Dr. Bruno Rodrigues}{bruno.rodrigues@unisg.ch}
-\def\@hsgclosingcontactname{\insertauthor}
-\def\@hsgclosingcontactemail{}
+% Contact info shown as one translucent white box per author on the closing
+% slide. Call \hsgclosingcontact once per author; each call appends a box.
+% Boxes lay out right-to-left so the rightmost box matches the master.
+% Up to 4 authors fit on a 16 cm canvas; beyond that boxes overflow the
+% left margin and the deck should switch to a single shared box.
+%   \hsgclosingcontact{Bruno Rodrigues}{bruno.rodrigues@unisg.ch}
+%   \hsgclosingcontact{Jinyuan Zhang}{jinyuan.zhang@unisg.ch}
+% If no \hsgclosingcontact is called, the closing slide falls back to one
+% box containing \insertauthor.
+\newcounter{hsg@cccount}
+\setcounter{hsg@cccount}{0}
+
 \newcommand{\hsgclosingcontact}[2]{%
-  \def\@hsgclosingcontactname{#1}%
-  \def\@hsgclosingcontactemail{#2}%
+  \stepcounter{hsg@cccount}%
+  \expandafter\xdef\csname hsg@ccname\arabic{hsg@cccount}\endcsname{#1}%
+  \expandafter\xdef\csname hsg@ccmail\arabic{hsg@cccount}\endcsname{#2}%
 }
 
 \newcommand{\hsgclosing}{%
@@ -857,26 +864,33 @@
       % The box is drawn first as a semi-transparent white rectangle with a
       % subtle shadow; the logo + contact text sit on top.
       % Box shifted 1 cm up relative to master XML (PPT has extra vertical
-      % headroom the Beamer 16x9 canvas lacks). Position origin: (12.06, 4.27).
-      \begin{scope}[shift={([xshift=12.06cm, yshift=-4.27cm]current page.north west)}]
-        \fill[white, opacity=0.81]
-          (0, 0) rectangle (3.69cm, -2.17cm);
-        % HSG logo at the top of the box (same offset as master).
-        \node[anchor=north west, inner sep=0pt]
-          at (0.25cm, -0.23cm)
-          {\includegraphics[width=2.58cm]{hsg-logo-en.pdf}};
-        % Contact text (name bold + email) at 5.5 pt, below the logo.
-        \node[anchor=north west, inner sep=0pt,
-              text=HSGtext, align=left,
-              font=\fontsize{5}{6.5}\selectfont]
-          at (0.25cm, -1.05cm)
-          {\ifx\@hsgclosingcontactname\@empty\else
-             {\bfseries\@hsgclosingcontactname}\\[0.10em]%
-           \fi
-           \ifx\@hsgclosingcontactemail\@empty\else
-             \@hsgclosingcontactemail%
-           \fi};
-      \end{scope}
+      % headroom the Beamer 16x9 canvas lacks). Anchor origin (rightmost
+      % box): (12.06, 4.27). Each additional author slides 3.89 cm left
+      % (3.69 cm box width + 0.20 cm gutter).
+      %
+      % If \hsgclosingcontact was never called, fall back to one box
+      % containing \insertauthor.
+      \ifnum\value{hsg@cccount}=0\relax
+        \stepcounter{hsg@cccount}%
+        \expandafter\xdef\csname hsg@ccname1\endcsname{\insertauthor}%
+        \expandafter\xdef\csname hsg@ccmail1\endcsname{}%
+      \fi
+      \foreach \hsgcci in {1,...,\arabic{hsg@cccount}} {%
+        \pgfmathsetmacro{\hsgccx}{12.06 - (\arabic{hsg@cccount} - \hsgcci) * 3.89}%
+        \begin{scope}[shift={([xshift=\hsgccx cm, yshift=-4.27cm]current page.north west)}]
+          \fill[white, opacity=0.81]
+            (0, 0) rectangle (3.69cm, -2.17cm);
+          \node[anchor=north west, inner sep=0pt]
+            at (0.25cm, -0.23cm)
+            {\includegraphics[width=2.58cm]{hsg-logo-en.pdf}};
+          \node[anchor=north west, inner sep=0pt,
+                text=HSGtext, align=left,
+                font=\fontsize{5}{6.5}\selectfont]
+            at (0.25cm, -1.05cm)
+            {{\bfseries\csname hsg@ccname\hsgcci\endcsname}\\[0.10em]
+             \csname hsg@ccmail\hsgcci\endcsname};
+        \end{scope}%
+      }
 
       % Bottom strip with EQUIS / AACSB / AMBA accreditation logos and
       % the "From insight to impact" tagline. Extracted from master page 5
