@@ -450,24 +450,30 @@
           \fontsize{14}{17}\selectfont\color{HSGtext}\insertsubtitle}};
     \fi
 
-    \ifx\insertauthor\@empty\else
-      \node[anchor=north west, inner sep=0pt, outer sep=0pt]
-        at ([xshift=\hsg@sidemargin, yshift=-6.10cm]current page.north west)
-        {\adjustbox{max width=8.4cm}{%
-          \fontsize{9}{11}\selectfont\color{HSGtext}\insertauthor}};
-    \fi
-
-    % Institute often has 2-3 lines so wrap inside a 9 cm minipage and
-    % auto-shrink the WHOLE block if its total height exceeds 1.5 cm.
-    \ifx\insertinstitute\@empty\else
-      \node[anchor=north west, inner sep=0pt, outer sep=0pt]
-        at ([xshift=\hsg@sidemargin, yshift=-6.80cm]current page.north west)
-        {\adjustbox{max totalsize={8.4cm}{1.5cm}}{%
-          \begin{minipage}[t]{8.4cm}
-            \setlength{\parindent}{0pt}\setlength{\parskip}{0pt}\raggedright
-            \leavevmode{\fontsize{8}{10}\selectfont\color{HSGtext}\insertinstitute\par}%
-          \end{minipage}}};
-    \fi
+    % Author + institute as a single auto-flowing stack so the institute
+    % follows the author block down naturally when multiple authors wrap
+    % across lines. \and is locally redefined to ", " so users can pass
+    % either \author{A \and B \and C} or \author{A, B, C} and both render
+    % as a single comma-separated line. The whole block auto-shrinks if
+    % its height exceeds 2.5 cm (e.g. 6+ authors over 3 lines).
+    \node[anchor=north west, inner sep=0pt, outer sep=0pt]
+      at ([xshift=\hsg@sidemargin, yshift=-6.10cm]current page.north west)
+      {\adjustbox{max totalsize={8.4cm}{2.5cm}}{%
+        \begin{minipage}[t]{8.4cm}
+          \setlength{\parindent}{0pt}\setlength{\parskip}{0pt}\raggedright
+          \renewcommand{\and}{\unskip,\space}%
+          \ifx\insertauthor\@empty\else
+            \leavevmode{\fontsize{9}{11}\selectfont\color{HSGtext}%
+              \insertauthor\par}%
+            \ifx\insertinstitute\@empty\else
+              \vspace{0.25em}%
+            \fi
+          \fi
+          \ifx\insertinstitute\@empty\else
+            \leavevmode{\fontsize{8}{10}\selectfont\color{HSGtext}%
+              \insertinstitute\par}%
+          \fi
+        \end{minipage}}};
 
     % "From insight to impact" — bottom-left, small (6 pt).
     \node[anchor=north west, inner sep=0pt,
@@ -489,6 +495,15 @@
     {\usebeamerfont{title}\insertsection\par}
   \end{centering}
 }
+
+% ---------------------------------------------------------------------------
+% Author list separator. Beamer expands \and inside \insertauthor to
+% \beamer@andtitle (default: a wide quad-spaced separator). Override it so
+% \author{A \and B \and C} renders the cover as "A, B, C". Users can also
+% pass a comma-separated string directly; both forms work.
+% ---------------------------------------------------------------------------
+\def\beamer@andtitle{\unskip,\space}
+\renewcommand{\and}{\unskip,\space}
 
 % ---------------------------------------------------------------------------
 % Convenience: green inline emphasis command
