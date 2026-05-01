@@ -507,14 +507,30 @@
 }
 
 % ---------------------------------------------------------------------------
-% \hsgbackup — render an "Appendix" separator slide and switch the
-% top-right progress indicator from numeric (1..N) to a quiet "appendix"
-% label. Following frames keep counting toward \insertframenumber but no
-% longer inflate the section progress shown in the corner.
+% \hsgbackup — render a "Backup" separator slide and switch the top-right
+% progress indicator from numeric (1..N) to a quiet "appendix" label.
+% Following frames keep counting toward \insertframenumber but no longer
+% inflate the section progress shown in the corner.
+%
+% The separator places "Backup" at the same top-left position used by
+% normal frametitles (~2 cm from the top), so the slide feels balanced
+% rather than empty above the title.
 % ---------------------------------------------------------------------------
 \newcommand{\hsgbackup}{%
   \hsg@backuptrue
-  \hsgchapter{}{Backup}%
+  \begin{frame}[plain]
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[anchor=north west, inner sep=0pt,
+            font=\fontsize{36}{42}\selectfont, text=HSGgreen]
+        at ([xshift=\hsg@sidemargin, yshift=-2.20cm]current page.north west)
+        {Backup};
+      \node[anchor=north west, inner sep=0pt,
+            font=\fontsize{12}{16}\selectfont, text=HSGmuted]
+        at ([xshift=\hsg@sidemargin, yshift=-3.50cm]current page.north west)
+        {Slides for questions and reference --- not part of the main narrative.};
+    \end{tikzpicture}%
+    \hsg@footerchrome%
+  \end{frame}%
 }
 
 % ---------------------------------------------------------------------------
