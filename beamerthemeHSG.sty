@@ -539,16 +539,21 @@
 %
 % Each column is top-aligned. Use inside any normal frame.
 % ---------------------------------------------------------------------------
+% \vspace*{0pt} at the start of each minipage forces top alignment
+% regardless of the first content. Without it, [t] aligns the
+% first-line baseline -- when the first content is a graphic, the
+% baseline sits at the bottom of the image and the column appears
+% to "hang" above a column whose first content is text.
 \newcommand{\hsgtwocol}[2]{%
   \par\noindent
-  \begin{minipage}[t]{0.48\textwidth}#1\end{minipage}\hfill%
-  \begin{minipage}[t]{0.48\textwidth}#2\end{minipage}\par%
+  \begin{minipage}[t]{0.48\textwidth}\vspace*{0pt}#1\end{minipage}\hfill%
+  \begin{minipage}[t]{0.48\textwidth}\vspace*{0pt}#2\end{minipage}\par%
 }
 \newcommand{\hsgthreecol}[3]{%
   \par\noindent
-  \begin{minipage}[t]{0.31\textwidth}#1\end{minipage}\hfill%
-  \begin{minipage}[t]{0.31\textwidth}#2\end{minipage}\hfill%
-  \begin{minipage}[t]{0.31\textwidth}#3\end{minipage}\par%
+  \begin{minipage}[t]{0.31\textwidth}\vspace*{0pt}#1\end{minipage}\hfill%
+  \begin{minipage}[t]{0.31\textwidth}\vspace*{0pt}#2\end{minipage}\hfill%
+  \begin{minipage}[t]{0.31\textwidth}\vspace*{0pt}#3\end{minipage}\par%
 }
 
 % ---------------------------------------------------------------------------
