@@ -8,7 +8,36 @@
 
 set -euo pipefail
 
-TARGET="${1:?usage: bin/new-deck.sh <target-dir>}"
+usage() {
+  cat <<'EOF'
+Usage: bin/new-deck.sh <target-dir>
+
+Bootstraps a new HSG-themed Beamer deck in <target-dir>. Copies the theme,
+every asset, the fonts/ directory, and the latexmkrc, plus the minimal
+skeleton renamed to deck.tex. Fill in the TODO markers, then compile with
+`pdflatex deck.tex` (3 passes) or `latexmk deck.tex`.
+
+Arguments:
+  <target-dir>   Directory to scaffold the deck into (created if missing).
+
+Options:
+  -h, --help     Show this help and exit.
+EOF
+}
+
+case "${1:-}" in
+  -h|--help)
+    usage
+    exit 0
+    ;;
+esac
+
+if [ "$#" -eq 0 ]; then
+  usage >&2
+  exit 2
+fi
+
+TARGET="$1"
 HERE="$(cd "$(dirname "$0")/.." && pwd)"
 
 mkdir -p "$TARGET"
