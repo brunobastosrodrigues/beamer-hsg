@@ -31,7 +31,7 @@ in one shot. After that, fill in the `TODO` markers in `deck.tex`.
 | --------------------------------- | --------------------------------------- |
 | Cover                             | `\titlepage` inside `[plain]` frame     |
 | Agenda                            | `\hsgagenda{\item ... \item ...}`       |
-| Section advance (silent)          | `\hsgsection{Name}`                     |
+| Section separator (numbered "N.") | `\hsgsection{Name}`                     |
 | Two columns                       | `\hsgtwocol{left}{right}`               |
 | Three columns                     | `\hsgthreecol{a}{b}{c}`                 |
 | One bold green sentence           | `\hsgstatement{...}` (centred)          |
@@ -244,9 +244,9 @@ Declare the deck's top-level outline ONCE in the preamble:
 \hsgsetsections{Dataset, Methodology, Results, Acoustic test, Takeaways}
 ```
 
-Then advance the progress counter by calling `\hsgsection{Name}` right
-before the first slide of each section. `\hsgsection` is SILENT — it
-does NOT render a divider slide, it only updates the sidebar.
+Then call `\hsgsection{Name}` right before the first slide of each section.
+By default it renders a numbered "N. Name" separator slide AND updates the
+progress display (see 4.7; disable with `\hsgseparators{false}`).
 
 Every content slide renders a vertical left sidebar (~2.2 cm wide) that
 stacks the section names top-to-bottom:
@@ -357,24 +357,31 @@ Do NOT colour column headers HSGgreen. Reserve green for inline `\hsgemph`.
 \end{frame}
 ```
 
-## 4.7 Section advance — `\hsgsection`
+## 4.7 Section advance + numbered separator — `\hsgsection`
 
-`\hsgsection{Name}` advances the deck to the next section. It is SILENT
-— no frame is rendered. Its only effect is to update the inline footer
-progress display ("Section name · N / M") on every subsequent content
-slide.
+`\hsgsection{Name}` advances the deck to the next section AND renders a
+numbered **section-separator slide** — "N. Name", the number in HSG green,
+centred on an otherwise blank slide. It also updates the inline footer
+progress ("Section name · N / M") on every subsequent content slide.
 
 ```latex
-\hsgsection{Introduction}                            % advances progress
-\hsgsection[ignored]{Introduction}                   % optional arg kept for backward compat
+\hsgsection{Introduction}        % emits "1. Introduction" separator, advances progress
 ```
 
-`\hsgsection` DOES NOT produce a divider slide. The section-separator
-pattern from the original HSG master is intentionally omitted because
-the inline footer progress already shows where the deck is.
+Numbered separators are **ON by default**, for cross-deck consistency:
+every deck built from this template opens each section with the same clean
+"N. Name" divider, so all decks look and navigate the same way. Use the
+SAME short names in `\hsgsetsections` and `\hsgsection`.
 
-Override the right-side image key (`\hsgsectionimage`) is kept for
-backward compatibility but currently has no effect.
+To disable separators for a specific deck (e.g. a very short one), put this
+before `\begin{document}`:
+
+```latex
+\hsgseparators{false}            % \hsgsection then only advances progress, no slide
+```
+
+The optional argument (`\hsgsection[ignored]{Name}`) and `\hsgsectionimage`
+are kept for backward compatibility and have no effect.
 
 ## 4.7b Chapter separator — `\hsgchapter`
 

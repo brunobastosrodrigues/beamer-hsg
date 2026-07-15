@@ -735,15 +735,28 @@
 % Override the right-side image: \hsgsectionimage{path}.
 % Disable it entirely:           \hsgsectionimage{}.
 % -----------------------------------------------------------------
-% \hsgsection{Name} — advance to the next section without rendering a
-% divider slide. The inline footer progress updates automatically.
-% The optional argument (#1) is kept for backward compatibility but
-% ignored, since the divider slide was removed.
+% \hsgsection{Name} — advance to the next section and (by default) render a
+% numbered "N. Name" separator slide. The inline footer progress also updates
+% automatically. Turn separators off with \hsgseparators{false}.
+% The optional argument (#1) is kept for backward compatibility but ignored.
 \def\@hsgsectionimage{hsg-agenda-texture-portrait.jpg}
 \newcommand{\hsgsectionimage}[1]{\def\@hsgsectionimage{#1}}
+% Numbered section-separator slides ("N. Name"), ON by default for cross-deck
+% consistency. Disable with \hsgseparators{false} before \begin{document}.
+\newif\ifhsg@sepslide \hsg@sepslidetrue
+\newcommand{\hsgseparators}[1]{\csname hsg@sepslide#1\endcsname}
 \newcommand{\hsgsection}[2][]{%
   \stepcounter{hsg@cursec}%
   \gdef\hsg@currentsectionname{#2}%
+  \ifhsg@sepslide
+    \begin{frame}[plain]%
+      \vfill
+      \centering
+      {\usebeamerfont{title}\bfseries\color{HSGgreen}\thehsg@cursec.\ %
+       \normalcolor #2}%
+      \vfill
+    \end{frame}%
+  \fi
 }
 
 % -----------------------------------------------------------------
