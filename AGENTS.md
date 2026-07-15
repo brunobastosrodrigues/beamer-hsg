@@ -360,7 +360,7 @@ Do NOT colour column headers HSGgreen. Reserve green for inline `\hsgemph`.
 ## 4.7 Section advance + numbered separator — `\hsgsection`
 
 `\hsgsection{Name}` advances the deck to the next section AND renders a
-numbered **section-separator slide** — "N. Name", the number in HSG green,
+numbered **section-separator slide** — "N. Name" in bold black,
 centred on an otherwise blank slide. It also updates the inline footer
 progress ("Section name · N / M") on every subsequent content slide.
 
