@@ -165,3 +165,12 @@ is set. The vendored Gillius ADF fonts retain their **GPL-2+FE**
 licence (see `fonts/LICENSE-Gillius-ADF.txt`); the font exception
 allows embedding in a compiled PDF without infecting the document with
 GPL.
+
+The official corporate fonts, **Gill Sans MT Pro** (Monotype) and
+**Palatino** (Linotype), are **proprietary and are not included in this
+repository**. The theme only references them by name and uses them when
+you have installed them yourself. Obtaining and using them is covered by
+your own licence, e.g. the HSG community download
+(<https://hsgalumni.ch/en/communities/event-support/>) or a Monotype /
+Linotype licence — not by this repo. Do not commit these font files
+here or otherwise redistribute them.
