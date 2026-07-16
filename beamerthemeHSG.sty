@@ -71,7 +71,11 @@
 % or \textrm{...} for body text in formal docs. Three compile paths:
 %
 %   pdflatex ..... Lato (sans) + mathpazo (Palatino-like serif)
-%   xe/lualatex .. Vendored Gillius ADF + TeX Gyre Pagella from ./fonts/
+%   xe/lualatex .. Official Gill Sans MT Pro + Palatino Linotype when installed
+%                  on the machine (e.g. ~/.local/share/fonts/ from the HSG
+%                  community download); otherwise the vendored Gillius ADF +
+%                  TeX Gyre Pagella clones from ./fonts/. Licensed fonts are
+%                  referenced by name only, never bundled in this theme.
 %
 % Compile with xelatex or lualatex for the official HSG look.
 % ---------------------------------------------------------------------------
@@ -86,8 +90,14 @@
     (the theme will pick up fonts/ automatically)}%
 \else
   \RequirePackage{fontspec}
-  % Prefer the vendored Gillius ADF + TeX Gyre Pagella OTFs under ./fonts/
-  % (deterministic, independent of TeX Live's font collection on the host).
+  % Sans (Gill Sans). Prefer the official HSG corporate font Gill Sans MT Pro
+  % when it is installed on the machine (e.g. in ~/.local/share/fonts/ from the
+  % HSG community download); otherwise the vendored Gillius ADF clone under
+  % ./fonts/ (deterministic / Overleaf-portable). The licensed font is never
+  % bundled in this theme, so we only reference it by name.
+  \IfFontExistsTF{Gill Sans MT Pro Medium}{%
+    \setsansfont{Gill Sans MT Pro Medium}[Ligatures=TeX]%
+  }{%
   \IfFileExists{fonts/GilliusADF-Regular.otf}{%
     \setsansfont{GilliusADF}[%
       Path=./fonts/, Extension=.otf,
@@ -114,7 +124,12 @@
       }%
     }%
   }%
-  % Serif: TeX Gyre Pagella (open Palatino clone). Vendored under fonts/.
+  }%
+  % Serif (Palatino). Prefer the official Palatino Linotype when installed;
+  % otherwise the vendored TeX Gyre Pagella clone under ./fonts/.
+  \IfFontExistsTF{Palatino Linotype}{%
+    \setmainfont{Palatino Linotype}[Ligatures=TeX]%
+  }{%
   \IfFileExists{fonts/texgyrepagella-regular.otf}{%
     \setmainfont{texgyrepagella}[%
       Path=./fonts/, Extension=.otf,
@@ -131,6 +146,7 @@
         TeX Gyre Pagella not found; \rmfamily will use the LaTeX default.\MessageBreak
         Drop texgyrepagella-{regular,italic,bold,bolditalic}.otf into ./fonts/}%
     }%
+  }%
   }%
 \fi
 \renewcommand{\familydefault}{\sfdefault}
