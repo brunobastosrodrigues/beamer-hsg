@@ -119,10 +119,33 @@ The HSG corporate identity uses two families:
 | Sans  | Gill Sans MT Pro  | Gillius ADF           | GPL-2+FE   |
 | Serif | Palatino OTF      | TeX Gyre Pagella      | GUST FL    |
 
-xelatex / lualatex pick up both automatically via `fontspec` from
-`./fonts/`. Slides are sans-dominant (`\sffamily` is the default);
-the serif family is available via `\rmfamily` or `\textrm{...}` for
-formal-document body text.
+**Font selection (xelatex / lualatex).** The theme prefers the official
+corporate fonts when they are installed on the machine, and otherwise
+falls back to the vendored open clones so builds stay reproducible
+(including on Overleaf):
+
+- **Sans:** `Gill Sans MT Pro` if installed, else the vendored
+  `Gillius ADF` from `./fonts/`.
+- **Serif:** `Palatino Linotype` if installed, else the vendored
+  `TeX Gyre Pagella` from `./fonts/`.
+
+The licensed fonts are referenced **by name only and are never bundled**
+in this repo, so nothing proprietary is redistributed. To get the
+official look, install them locally on your machine (they do not need to
+go into `./fonts/`):
+
+1. HSG community members can download **Gill Sans MT Pro**
+   (`gill_sans_mt_pro.zip`) and **Palatino** (`palatino_otf.zip`) from
+   the HSG Alumni portal:
+   <https://hsgalumni.ch/en/communities/event-support/>
+2. Unzip the `.otf` files into a user font directory, e.g.
+   `~/.local/share/fonts/` (Linux) or install them via the OS font
+   manager (macOS / Windows), then refresh the cache (`fc-cache -f` on
+   Linux). The theme picks them up automatically on the next build.
+
+Slides are sans-dominant (`\sffamily` is the default); the serif family
+is available via `\rmfamily` or `\textrm{...}` for formal-document body
+text.
 
 pdflatex falls back to **Lato** (sans) + **mathpazo** (Palatino-clone
 serif). Always available; less faithful to the corporate look.
