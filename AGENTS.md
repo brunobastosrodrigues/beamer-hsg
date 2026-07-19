@@ -34,6 +34,7 @@ in one shot. After that, fill in the `TODO` markers in `deck.tex`.
 | Section separator (numbered "N.") | `\hsgsection{Name}`                     |
 | Two columns                       | `\hsgtwocol{left}{right}`               |
 | Three columns                     | `\hsgthreecol{a}{b}{c}`                 |
+| Coloured panel (fixed height)     | `\hsgpanel[3.0cm]{HSGgreen}{Title}{body}` |
 | One bold green sentence           | `\hsgstatement{...}` (centred)          |
 | Quotation, optional avatar        | `\hsgquote[photo.jpg]{quote}{author}`   |
 | Quotation on green bg             | `\hsgquoteinverted[photo.jpg]{...}{...}`|
@@ -47,6 +48,11 @@ in one shot. After that, fill in the `TODO` markers in `deck.tex`.
 
 **Never** use Beamer's native `\begin{columns}` — it shifts content
 into the margin. Use `\hsgtwocol` / `\hsgthreecol` instead.
+
+**Panel rows must be level.** When `\hsgpanel` boxes sit side by side,
+give every panel in the row the SAME fixed height via the optional
+argument (`\hsgpanel[3.0cm]{...}`). Natural-height panels in a row end
+up unequal and look broken.
 
 If something breaks, jump to *Section 6 — Common errors*.
 

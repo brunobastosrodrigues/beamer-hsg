@@ -572,6 +572,26 @@
   \begin{minipage}[t]{0.31\textwidth}\vspace*{0pt}#3\end{minipage}\par%
 }
 
+% -----------------------------------------------------------------
+% Coloured content panel. Semantic colours by course convention:
+%   HSGcoral = wrong/failure path · HSGgreen = right path ·
+%   HSGbluegrey = neutral · any theme colour works.
+%
+%   \hsgpanel{HSGgreen}{Title}{body}            natural height
+%   \hsgpanel[3.0cm]{HSGgreen}{Title}{body}     fixed height
+%
+% RULE: when two or more panels sit side by side (inside \hsgtwocol /
+% \hsgthreecol), ALWAYS pass the SAME fixed height to every panel in
+% the row. Unequal panel heights in a row look broken; do not rely on
+% natural heights for rows.
+% -----------------------------------------------------------------
+\newcommand{\hsgpanel}[4][]{%
+  \fcolorbox{#2}{#2!10}{%
+  \ifstrempty{#1}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}%
+  \textbf{#3}\par\vspace{3pt}#4\end{minipage}}%
+  {\begin{minipage}[t][#1][t]{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}%
+  \textbf{#3}\par\vspace{3pt}#4\end{minipage}}}}
+
 % ---------------------------------------------------------------------------
 % \hsgvideolink{url}{thumbnail} — clickable video thumbnail.
 %
@@ -809,7 +829,8 @@
 %
 %   \hsgquote{quote}{attribution}                  black text, white bg
 %   \hsgquote[author-photo.jpg]{quote}{attribution}    + circular author avatar
-%   \hsgquoteinverted{quote}{attribution}          white text, green bg
+%   \hsgquoteinverted{quote}{attribution}          white text, coral bg
+%   (official master "Zitat weisse Schrift" = accent3 coral background)
 %   \hsgquoteinverted[photo.jpg]{quote}{attribution}   + circular author avatar
 %
 % The optional first argument is a path to an image of the quote's author.
@@ -839,35 +860,61 @@
     \end{tikzpicture}%
     \vfill
     \begin{center}
+    \ifstrempty{#1}{%
       \begin{minipage}{0.82\textwidth}
         \raggedright
         {\color{HSGgreen}\fontsize{60}{60}\selectfont\textbf{\char`\"}}\\[-1.2em]
         {\LARGE\itshape #2}\par\vspace{1.2em}
-        \hfill
-        \ifx\\#1\\\else\hsg@avatar{#1}{HSGmuted!50}\hspace{0.35em}\fi
-        \emph{#3}
-      \end{minipage}
+        \hfill\emph{#3}
+      \end{minipage}%
+    }{%
+      % large author portrait on the left, quote on the right
+      \begin{minipage}[c]{0.28\textwidth}
+        \centering
+        \fcolorbox{HSGmuted!40}{white}{\includegraphics[width=\dimexpr\linewidth-6pt\relax,
+          height=5.6cm, keepaspectratio]{#1}}
+      \end{minipage}\hspace{0.045\textwidth}%
+      \begin{minipage}[c]{0.60\textwidth}
+        \raggedright
+        {\color{HSGgreen}\fontsize{60}{60}\selectfont\textbf{\char`\"}}\\[-1.2em]
+        {\LARGE\itshape #2}\par\vspace{1.0em}
+        \hfill\emph{#3}
+      \end{minipage}%
+    }%
     \end{center}
-    \vfill\vfill
+    \vfill
   \end{frame}%
 }
 
 \newcommand{\hsgquoteinverted}[3][]{%
-  {\setbeamercolor{background canvas}{bg=HSGgreen}%
-   \setbeamercolor{normal text}{fg=white, bg=HSGgreen}%
+  {\setbeamercolor{background canvas}{bg=HSGcoral}%
+   \setbeamercolor{normal text}{fg=white, bg=HSGcoral}%
   \begin{frame}[plain]\hsg@stepframe
     \vfill
     \begin{center}
+    \ifstrempty{#1}{%
       \begin{minipage}{0.82\textwidth}
         \color{white}\raggedright
         {\fontsize{60}{60}\selectfont\textbf{\char`\"}}\\[-1.2em]
         {\LARGE\itshape #2}\par\vspace{1.2em}
-        \hfill
-        \ifx\\#1\\\else\hsg@avatar{#1}{white}\hspace{0.35em}\fi
-        \emph{#3}
-      \end{minipage}
+        \hfill\emph{#3}
+      \end{minipage}%
+    }{%
+      % large author portrait on the left, quote on the right
+      \begin{minipage}[c]{0.28\textwidth}
+        \centering
+        \fcolorbox{white}{HSGcoral}{\includegraphics[width=\dimexpr\linewidth-6pt\relax,
+          height=5.6cm, keepaspectratio]{#1}}
+      \end{minipage}\hspace{0.045\textwidth}%
+      \begin{minipage}[c]{0.60\textwidth}
+        \color{white}\raggedright
+        {\fontsize{60}{60}\selectfont\textbf{\char`\"}}\\[-1.2em]
+        {\LARGE\itshape #2}\par\vspace{1.0em}
+        \hfill\emph{#3}
+      \end{minipage}%
+    }%
     \end{center}
-    \vfill\vfill
+    \vfill
   \end{frame}}%
 }
 

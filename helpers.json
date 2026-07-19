@@ -1,57 +1,264 @@
 {
-  "version": "0.3.0",
-  "compilers_supported": ["pdflatex", "xelatex", "lualatex"],
-  "default_compiler": "pdflatex",
-  "preamble_setters": [
-    {"name": "\\title",            "args": ["text"], "purpose": "Cover-slide title."},
-    {"name": "\\subtitle",         "args": ["text"], "purpose": "Cover-slide subtitle, optional."},
-    {"name": "\\author",           "args": ["text"], "purpose": "Cover-slide author line."},
-    {"name": "\\institute",        "args": ["text"], "purpose": "Cover-slide institute (newline-separated)."},
-    {"name": "\\coursefooter",     "args": ["text"], "purpose": "Course/project name shown in the footer."},
-    {"name": "\\coverimage",       "args": ["path"], "purpose": "Hero photo on the cover, clipped+badge-framed."},
-    {"name": "\\hsgsetsections",   "args": ["comma-separated names"], "purpose": "Declare deck outline; drives the sidebar progress."},
-    {"name": "\\hsgclosingcontact","args": ["name", "email"], "purpose": "Contact lines inside the closing translucent box."},
-    {"name": "\\hsgclosingtext",   "args": ["text"], "purpose": "Override default 'Questions?' headline on closing slide."},
-    {"name": "\\hsgclosingphoto",  "args": ["path"], "purpose": "Override default closing-slide background photo."}
-  ],
-  "frame_helpers": [
-    {"name": "\\titlepage",         "args": [],                          "layout": "Titel Slide 3",            "purpose": "Cover. Use inside [plain] frame: \\begin{frame}[plain]\\titlepage\\end{frame}."},
-    {"name": "\\hsgagenda",         "args": ["\\item ... \\item ..."],   "layout": "Agenda",                   "purpose": "Numbered agenda + concrete-texture column on the right."},
-    {"name": "\\hsgsection",        "args": ["[ignored]", "name"],       "layout": "—",                        "purpose": "Silent: advances sidebar counter; renders no frame."},
-    {"name": "\\hsgstatement",      "args": ["text"],                    "layout": "Statement 1",              "purpose": "One bold green sentence at 36 pt."},
-    {"name": "\\hsgquote",          "args": ["[author-photo]?", "quote", "attribution"], "layout": "Zitat schwarze Schrift",   "purpose": "Quote on white background. Optional [photo.jpg] renders a circular author avatar next to the attribution."},
-    {"name": "\\hsgquoteinverted",  "args": ["[author-photo]?", "quote", "attribution"], "layout": "Zitat weisse Schrift",     "purpose": "Quote on green background. Optional [photo.jpg] renders a circular author avatar next to the attribution."},
-    {"name": "\\hsgfullimage",      "args": ["path"],                    "layout": "Bild Vollfläche",          "purpose": "Full-bleed image, small HSG logo overlay."},
-    {"name": "\\hsgtwocol",         "args": ["left", "right"],           "layout": "—",                        "purpose": "Two-column body via minipages. Left edge aligns with the frametitle (Beamer's native columns shifts content into the margin)."},
-    {"name": "\\hsgthreecol",       "args": ["left", "centre", "right"], "layout": "—",                        "purpose": "Three-column body via minipages. Same alignment guarantee as \\hsgtwocol."},
-    {"name": "\\hsgbibliography",   "args": [],                          "layout": "—",                        "purpose": "Render a 'References' slide via biblatex. Requires \\usepackage{biblatex}+\\addbibresource{...} in preamble."},
-    {"name": "\\hsgvideolink",      "args": ["url", "thumbnail"],        "layout": "—",                        "purpose": "Clickable video thumbnail. Image gets a translucent play-button overlay; whole figure is hyperlinked to the URL."},
-    {"name": "\\hsgbackup",         "args": [],                          "layout": "Kapiteltrenner",           "purpose": "Insert an 'Backup' separator and switch top-right progress to 'appendix'. Following slides keep page-badge counting but stop inflating section progress."},
-    {"name": "\\hsgclosing",        "args": [],                          "layout": "31_Contact",               "purpose": "Closing slide: full-bleed campus photo + contact box. Uses preamble setters."}
-  ],
-  "inline_helpers": [
-    {"name": "\\hsgemph", "args": ["text"], "purpose": "Inline HSG-green bold emphasis."},
-    {"name": "\\framesubtitle", "args": ["text"], "purpose": "Tiny grey breadcrumb above the frametitle."}
-  ],
-  "rules_to_follow": [
-    "Three pdflatex passes. remember-picture overlays settle on pass 2-3.",
-    "HSG green is reserved for the sidebar, page badge, and \\hsgemph. Never use it for frame titles, framesubtitles, or column headers.",
-    "Copy ALL hsg-* assets and the fonts/ directory next to your .tex file.",
-    "Sidebar wants 4-6 sections in \\hsgsetsections; the same items should appear in \\hsgagenda.",
-    "Cover and closing layouts are hand-tuned. Do not redefine their templates."
-  ],
-  "assets_required": {
-    "logos": ["assets/hsg-logo-en.pdf", "assets/hsg-logo-en.png", "assets/hsg-logo-de.pdf", "assets/hsg-logo-de.png", "assets/hsg-logo-cover.png"],
-    "decoration": ["assets/hsg-badge.png"],
-    "agenda": ["assets/hsg-agenda-texture-portrait.jpg"],
-    "closing": ["assets/hsg-closing-campus.jpg", "assets/hsg-closing-logo-band.png"],
-    "fonts_sans": ["fonts/GilliusADF-Regular.otf", "fonts/GilliusADF-Italic.otf", "fonts/GilliusADF-Bold.otf", "fonts/GilliusADF-BoldItalic.otf"],
-    "fonts_serif": ["fonts/texgyrepagella-regular.otf", "fonts/texgyrepagella-italic.otf", "fonts/texgyrepagella-bold.otf", "fonts/texgyrepagella-bolditalic.otf"]
+ "version": "0.3.0",
+ "compilers_supported": [
+  "pdflatex",
+  "xelatex",
+  "lualatex"
+ ],
+ "default_compiler": "pdflatex",
+ "preamble_setters": [
+  {
+   "name": "\\title",
+   "args": [
+    "text"
+   ],
+   "purpose": "Cover-slide title."
   },
-  "asset_resolution_paths_in_theme": ["./assets/", "./", "../assets/"],
-  "starter_files": {
-    "minimal": "example/skeleton.tex",
-    "exhaustive_example": "example/demo-using-the-template.tex",
-    "deck_showcase":      "examples/example.tex"
+  {
+   "name": "\\subtitle",
+   "args": [
+    "text"
+   ],
+   "purpose": "Cover-slide subtitle, optional."
+  },
+  {
+   "name": "\\author",
+   "args": [
+    "text"
+   ],
+   "purpose": "Cover-slide author line."
+  },
+  {
+   "name": "\\institute",
+   "args": [
+    "text"
+   ],
+   "purpose": "Cover-slide institute (newline-separated)."
+  },
+  {
+   "name": "\\coursefooter",
+   "args": [
+    "text"
+   ],
+   "purpose": "Course/project name shown in the footer."
+  },
+  {
+   "name": "\\coverimage",
+   "args": [
+    "path"
+   ],
+   "purpose": "Hero photo on the cover, clipped+badge-framed."
+  },
+  {
+   "name": "\\hsgsetsections",
+   "args": [
+    "comma-separated names"
+   ],
+   "purpose": "Declare deck outline; drives the sidebar progress."
+  },
+  {
+   "name": "\\hsgclosingcontact",
+   "args": [
+    "name",
+    "email"
+   ],
+   "purpose": "Contact lines inside the closing translucent box."
+  },
+  {
+   "name": "\\hsgclosingtext",
+   "args": [
+    "text"
+   ],
+   "purpose": "Override default 'Questions?' headline on closing slide."
+  },
+  {
+   "name": "\\hsgclosingphoto",
+   "args": [
+    "path"
+   ],
+   "purpose": "Override default closing-slide background photo."
   }
+ ],
+ "frame_helpers": [
+  {
+   "name": "\\titlepage",
+   "args": [],
+   "layout": "Titel Slide 3",
+   "purpose": "Cover. Use inside [plain] frame: \\begin{frame}[plain]\\titlepage\\end{frame}."
+  },
+  {
+   "name": "\\hsgagenda",
+   "args": [
+    "\\item ... \\item ..."
+   ],
+   "layout": "Agenda",
+   "purpose": "Numbered agenda + concrete-texture column on the right."
+  },
+  {
+   "name": "\\hsgsection",
+   "args": [
+    "[ignored]",
+    "name"
+   ],
+   "layout": "\u2014",
+   "purpose": "Silent: advances sidebar counter; renders no frame."
+  },
+  {
+   "name": "\\hsgstatement",
+   "args": [
+    "text"
+   ],
+   "layout": "Statement 1",
+   "purpose": "One bold green sentence at 36 pt."
+  },
+  {
+   "name": "\\hsgquote",
+   "args": [
+    "[author-photo]?",
+    "quote",
+    "attribution"
+   ],
+   "layout": "Zitat schwarze Schrift",
+   "purpose": "Quote on white background. Optional [photo.jpg] renders a circular author avatar next to the attribution."
+  },
+  {
+   "name": "\\hsgquoteinverted",
+   "args": [
+    "[author-photo]?",
+    "quote",
+    "attribution"
+   ],
+   "layout": "Zitat weisse Schrift",
+   "purpose": "Quote on green background. Optional [photo.jpg] renders a circular author avatar next to the attribution."
+  },
+  {
+   "name": "\\hsgfullimage",
+   "args": [
+    "path"
+   ],
+   "layout": "Bild Vollfl\u00e4che",
+   "purpose": "Full-bleed image, small HSG logo overlay."
+  },
+  {
+   "name": "\\hsgtwocol",
+   "args": [
+    "left",
+    "right"
+   ],
+   "layout": "\u2014",
+   "purpose": "Two-column body via minipages. Left edge aligns with the frametitle (Beamer's native columns shifts content into the margin)."
+  },
+  {
+   "name": "\\hsgthreecol",
+   "args": [
+    "left",
+    "centre",
+    "right"
+   ],
+   "layout": "\u2014",
+   "purpose": "Three-column body via minipages. Same alignment guarantee as \\hsgtwocol."
+  },
+  {
+   "name": "\\hsgbibliography",
+   "args": [],
+   "layout": "\u2014",
+   "purpose": "Render a 'References' slide via biblatex. Requires \\usepackage{biblatex}+\\addbibresource{...} in preamble."
+  },
+  {
+   "name": "\\hsgvideolink",
+   "args": [
+    "url",
+    "thumbnail"
+   ],
+   "layout": "\u2014",
+   "purpose": "Clickable video thumbnail. Image gets a translucent play-button overlay; whole figure is hyperlinked to the URL."
+  },
+  {
+   "name": "\\hsgbackup",
+   "args": [],
+   "layout": "Kapiteltrenner",
+   "purpose": "Insert an 'Backup' separator and switch top-right progress to 'appendix'. Following slides keep page-badge counting but stop inflating section progress."
+  },
+  {
+   "name": "\\hsgclosing",
+   "args": [],
+   "layout": "31_Contact",
+   "purpose": "Closing slide: full-bleed campus photo + contact box. Uses preamble setters."
+  },
+  {
+   "name": "\\hsgpanel",
+   "args": [
+    "[fixed-height]?",
+    "colour",
+    "title",
+    "body"
+   ],
+   "layout": "\u2014",
+   "purpose": "Coloured content panel (colour border, 10% tint fill, bold title). RULE: panels sitting side by side in a row must all receive the SAME fixed height via the optional argument, e.g. \\hsgpanel[3.0cm]{HSGgreen}{...}{...}; never mix natural heights in a row."
+  }
+ ],
+ "inline_helpers": [
+  {
+   "name": "\\hsgemph",
+   "args": [
+    "text"
+   ],
+   "purpose": "Inline HSG-green bold emphasis."
+  },
+  {
+   "name": "\\framesubtitle",
+   "args": [
+    "text"
+   ],
+   "purpose": "Tiny grey breadcrumb above the frametitle."
+  }
+ ],
+ "rules_to_follow": [
+  "Three pdflatex passes. remember-picture overlays settle on pass 2-3.",
+  "HSG green is reserved for the sidebar, page badge, and \\hsgemph. Never use it for frame titles, framesubtitles, or column headers.",
+  "Copy ALL hsg-* assets and the fonts/ directory next to your .tex file.",
+  "Sidebar wants 4-6 sections in \\hsgsetsections; the same items should appear in \\hsgagenda.",
+  "Cover and closing layouts are hand-tuned. Do not redefine their templates."
+ ],
+ "assets_required": {
+  "logos": [
+   "assets/hsg-logo-en.pdf",
+   "assets/hsg-logo-en.png",
+   "assets/hsg-logo-de.pdf",
+   "assets/hsg-logo-de.png",
+   "assets/hsg-logo-cover.png"
+  ],
+  "decoration": [
+   "assets/hsg-badge.png"
+  ],
+  "agenda": [
+   "assets/hsg-agenda-texture-portrait.jpg"
+  ],
+  "closing": [
+   "assets/hsg-closing-campus.jpg",
+   "assets/hsg-closing-logo-band.png"
+  ],
+  "fonts_sans": [
+   "fonts/GilliusADF-Regular.otf",
+   "fonts/GilliusADF-Italic.otf",
+   "fonts/GilliusADF-Bold.otf",
+   "fonts/GilliusADF-BoldItalic.otf"
+  ],
+  "fonts_serif": [
+   "fonts/texgyrepagella-regular.otf",
+   "fonts/texgyrepagella-italic.otf",
+   "fonts/texgyrepagella-bold.otf",
+   "fonts/texgyrepagella-bolditalic.otf"
+  ]
+ },
+ "asset_resolution_paths_in_theme": [
+  "./assets/",
+  "./",
+  "../assets/"
+ ],
+ "starter_files": {
+  "minimal": "example/skeleton.tex",
+  "exhaustive_example": "example/demo-using-the-template.tex",
+  "deck_showcase": "examples/example.tex"
+ }
 }
