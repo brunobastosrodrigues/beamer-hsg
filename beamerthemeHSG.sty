@@ -606,10 +606,22 @@
 %                                               \hsgtwocol/\hsgthreecol all
 %                                               panels of the row are levelled
 %   \hsgpanel[3.0cm]{HSGgreen}{Title}{body}     fixed height
+%   \hsgpanel*{...}{...}{...}                   same, text centred horizontally
+%
+% In a levelled row or with a fixed height, the title stays at the top
+% and the body is centred vertically in the space below it.
 % -----------------------------------------------------------------
 \newsavebox{\hsg@panelbox}
-\newcommand{\hsg@panelinner}[2]{\textbf{#1}\par\vspace{3pt}#2}
-\newcommand{\hsgpanel}[4][]{%
+\let\hsg@pcentre\relax
+% Natural-height content (used for measuring and for lone panels).
+\newcommand{\hsg@panelinner}[2]{{\hsg@pcentre\textbf{#1}\par}\vspace{3pt}{\hsg@pcentre#2\par}}
+% Fixed-height content: the title stays at the top, the body is centred
+% vertically in the space below it, so panels of one row read level.
+\newcommand{\hsg@panelfixed}[2]{{\hsg@pcentre\textbf{#1}\par}\vspace{3pt}\vfill{\hsg@pcentre#2\par}\vfill\vspace*{0pt}}
+\newcommand{\hsgpanel}{\@ifstar
+  {\def\hsg@pcentre{\centering}\hsg@panel}%
+  {\let\hsg@pcentre\relax\hsg@panel}}
+\newcommand{\hsg@panel}[4][]{%
   \ifstrempty{#1}{%
     \ifhsg@measuring
       \sbox{\hsg@panelbox}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}%
@@ -621,11 +633,11 @@
       \fcolorbox{#2}{#2!10}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}%
         \hsg@panelinner{#3}{#4}\end{minipage}}%
     \else
-      \fcolorbox{#2}{#2!10}{\begin{minipage}[t][\hsg@rowheight][t]{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}%
-        \hsg@panelinner{#3}{#4}\end{minipage}}%
+      \fcolorbox{#2}{#2!10}{\begin{minipage}[t][\hsg@rowheight][s]{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}%
+        \hsg@panelfixed{#3}{#4}\end{minipage}}%
     \fi}%
-  {\fcolorbox{#2}{#2!10}{\begin{minipage}[t][#1][t]{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}%
-    \hsg@panelinner{#3}{#4}\end{minipage}}}}
+  {\fcolorbox{#2}{#2!10}{\begin{minipage}[t][#1][s]{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}%
+    \hsg@panelfixed{#3}{#4}\end{minipage}}}}
 
 % ---------------------------------------------------------------------------
 % Labelled boxes and slide furniture.

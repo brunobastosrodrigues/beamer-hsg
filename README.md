@@ -92,7 +92,7 @@ the organised layout above OR a flat layout (everything next to the
 | `\hsgsection{Name}` | Silent: advances sidebar progress. |
 | `\hsgtwocol{l}{r}` | Two columns aligned with the frametitle. |
 | `\hsgthreecol{a}{b}{c}` | Three columns with the same alignment guarantee. |
-| `\hsgpanel{colour}{title}{body}` | Coloured panel; panels side by side in `\hsgtwocol`/`\hsgthreecol` are levelled to the tallest automatically. |
+| `\hsgpanel{colour}{title}{body}` | Coloured panel; panels side by side in `\hsgtwocol`/`\hsgthreecol` are levelled to the tallest automatically, body centred vertically under the title. `\hsgpanel*` also centres the text horizontally. |
 | `\hsgstatement{text}` | One bold green sentence, centred on the slide. |
 | `\hsgquote[photo.jpg]{q}{author}` | Quote on white; optional square author avatar. |
 | `\hsgquoteinverted[photo.jpg]{q}{author}` | Quote on green; same optional avatar. |

@@ -36,6 +36,7 @@ in one shot. After that, fill in the `TODO` markers in `deck.tex`.
 | Three columns                     | `\hsgthreecol{a}{b}{c}`                 |
 | Coloured panel                    | `\hsgpanel{HSGgreen}{Title}{body}`      |
 | Panel with a fixed height         | `\hsgpanel[3.0cm]{HSGgreen}{Title}{body}` |
+| Panel, text centred              | `\hsgpanel*{HSGgreen}{Title}{body}`     |
 | Takeaway box ("Takeaway.")        | `\hsgtakeaway{text}`                    |
 | Definition box ("Definition.")    | `\hsgdefinition{text}`                  |
 | Prompt for the room               | `\hsgdiscuss{text}`                     |
@@ -61,7 +62,8 @@ into the margin. Use `\hsgtwocol` / `\hsgthreecol` instead.
 **Panel rows are level automatically.** Panels without a height inside
 `\hsgtwocol` / `\hsgthreecol` all get the height of the tallest one (the
 row is measured once, then typeset). Pass `\hsgpanel[3.0cm]{...}` only
-when you want a specific height.
+when you want a specific height. The body is centred vertically under
+the title; `\hsgpanel*` centres it horizontally as well.
 
 **Diagram boxes must be symmetric.** In a TikZ schematic use `hsg box`
 for every box and set one `hsg box height` / `hsg box width` on the

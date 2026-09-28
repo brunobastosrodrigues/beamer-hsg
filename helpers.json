@@ -201,7 +201,7 @@
     "body"
    ],
    "layout": "—",
-   "purpose": "Coloured panel. Without [height], panels side by side in \\hsgtwocol/\\hsgthreecol are levelled to the tallest automatically."
+   "purpose": "Coloured panel. Without [height], panels side by side in \\hsgtwocol/\\hsgthreecol are levelled to the tallest automatically. Body centred vertically under the title; \\hsgpanel* also centres it horizontally."
   }
  ],
  "inline_helpers": [

@@ -677,7 +677,7 @@ pdflatex deck.tex && pdflatex deck.tex && pdflatex deck.tex
 \begin{frame}
   \frametitle{Panels level themselves}
   \hsgthreecol{%
-    \hsgpanel{HSGgreen}{Short}{One line.}
+    \hsgpanel*{HSGgreen}{Short, centred}{One line.}
   }{%
     \hsgpanel{HSGbluegrey}{Longer}{\begin{itemize}\item First point\item Second point\item Third point\end{itemize}}
   }{%
@@ -685,7 +685,8 @@ pdflatex deck.tex && pdflatex deck.tex && pdflatex deck.tex
   }
   \hsgdefinition{\texttt{\textbackslash hsgpanel} without a height, inside
   \texttt{\textbackslash hsgtwocol} or \texttt{\textbackslash hsgthreecol},
-  takes the height of the tallest panel in the row.}
+  takes the height of the tallest panel in the row, with the body centred
+  vertically; \texttt{\textbackslash hsgpanel*} also centres it horizontally.}
   \hsgtakeaway{Rows of panels are level by construction; no height to guess.}
   \hsgsource{\texttt{\textbackslash hsgsource\{...\}}: the source line, at the bottom, with a gap above.}
 \end{frame}
