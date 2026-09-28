@@ -645,7 +645,7 @@
       \node[anchor=north west, inner sep=0pt,
             font=\fontsize{12}{16}\selectfont, text=HSGmuted]
         at ([xshift=\hsg@sidemargin, yshift=-3.50cm]current page.north west)
-        {Slides for questions and reference --- not part of the main narrative.};
+        {Slides for questions and reference, not part of the main narrative.};
     \end{tikzpicture}%
     \hsg@footerchrome%
   \end{frame}%
@@ -929,19 +929,47 @@
 %
 % \hsgstatement{Security is a process, not a product.}
 % -----------------------------------------------------------------
-\newcommand{\hsgstatement}[1]{%
+% Auto-alternating pull-quote: bold-green (odd) / warm-sand (even), so a
+% deck's statement slides get visual rhythm without any per-slide markup.
+\newcommand{\hsg@stmt@green}[1]{%
   \begin{frame}[plain]\hsg@stepframe
     \begin{tikzpicture}[remember picture, overlay]
-      \node[anchor=center, inner sep=0pt]
-        at (current page.center)
-        {\begin{minipage}{13.0cm}
-          \setlength{\parindent}{0pt}\centering
-          {\color{HSGgreen}\fontsize{36}{42}\selectfont\bfseries #1\par}
-         \end{minipage}};
+      \fill[HSGgreen] (current page.south west) rectangle (current page.north east);
+      \node[anchor=north west, text=white, opacity=0.14, inner sep=0pt,
+            font=\fontsize{190}{190}\selectfont\bfseries]
+        at ([xshift=0.6cm, yshift=-0.1cm]current page.north west) {\char`\"};
+      \node[anchor=center, inner sep=0pt] at (current page.center)
+        {\begin{minipage}{12.4cm}\centering
+          {\color{white}\fontsize{34}{42}\selectfont\bfseries #1\par}\end{minipage}};
+      \node[anchor=south west, inner sep=0pt]
+        at ([xshift=0.30cm, yshift=0.25cm]current page.south west)
+        {\includegraphics[height=0.55cm]{hsg-logo-en-white.png}};
+      \node[anchor=south east, text=white, inner sep=0pt, font=\fontsize{7}{8}\selectfont]
+        at ([xshift=-0.45cm, yshift=0.42cm]current page.south east) {\insertframenumber};
     \end{tikzpicture}%
-    \hsg@footerchrome%  same logo + page-number badge as every content slide
-  \end{frame}%
-}
+  \end{frame}}
+\newcommand{\hsg@stmt@sand}[1]{%
+  \begin{frame}[plain]\hsg@stepframe
+    \begin{tikzpicture}[remember picture, overlay]
+      \fill[HSGsand] (current page.south west) rectangle (current page.north east);
+      \node[anchor=north west, text=HSGgreenDark, opacity=0.10, inner sep=0pt,
+            font=\fontsize{190}{190}\selectfont\bfseries]
+        at ([xshift=0.6cm, yshift=-0.1cm]current page.north west) {\char`\"};
+      \node[anchor=center, inner sep=0pt] at (current page.center)
+        {\begin{minipage}{12.4cm}\centering
+          {\color{HSGgreenDark}\fontsize{34}{42}\selectfont\bfseries #1\par}
+          \vspace{0.7em}{\color{HSGcoral}\rule{2.2cm}{2.5pt}}\end{minipage}};
+      \node[anchor=south west, inner sep=0pt]
+        at ([xshift=0.30cm, yshift=0.25cm]current page.south west)
+        {\includegraphics[height=0.55cm]{hsg-logo-en.pdf}};
+      \node[anchor=south east, text=HSGmuted, inner sep=0pt, font=\fontsize{7}{8}\selectfont]
+        at ([xshift=-0.45cm, yshift=0.42cm]current page.south east) {\insertframenumber};
+    \end{tikzpicture}%
+  \end{frame}}
+\newcounter{hsgstmtparity}
+\newcommand{\hsgstatement}[1]{%
+  \stepcounter{hsgstmtparity}%
+  \ifodd\value{hsgstmtparity}\hsg@stmt@green{#1}\else\hsg@stmt@sand{#1}\fi}
 
 % -----------------------------------------------------------------
 % Full-bleed image frame. No footer, small logo bottom-left.
