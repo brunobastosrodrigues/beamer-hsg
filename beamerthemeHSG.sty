@@ -10,6 +10,7 @@
 %   hsg-agenda-texture-portrait.jpg   concrete texture for the agenda
 %   hsg-closing-campus.jpg            campus photo for the closing slide
 %   hsg-closing-logo-band.png         accreditation strip for the closing
+%   hsg-fade-left.png                 white fade behind chapter titles on photos
 %
 % Usage in a presentation:
 %   \documentclass[aspectratio=169]{beamer}
@@ -21,7 +22,7 @@
 %   \date{...}
 %   \newcommand{\coursefooter}{Computer Networks} % shown in the footer
 %
-\ProvidesPackage{beamerthemeHSG}[2026/09/28 v0.4.0 HSG Beamer Theme]
+\ProvidesPackage{beamerthemeHSG}[2026/09/28 v0.5.0 HSG Beamer Theme]
 
 \RequirePackage{tikz}
 \RequirePackage{xcolor}
@@ -943,29 +944,47 @@
 %   \hsgsection{Introduction}             -> title only
 %   \hsgsection{Methods}{Distributed}     -> title + subtitle line
 %
-% Override the right-side image: \hsgsectionimage{path}.
-% Disable it entirely:           \hsgsectionimage{}.
+% SEPARATOR ART. \hsgsectionimage{path} (alias \hsgchapterimage{path})
+% sets the deck-wide background art of chapter separators; empty by
+% default (plain white). Art with a light left third reads best; for any
+% other photo, \hsgchapterfade{true} lays a white fade over the left side.
+%
+% SEPARATOR STYLE. \hsgseparators{true|false|chapter}
+%   true     numbered "N. Name" slide (default)
+%   false    no slide, the footer progress still advances
+%   chapter  large-number chapter slide (01, 02, ...) with the deck art,
+%            i.e. \hsgsection{Name} behaves like \hsgchapter{NN}{Name}
 % -----------------------------------------------------------------
 % \hsgsection{Name} — advance to the next section and (by default) render a
 % numbered "N. Name" separator slide. The inline footer progress also updates
 % automatically. Turn separators off with \hsgseparators{false}.
 % The optional argument (#1) is kept for backward compatibility but ignored.
-\def\@hsgsectionimage{hsg-agenda-texture-portrait.jpg}
+\def\@hsgsectionimage{}
 \newcommand{\hsgsectionimage}[1]{\def\@hsgsectionimage{#1}}
+\newcommand{\hsgchapterimage}[1]{\def\@hsgsectionimage{#1}}
+\newif\ifhsg@chapterfade
+\newcommand{\hsgchapterfade}[1]{\csname hsg@chapterfade#1\endcsname}
 % Numbered section-separator slides ("N. Name"), ON by default for cross-deck
 % consistency. Disable with \hsgseparators{false} before \begin{document}.
 \newif\ifhsg@sepslide \hsg@sepslidetrue
-\newcommand{\hsgseparators}[1]{\csname hsg@sepslide#1\endcsname}
+\newif\ifhsg@sepchapter
+\newcommand{\hsgseparators}[1]{%
+  \ifstrequal{#1}{chapter}{\hsg@sepslidetrue\hsg@sepchaptertrue}%
+    {\hsg@sepchapterfalse\csname hsg@sepslide#1\endcsname}}
 \newcommand{\hsgsection}[2][]{%
   \stepcounter{hsg@cursec}%
   \gdef\hsg@currentsectionname{#2}%
   \ifhsg@sepslide
+    \ifhsg@sepchapter
+      \hsgchapter{\two@digits{\value{hsg@cursec}}}{#2}%
+    \else
     \begin{frame}[plain]%
       \vfill
       \centering
       {\usebeamerfont{title}\bfseries\normalcolor\thehsg@cursec.\ #2}%
       \vfill
     \end{frame}%
+    \fi
   \fi
 }
 
@@ -973,16 +992,23 @@
 % Chapter-separator frame — matches slideLayout39/40.xml "Kapiteltrenner".
 % Large number + title, optionally over a full-bleed background image.
 %
-%   \hsgchapter{02}{Methodology}
-%   \hsgchapter[images/bg.jpg]{03}{Results}   % optional bg image
+%   \hsgchapter{02}{Methodology}              % deck art (\hsgsectionimage), if set
+%   \hsgchapter[images/bg.jpg]{03}{Results}   % this slide's own art
+%   \hsgchapter[none]{04}{Discussion}         % no art on this slide
 % -----------------------------------------------------------------
 \newcommand{\hsgchapter}[3][]{%
   \begin{frame}[plain]\hsg@stepframe
     \begin{tikzpicture}[remember picture, overlay]
-      \ifthenelse{\equal{#1}{}}{}{%
+      \ifstrempty{#1}{\edef\hsg@chapart{\@hsgsectionimage}}{\def\hsg@chapart{#1}}%
+      \ifthenelse{\equal{\hsg@chapart}{}\OR\equal{\hsg@chapart}{none}}{}{%
         \node[anchor=center, inner sep=0pt] at (current page.center)
           {\includegraphics[width=\paperwidth, height=\paperheight,
-                            keepaspectratio=false]{#1}};%
+                            keepaspectratio=false]{\hsg@chapart}};%
+        \ifhsg@chapterfade
+          % white-to-clear fade over the left 62% (assets/hsg-fade-left.png)
+          \node[anchor=west, inner sep=0pt] at (current page.west)
+            {\includegraphics[width=0.62\paperwidth, height=\paperheight]{hsg-fade-left.png}};%
+        \fi
       }
       % Large chapter number — bold HSG green
       \node[anchor=north west, inner sep=0pt,

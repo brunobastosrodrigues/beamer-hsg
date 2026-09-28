@@ -1,5 +1,5 @@
 {
- "version": "0.4.0",
+ "version": "0.5.0",
  "compilers_supported": [
   "pdflatex",
   "xelatex",
@@ -84,6 +84,27 @@
     "path/"
    ],
    "purpose": "Image and \\input search paths for a deck in a sub-folder compiled from the repository root."
+  },
+  {
+   "name": "\\hsgseparators",
+   "args": [
+    "true | false | chapter"
+   ],
+   "purpose": "Separator style for \\hsgsection: numbered slide (default), none, or large-number chapter slide with the deck art."
+  },
+  {
+   "name": "\\hsgsectionimage",
+   "args": [
+    "path"
+   ],
+   "purpose": "Deck-wide background art for chapter separators (alias \\hsgchapterimage). Empty by default."
+  },
+  {
+   "name": "\\hsgchapterfade",
+   "args": [
+    "true | false"
+   ],
+   "purpose": "White fade over the left 62% of the chapter art so the title reads on any photo."
   }
  ],
  "frame_helpers": [
@@ -286,14 +307,16 @@
    "assets/hsg-logo-cover.png"
   ],
   "decoration": [
-   "assets/hsg-badge.png"
+   "assets/hsg-badge.png",
+   "assets/hsg-fade-left.png"
   ],
   "agenda": [
    "assets/hsg-agenda-texture-portrait.jpg"
   ],
   "closing": [
    "assets/hsg-closing-campus.jpg",
-   "assets/hsg-closing-logo-band.png"
+   "assets/hsg-closing-logo-band.png",
+   "assets/hsg-logo-en-white.png"
   ],
   "fonts_sans": [
    "fonts/GilliusADF-Regular.otf",

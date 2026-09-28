@@ -32,6 +32,8 @@ in one shot. After that, fill in the `TODO` markers in `deck.tex`.
 | Cover                             | `\titlepage` inside `[plain]` frame     |
 | Agenda                            | `\hsgagenda{\item ... \item ...}`       |
 | Section separator (numbered "N.") | `\hsgsection{Name}`                     |
+| Chapter separators with art       | preamble: `\hsgseparators{chapter}` + `\hsgsectionimage{art.jpg}` (+ `\hsgchapterfade{true}` for photos); then `\hsgsection{Name}` |
+| One chapter slide, own art        | `\hsgchapter[art.jpg]{02}{Title}`; `[none]` for none |
 | Two columns                       | `\hsgtwocol{left}{right}`               |
 | Three columns                     | `\hsgthreecol{a}{b}{c}`                 |
 | Coloured panel                    | `\hsgpanel{HSGgreen}{Title}{body}`      |

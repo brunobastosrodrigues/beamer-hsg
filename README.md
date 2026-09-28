@@ -83,6 +83,10 @@ the organised layout above OR a flat layout (everything next to the
 | `\hsgagenda{ \item ... }` | Numbered agenda + concrete-texture column. |
 | `\hsgsetsections{a, b, c}` | Declare deck outline (drives sidebar). |
 | `\hsgsection{Name}` | Silent: advances sidebar progress. |
+| `\hsgseparators{true\|false\|chapter}` | Separator style: numbered slide, none, or large-number chapter slide (01, 02, ...) for every `\hsgsection`. |
+| `\hsgchapter[art]{NN}{Title}` | Chapter separator; `[none]` for no art on this slide. |
+| `\hsgsectionimage{path}` (alias `\hsgchapterimage`) | Deck-wide art behind chapter separators. |
+| `\hsgchapterfade{true}` | White fade over the left of the art, so any photo works behind the title. |
 | `\hsgtwocol{l}{r}` | Two columns aligned with the frametitle. |
 | `\hsgthreecol{a}{b}{c}` | Three columns with the same alignment guarantee. |
 | `\hsgpanel{colour}{title}{body}` | Coloured panel; panels side by side in `\hsgtwocol`/`\hsgthreecol` are levelled to the tallest automatically, body centred vertically under the title. `\hsgpanel*` also centres the text horizontally. |
