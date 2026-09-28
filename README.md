@@ -24,13 +24,6 @@ Gill-Sans-Nova look without system installs.
 - Quick draft decks where setting up PowerPoint is overkill
 - Any private working presentation 
 
-**Not recommended for**
-
-- Official university communications
-- External keynotes representing HSG
-- Branded recruiting / marketing materials
-- Anything where the absence of the *official* corporate identity
-  would be a problem
 
 ## Quick start
 
