@@ -4,7 +4,7 @@
 %
 % Compile from this folder:
 %     pdflatex demo-using-the-template.tex      (3 passes)
-\documentclass[aspectratio=169]{beamer}
+\documentclass[aspectratio=169,xcolor=table]{beamer}
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{booktabs}
@@ -669,6 +669,72 @@ pdflatex deck.tex && pdflatex deck.tex && pdflatex deck.tex
   figure becomes a hyperlink that opens in the audience's browser.
   \vspace{0.4em}
   \hsgvideolink{https://youtu.be/dQw4w9WgXcQ}{hsg-closing-campus.jpg}
+\end{frame}
+
+% ---------------------------------------------------------------------------
+% Levelled panels, labelled boxes, source line.
+% ---------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Panels level themselves}
+  \hsgthreecol{%
+    \hsgpanel{HSGgreen}{Short}{One line.}
+  }{%
+    \hsgpanel{HSGbluegrey}{Longer}{\begin{itemize}\item First point\item Second point\item Third point\end{itemize}}
+  }{%
+    \hsgpanel{HSGcoral}{Medium}{Two lines of text\\in this panel.}
+  }
+  \hsgdefinition{\texttt{\textbackslash hsgpanel} without a height, inside
+  \texttt{\textbackslash hsgtwocol} or \texttt{\textbackslash hsgthreecol},
+  takes the height of the tallest panel in the row.}
+  \hsgtakeaway{Rows of panels are level by construction; no height to guess.}
+  \hsgsource{\texttt{\textbackslash hsgsource\{...\}}: the source line, at the bottom, with a gap above.}
+\end{frame}
+
+% ---------------------------------------------------------------------------
+% Diagram boxes: one height and width per picture.
+% ---------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Diagram boxes}
+  \begin{center}
+  \begin{tikzpicture}[hsg box height=1.25cm, hsg box width=2.5cm]
+    \node[hsg box]              (a) at (0,0)    {Raw data};
+    \node[hsg box=HSGgreen]     (b) at (3.4,0)  {Train\\the model};
+    \node[hsg box=HSGbluegrey]  (c) at (6.8,0)  {Evaluate on\\held-out\\data};
+    \node[hsg decision]         (d) at (10.2,0) {good\\enough?};
+    \draw[hsg arrow] (a) -- (b);
+    \draw[hsg arrow] (b) -- (c);
+    \draw[hsg arrow] (c) -- (d);
+    \draw[hsg arrow] (d.south) -- ++(0,-0.6) -| node[hsg label, pos=0.25]{no} (b.south);
+  \end{tikzpicture}
+  \end{center}
+  \hsgdiscuss{Every box has the height of the tallest (three lines), set once
+  on the picture: \texttt{[hsg box height=1.25cm, hsg box width=2.5cm]}.}
+\end{frame}
+
+% ---------------------------------------------------------------------------
+% Striped, gridded table and chart styles.
+% ---------------------------------------------------------------------------
+\begin{frame}
+  \frametitle{Tables and charts}
+  \hsgtwocol{%
+    \begin{hsgtable}{|L{2.0cm}|L{3.8cm}|}
+      \hsgtablehead{Metric & What it measures}
+      Accuracy & Share of correct answers\\\hline
+      Precision & Share of alarms that are real\\\hline
+      Recall & Share of real cases caught\\\hline
+      F1 & Balance of precision and recall\\\hline
+    \end{hsgtable}
+  }{%
+    \begin{tikzpicture}
+      \begin{axis}[hsg bars, width=6.4cm, height=4.2cm,
+          symbolic x coords={A,B,C}, xtick={A,B,C}, ylabel={score}, ymax=1]
+        \addplot coordinates {(A,0.72)(B,0.81)(C,0.64)};
+        \addplot coordinates {(A,0.65)(B,0.77)(C,0.70)};
+        \legend{model 1, model 2}
+      \end{axis}
+    \end{tikzpicture}
+  }
+  \hsgsource{\texttt{hsgtable} needs \texttt{xcolor=table} in the document class for the stripes; \texttt{hsg bars} and \texttt{hsg chart} are pgfplots styles.}
 \end{frame}
 
 % ---------------------------------------------------------------------------

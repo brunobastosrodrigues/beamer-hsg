@@ -92,6 +92,7 @@ the organised layout above OR a flat layout (everything next to the
 | `\hsgsection{Name}` | Silent: advances sidebar progress. |
 | `\hsgtwocol{l}{r}` | Two columns aligned with the frametitle. |
 | `\hsgthreecol{a}{b}{c}` | Three columns with the same alignment guarantee. |
+| `\hsgpanel{colour}{title}{body}` | Coloured panel; panels side by side in `\hsgtwocol`/`\hsgthreecol` are levelled to the tallest automatically. |
 | `\hsgstatement{text}` | One bold green sentence, centred on the slide. |
 | `\hsgquote[photo.jpg]{q}{author}` | Quote on white; optional square author avatar. |
 | `\hsgquoteinverted[photo.jpg]{q}{author}` | Quote on green; same optional avatar. |
@@ -102,6 +103,14 @@ the organised layout above OR a flat layout (everything next to the
 | `\hsgclosingcontact{name}{email}` | One translucent contact box per call (repeatable). |
 | `\hsgclosing` | Closing *Questions?* slide with campus photo. |
 | `\hsgemph{word}` | Inline HSG-green bold accent. |
+| `\hsgtakeaway{text}` | Green box labelled **Takeaway.** (label: `\hsgtakeawaylabel`). |
+| `\hsgdefinition{text}` | Blue-grey box labelled **Definition.** (label: `\hsgdefinitionlabel`). |
+| `\hsgdiscuss{text}` | Italic prompt for the audience. |
+| `\hsgsource{text}` | Small grey source line at the slide bottom, with a gap above. |
+| `\hsgdeckdir{path/}` | One-line image and `\input` paths for decks in a sub-folder compiled from a repo root. |
+| `hsg box`, `hsg decision`, `hsg arrow` (TikZ) | Diagram boxes sharing one height and width per picture: `[hsg box height=1.2cm, hsg box width=2.8cm]`. |
+| `\begin{hsgtable}{\|L{3cm}\|L{4cm}\|}` | Table with grid lines, shaded header (`\hsgtablehead{A & B}`), alternating rows (needs `xcolor=table` class option), columns `L/C/R{width}` without hyphenation. |
+| `hsg chart`, `hsg bars` (pgfplots) | Chart styles: fonts, left axes, dashed grid, HSG colours. |
 
 For full details and the layout-decision table, see **AGENTS.md**.
 

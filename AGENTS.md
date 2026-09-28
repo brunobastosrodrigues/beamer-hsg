@@ -34,7 +34,16 @@ in one shot. After that, fill in the `TODO` markers in `deck.tex`.
 | Section separator (numbered "N.") | `\hsgsection{Name}`                     |
 | Two columns                       | `\hsgtwocol{left}{right}`               |
 | Three columns                     | `\hsgthreecol{a}{b}{c}`                 |
-| Coloured panel (fixed height)     | `\hsgpanel[3.0cm]{HSGgreen}{Title}{body}` |
+| Coloured panel                    | `\hsgpanel{HSGgreen}{Title}{body}`      |
+| Panel with a fixed height         | `\hsgpanel[3.0cm]{HSGgreen}{Title}{body}` |
+| Takeaway box ("Takeaway.")        | `\hsgtakeaway{text}`                    |
+| Definition box ("Definition.")    | `\hsgdefinition{text}`                  |
+| Prompt for the room               | `\hsgdiscuss{text}`                     |
+| Source line at slide bottom       | `\hsgsource{text}`                      |
+| Deck in a repo sub-folder         | `\hsgdeckdir{path/}` in the preamble    |
+| Diagram box / decision / arrow    | TikZ `hsg box[=colour]`, `hsg decision`, `hsg arrow` |
+| Table (grid, header, stripes)     | `\begin{hsgtable}{\|L{3cm}\|L{4cm}\|}` + `\hsgtablehead{A & B}` |
+| Chart style                       | pgfplots `hsg chart`, `hsg bars`         |
 | One bold green sentence           | `\hsgstatement{...}` (centred)          |
 | Quotation, optional avatar        | `\hsgquote[photo.jpg]{quote}{author}`   |
 | Quotation on green bg             | `\hsgquoteinverted[photo.jpg]{...}{...}`|
@@ -49,10 +58,21 @@ in one shot. After that, fill in the `TODO` markers in `deck.tex`.
 **Never** use Beamer's native `\begin{columns}` — it shifts content
 into the margin. Use `\hsgtwocol` / `\hsgthreecol` instead.
 
-**Panel rows must be level.** When `\hsgpanel` boxes sit side by side,
-give every panel in the row the SAME fixed height via the optional
-argument (`\hsgpanel[3.0cm]{...}`). Natural-height panels in a row end
-up unequal and look broken.
+**Panel rows are level automatically.** Panels without a height inside
+`\hsgtwocol` / `\hsgthreecol` all get the height of the tallest one (the
+row is measured once, then typeset). Pass `\hsgpanel[3.0cm]{...}` only
+when you want a specific height.
+
+**Diagram boxes must be symmetric.** In a TikZ schematic use `hsg box`
+for every box and set one `hsg box height` / `hsg box width` on the
+picture, large enough for the tallest box. Do not give single boxes
+their own sizes. Shapes whose size carries meaning (proportional bars,
+areas) are the exception.
+
+**Tables.** Use `hsgtable`: grid lines, a shaded header row via
+`\hsgtablehead{...}`, alternating light rows, ragged columns `L{w}`.
+Start every cell with a capital letter. Add `xcolor=table` to the
+document class for the stripes.
 
 If something breaks, jump to *Section 6 — Common errors*.
 
@@ -98,7 +118,7 @@ with `assets/` in your `\includegraphics{...}` calls — the
 Every new presentation MUST follow this structure:
 
 ```latex
-\documentclass[aspectratio=169]{beamer}
+\documentclass[aspectratio=169,xcolor=table]{beamer}
 \usetheme{HSG}
 
 \title{Short descriptive title}

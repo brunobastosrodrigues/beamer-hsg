@@ -1,5 +1,5 @@
 {
- "version": "0.3.0",
+ "version": "0.4.0",
  "compilers_supported": [
   "pdflatex",
   "xelatex",
@@ -77,6 +77,13 @@
     "path"
    ],
    "purpose": "Override default closing-slide background photo."
+  },
+  {
+   "name": "\\hsgdeckdir",
+   "args": [
+    "path/"
+   ],
+   "purpose": "Image and \\input search paths for a deck in a sub-folder compiled from the repository root."
   }
  ],
  "frame_helpers": [
@@ -100,7 +107,7 @@
     "[ignored]",
     "name"
    ],
-   "layout": "\u2014",
+   "layout": "—",
    "purpose": "Silent: advances sidebar counter; renders no frame."
   },
   {
@@ -136,7 +143,7 @@
    "args": [
     "path"
    ],
-   "layout": "Bild Vollfl\u00e4che",
+   "layout": "Bild Vollfläche",
    "purpose": "Full-bleed image, small HSG logo overlay."
   },
   {
@@ -145,7 +152,7 @@
     "left",
     "right"
    ],
-   "layout": "\u2014",
+   "layout": "—",
    "purpose": "Two-column body via minipages. Left edge aligns with the frametitle (Beamer's native columns shifts content into the margin)."
   },
   {
@@ -155,13 +162,13 @@
     "centre",
     "right"
    ],
-   "layout": "\u2014",
+   "layout": "—",
    "purpose": "Three-column body via minipages. Same alignment guarantee as \\hsgtwocol."
   },
   {
    "name": "\\hsgbibliography",
    "args": [],
-   "layout": "\u2014",
+   "layout": "—",
    "purpose": "Render a 'References' slide via biblatex. Requires \\usepackage{biblatex}+\\addbibresource{...} in preamble."
   },
   {
@@ -170,7 +177,7 @@
     "url",
     "thumbnail"
    ],
-   "layout": "\u2014",
+   "layout": "—",
    "purpose": "Clickable video thumbnail. Image gets a translucent play-button overlay; whole figure is hyperlinked to the URL."
   },
   {
@@ -193,8 +200,8 @@
     "title",
     "body"
    ],
-   "layout": "\u2014",
-   "purpose": "Coloured content panel (colour border, 10% tint fill, bold title). RULE: panels sitting side by side in a row must all receive the SAME fixed height via the optional argument, e.g. \\hsgpanel[3.0cm]{HSGgreen}{...}{...}; never mix natural heights in a row."
+   "layout": "—",
+   "purpose": "Coloured panel. Without [height], panels side by side in \\hsgtwocol/\\hsgthreecol are levelled to the tallest automatically."
   }
  ],
  "inline_helpers": [
@@ -211,6 +218,53 @@
     "text"
    ],
    "purpose": "Tiny grey breadcrumb above the frametitle."
+  },
+  {
+   "name": "\\hsgtakeaway",
+   "args": [
+    "text"
+   ],
+   "purpose": "Green box with bold label 'Takeaway.' (\\hsgtakeawaylabel)."
+  },
+  {
+   "name": "\\hsgdefinition",
+   "args": [
+    "text"
+   ],
+   "purpose": "Blue-grey box with bold label 'Definition.' (\\hsgdefinitionlabel)."
+  },
+  {
+   "name": "\\hsgdiscuss",
+   "args": [
+    "text"
+   ],
+   "purpose": "Italic prompt for the audience."
+  },
+  {
+   "name": "\\hsgsource",
+   "args": [
+    "text"
+   ],
+   "purpose": "Small grey source line pushed to the slide bottom with a guaranteed gap."
+  },
+  {
+   "name": "hsgtable (environment)",
+   "args": [
+    "column spec, e.g. |L{3cm}|L{4cm}|"
+   ],
+   "purpose": "Table with grid lines, \\hsgtablehead{A & B} shaded bold header, alternating rows (class option xcolor=table), columns L/C/R{width} without hyphenation."
+  },
+  {
+   "name": "hsg box / hsg decision / hsg arrow / hsg label (TikZ styles)",
+   "args": [
+    "hsg box=<colour>; picture keys hsg box height, hsg box width"
+   ],
+   "purpose": "Diagram boxes that share one height and width per picture, so rows are symmetric."
+  },
+  {
+   "name": "hsg chart / hsg bars (pgfplots styles)",
+   "args": [],
+   "purpose": "Chart styling: scriptsize fonts, left axes, dashed grid, HSG colour cycle. With several bar series set xtick explicitly."
   }
  ],
  "rules_to_follow": [
@@ -218,7 +272,10 @@
   "HSG green is reserved for the sidebar, page badge, and \\hsgemph. Never use it for frame titles, framesubtitles, or column headers.",
   "Copy ALL hsg-* assets and the fonts/ directory next to your .tex file.",
   "Sidebar wants 4-6 sections in \\hsgsetsections; the same items should appear in \\hsgagenda.",
-  "Cover and closing layouts are hand-tuned. Do not redefine their templates."
+  "Cover and closing layouts are hand-tuned. Do not redefine their templates.",
+  "Boxes in one diagram share one height (the tallest) and one width: use hsg box with hsg box height/width on the picture.",
+  "Tables: hsgtable with grid, shaded header, alternating rows; every cell starts with a capital letter.",
+  "Takeaway boxes carry the label 'Takeaway.'; definitions the label 'Definition.'."
  ],
  "assets_required": {
   "logos": [

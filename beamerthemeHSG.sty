@@ -21,7 +21,7 @@
 %   \date{...}
 %   \newcommand{\coursefooter}{Computer Networks} % shown in the footer
 %
-\ProvidesPackage{beamerthemeHSG}[2026/04/23 HSG Beamer Theme]
+\ProvidesPackage{beamerthemeHSG}[2026/09/28 v0.4.0 HSG Beamer Theme]
 
 \RequirePackage{tikz}
 \RequirePackage{xcolor}
@@ -560,16 +560,41 @@
 % first-line baseline -- when the first content is a graphic, the
 % baseline sits at the bottom of the image and the column appears
 % to "hang" above a column whose first content is text.
+%
+% LEVEL PANELS. \hsgtwocol and \hsgthreecol typeset their columns twice:
+% a hidden measuring pass records the natural height of every \hsgpanel
+% that has no explicit height, then the visible pass gives all of them
+% the tallest height. Panels side by side are therefore always level,
+% with no height to choose. An explicit \hsgpanel[3cm]{...} still wins.
+% Overlay (\pause) and footnote counters are restored after the measuring pass.
+\newsavebox{\hsg@measurebox}
+\newlength{\hsg@panelmax}
+\newif\ifhsg@measuring
+\def\hsg@rowheight{}
+\newcommand{\hsg@levelrow}[1]{% #1 = the row's minipages
+  \begingroup
+    \global\hsg@panelmax=0pt
+    \edef\hsg@savedpauses{\the\c@beamerpauses}%
+    \edef\hsg@savedfootnote{\the\c@footnote}%
+    \hsg@measuringtrue
+    \sbox{\hsg@measurebox}{#1}%
+    \hsg@measuringfalse
+    \global\c@beamerpauses=\hsg@savedpauses\relax
+    \global\c@footnote=\hsg@savedfootnote\relax
+    \ifdim\hsg@panelmax>0pt\edef\hsg@rowheight{\the\hsg@panelmax}\fi
+    \par\noindent#1\par
+  \endgroup
+}
 \newcommand{\hsgtwocol}[2]{%
-  \par\noindent
+  \hsg@levelrow{%
   \begin{minipage}[t]{0.48\textwidth}\vspace*{0pt}#1\end{minipage}\hfill%
-  \begin{minipage}[t]{0.48\textwidth}\vspace*{0pt}#2\end{minipage}\par%
+  \begin{minipage}[t]{0.48\textwidth}\vspace*{0pt}#2\end{minipage}}%
 }
 \newcommand{\hsgthreecol}[3]{%
-  \par\noindent
+  \hsg@levelrow{%
   \begin{minipage}[t]{0.31\textwidth}\vspace*{0pt}#1\end{minipage}\hfill%
   \begin{minipage}[t]{0.31\textwidth}\vspace*{0pt}#2\end{minipage}\hfill%
-  \begin{minipage}[t]{0.31\textwidth}\vspace*{0pt}#3\end{minipage}\par%
+  \begin{minipage}[t]{0.31\textwidth}\vspace*{0pt}#3\end{minipage}}%
 }
 
 % -----------------------------------------------------------------
@@ -577,20 +602,158 @@
 %   HSGcoral = wrong/failure path · HSGgreen = right path ·
 %   HSGbluegrey = neutral · any theme colour works.
 %
-%   \hsgpanel{HSGgreen}{Title}{body}            natural height
+%   \hsgpanel{HSGgreen}{Title}{body}            natural height; inside
+%                                               \hsgtwocol/\hsgthreecol all
+%                                               panels of the row are levelled
 %   \hsgpanel[3.0cm]{HSGgreen}{Title}{body}     fixed height
-%
-% RULE: when two or more panels sit side by side (inside \hsgtwocol /
-% \hsgthreecol), ALWAYS pass the SAME fixed height to every panel in
-% the row. Unequal panel heights in a row look broken; do not rely on
-% natural heights for rows.
 % -----------------------------------------------------------------
+\newsavebox{\hsg@panelbox}
+\newcommand{\hsg@panelinner}[2]{\textbf{#1}\par\vspace{3pt}#2}
 \newcommand{\hsgpanel}[4][]{%
-  \fcolorbox{#2}{#2!10}{%
-  \ifstrempty{#1}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}%
-  \textbf{#3}\par\vspace{3pt}#4\end{minipage}}%
-  {\begin{minipage}[t][#1][t]{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}%
-  \textbf{#3}\par\vspace{3pt}#4\end{minipage}}}}
+  \ifstrempty{#1}{%
+    \ifhsg@measuring
+      \sbox{\hsg@panelbox}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}%
+        \hsg@panelinner{#3}{#4}\end{minipage}}%
+      \ifdim\dimexpr\ht\hsg@panelbox+\dp\hsg@panelbox\relax>\hsg@panelmax
+        \global\hsg@panelmax=\dimexpr\ht\hsg@panelbox+\dp\hsg@panelbox\relax\fi
+    \fi
+    \ifx\hsg@rowheight\@empty
+      \fcolorbox{#2}{#2!10}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}%
+        \hsg@panelinner{#3}{#4}\end{minipage}}%
+    \else
+      \fcolorbox{#2}{#2!10}{\begin{minipage}[t][\hsg@rowheight][t]{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}%
+        \hsg@panelinner{#3}{#4}\end{minipage}}%
+    \fi}%
+  {\fcolorbox{#2}{#2!10}{\begin{minipage}[t][#1][t]{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}%
+    \hsg@panelinner{#3}{#4}\end{minipage}}}}
+
+% ---------------------------------------------------------------------------
+% Labelled boxes and slide furniture.
+%
+%   \hsgtakeaway{text}     green box, bold label "Takeaway." then the text
+%   \hsgdefinition{text}   blue-grey box, bold label "Definition." then text
+%   \hsgdiscuss{text}      italic prompt for the room (no box)
+%   \hsgsource{text}       small grey source line, pushed to the slide bottom
+%                          with a guaranteed gap above it
+%
+% Labels are macros, so a deck can translate them:
+%   \renewcommand{\hsgtakeawaylabel}{Fazit.}
+%   \renewcommand{\hsgdefinitionlabel}{Definition.}
+% ---------------------------------------------------------------------------
+\newcommand{\hsgtakeawaylabel}{Takeaway.}
+\newcommand{\hsgdefinitionlabel}{Definition.}
+\newcommand{\hsg@labelbox}[4]{% frame colour, label colour, label, text
+  \par\vspace{0.45em}\noindent
+  \fcolorbox{#1}{#1!12}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}%
+  \small\raggedright\textbf{\textcolor{#2}{#3}}\ #4\end{minipage}}\par}
+\newcommand{\hsgtakeaway}[1]{\hsg@labelbox{HSGgreen}{HSGgreenDark}{\hsgtakeawaylabel}{#1}}
+\newcommand{\hsgdefinition}[1]{\hsg@labelbox{HSGbluegrey}{HSGbluegrey!62!black}{\hsgdefinitionlabel}{#1}}
+\newcommand{\hsgdiscuss}[1]{\par\vspace{0.5em}\noindent{\itshape\color{HSGtext!88} #1\par}}
+\newcommand{\hsgsource}[1]{\par\vspace{0.3em}\vfill
+  {\raggedright\scriptsize\textcolor{HSGmuted}{#1}\par}}
+
+% ---------------------------------------------------------------------------
+% \hsgdeckdir{path/} -- one line for decks that live in a sub-folder of a
+% larger repository but compile from its root (as Overleaf does). Images
+% and \input files then resolve in path/assets/, path/, assets/ and ./.
+%   \hsgdeckdir{week-03/lecture/}
+% ---------------------------------------------------------------------------
+\newcommand{\hsgdeckdir}[1]{%
+  \def\hsg@deckdir{#1}%
+  \graphicspath{{#1assets/}{#1}{assets/}{./}}%
+  \def\input@path{{#1}{./}}}
+
+% ---------------------------------------------------------------------------
+% Diagram boxes (TikZ). Every box in a picture shares ONE height and ONE
+% text width, so rows of boxes are level and symmetric by construction.
+%
+%   \begin{tikzpicture}[hsg box height=1.2cm, hsg box width=2.8cm]
+%     \node[hsg box]              (a) at (0,0)   {Input};
+%     \node[hsg box=HSGgreen]     (b) at (3.6,0) {Model};
+%     \node[hsg decision]         (c) at (7,0)   {OK?};
+%     \draw[hsg arrow] (a) -- (b);
+%   \end{tikzpicture}
+%
+% Set the height for the tallest box of the picture (e.g. three lines of
+% \small text need about 1.3cm). hsg box takes any theme colour; with no
+% value it is sand with a grey border.
+% ---------------------------------------------------------------------------
+\usetikzlibrary{arrows.meta}
+\def\hsg@boxh{1.0cm}
+\def\hsg@boxw{2.6cm}
+\tikzset{
+  hsg box height/.code={\def\hsg@boxh{#1}},
+  hsg box width/.code={\def\hsg@boxw{#1}},
+  hsg box base/.style={rounded corners=2pt, align=center, font=\small,
+    text width=\hsg@boxw, minimum height=\hsg@boxh, inner sep=3pt},
+  hsg box/.style={hsg box base, draw=#1, fill=#1!15},
+  hsg box/.default=HSGmuted,
+  hsg decision/.style={diamond, aspect=2, draw=HSGmuted, fill=HSGsand!60,
+    align=center, font=\scriptsize, inner sep=1pt},
+  hsg arrow/.style={-{Stealth}, thick, HSGmuted},
+  hsg label/.style={font=\scriptsize, text=HSGmuted, fill=white, inner sep=1pt},
+}
+
+% ---------------------------------------------------------------------------
+% Tables: \begin{hsgtable}{|L{3cm}|L{5cm}|} ... \end{hsgtable}
+%
+% Grid lines, a shaded header row, alternating light rows, left-aligned
+% columns without hyphenation. Column types: L{w}, C{w}, R{w}.
+%   \begin{hsgtable}{|L{3cm}|L{4cm}|L{4cm}|}
+%     \hsgtablehead{Metric & What it measures & Use for}
+%     Accuracy & Share of correct answers & Classification \\ \hline
+%   \end{hsgtable}
+% Start every cell with a capital letter.
+% Alternating rows need xcolor's table option:
+%   \documentclass[aspectratio=169,xcolor=table]{beamer}
+% Without it the table still has its grid and header, only no stripes.
+% ---------------------------------------------------------------------------
+\RequirePackage{array}
+\RequirePackage{colortbl}
+\newcolumntype{L}[1]{>{\raggedright\hyphenpenalty=10000\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\hyphenpenalty=10000\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\hyphenpenalty=10000\arraybackslash}p{#1}}
+\newcommand{\hsgtablehead}[1]{\rowcolor{HSGbluegrey!28}\hsg@boldcells#1&\hsg@end}
+\long\def\hsg@ifblank#1{\if\relax\detokenize{#1}\relax
+  \expandafter\@firstoftwo\else\expandafter\@secondoftwo\fi}
+\def\hsg@boldcells#1&#2\hsg@end{%
+  \textbf{\ignorespaces#1\unskip}\hsg@ifblank{#2}{\\\hline}{&\hsg@boldcells#2\hsg@end}}
+\newenvironment{hsgtable}[1]{%
+  \par\vspace{0.3em}\centering\footnotesize
+  \setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.2}%
+  \ifdefined\rowcolors\rowcolors{2}{HSGsand!45}{white}\fi
+  \begin{tabular}{#1}\hline}
+  {\end{tabular}\par\vspace{0.3em}}
+
+% ---------------------------------------------------------------------------
+% Charts (pgfplots, when the deck loads it):
+%   \begin{axis}[hsg chart, ...]   fonts, left axes, dashed grid, HSG colours
+%   \begin{axis}[hsg bars, ...]    the same for bar charts (ybar); legend on
+%                                  top; add nodes near coords for values; with
+%                                  several series use xtick={...} explicitly,
+%                                  because xtick=data only reads series one
+% ---------------------------------------------------------------------------
+\AtBeginDocument{\@ifpackageloaded{pgfplots}{%
+  \pgfplotscreateplotcyclelist{hsg}{%
+    {fill=HSGgreen!60, draw=HSGgreenDark, mark=*},
+    {fill=HSGbluegrey!60, draw=HSGbluegrey, mark=square*},
+    {fill=HSGcoral!60, draw=HSGcoral, mark=triangle*},
+    {fill=HSGsand, draw=HSGmuted, mark=diamond*}}%
+  \pgfplotscreateplotcyclelist{hsgbars}{%
+    {fill=HSGgreen!60, draw=HSGgreenDark},
+    {fill=HSGbluegrey!60, draw=HSGbluegrey},
+    {fill=HSGcoral!60, draw=HSGcoral},
+    {fill=HSGsand, draw=HSGmuted}}%
+  \pgfplotsset{
+    hsg chart/.style={axis lines=left, cycle list name=hsg,
+      label style={font=\scriptsize}, tick label style={font=\scriptsize},
+      legend style={font=\scriptsize, draw=none, fill=none,
+        at={(0.5,1.02)}, anchor=south, legend columns=-1,
+        /tikz/every even column/.append style={column sep=6pt}},
+      ymajorgrids, grid style={dashed, HSGmuted!25},
+      every node near coord/.append style={font=\scriptsize}},
+    hsg bars/.style={hsg chart, ybar, ymin=0, enlarge x limits=0.2,
+      cycle list name=hsgbars}}}{}}
 
 % ---------------------------------------------------------------------------
 % \hsgvideolink{url}{thumbnail} — clickable video thumbnail.
